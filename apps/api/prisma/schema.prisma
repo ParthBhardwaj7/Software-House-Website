@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  content   String   @db.Text
+  excerpt   String?
+  coverUrl  String?
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String   @db.Text
+  category    String
+  imageUrl    String?
+  liveUrl     String?
+  techStack   String[]
+  createdAt   DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  company   String?
+  quote     String   @db.Text
+  avatarUrl String?
+  rating    Int?
+  createdAt DateTime @default(now())
+}
+
+model Lead {
+  id                String   @id @default(cuid())
+  name              String
+  email             String
+  phone             String?
+  message           String   @db.Text
+  source            String?
+  serviceInterest   String?
+  consentAccepted   Boolean  @default(false)
+  createdAt         DateTime @default(now())
+}
+
+model TeamMember {
+  id           String   @id @default(cuid())
+  name         String
+  role         String
+  bio          String?  @db.Text
+  photoUrl     String?
+  sortOrder    Int      @default(0)
+  linkedinUrl  String?
+  githubUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Service {
+  id        String   @id @default(cuid())
+  title     String
+  description String @db.Text
+  problem   String?
+  solution  String?
+  outcome   String?
+  iconName  String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Settings {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @db.Text
+}
+
+/// CMS-style marketing pages; public URL /site/{slug}
+model CustomPage {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  navLabel        String
+  headline        String
+  subheadline     String?  @db.Text
+  showInNav       Boolean  @default(true)
+  navSortOrder    Int      @default(0)
+  published       Boolean  @default(false)
+  metaTitle       String?
+  metaDescription String?  @db.Text
+  blocks          Json     @default("[]")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

@@ -1,0 +1,53 @@
+import type { TeamMemberPublic } from "./team-types";
+
+/** Used when API is down or returns empty — keeps marketing sections populated. */
+export const DUMMY_TEAM: TeamMemberPublic[] = [
+  {
+    id: "dummy-1",
+    name: "Alex Rivera",
+    role: "Lead Developer",
+    bio: "Full-stack engineer focused on scalable systems.",
+    photoUrl: "https://picsum.photos/seed/hilo-f1/256/256",
+    sortOrder: 0,
+    linkedinUrl: null,
+    githubUrl: null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "dummy-2",
+    name: "Sam Chen",
+    role: "Product Designer",
+    bio: "UI/UX with a passion for accessible interfaces.",
+    photoUrl: "https://picsum.photos/seed/hilo-f2/256/256",
+    sortOrder: 1,
+    linkedinUrl: null,
+    githubUrl: null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "dummy-3",
+    name: "Jordan Blake",
+    role: "DevOps Engineer",
+    bio: "CI/CD and cloud infrastructure.",
+    photoUrl: "https://picsum.photos/seed/hilo-f3/256/256",
+    sortOrder: 2,
+    linkedinUrl: null,
+    githubUrl: null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "dummy-4",
+    name: "Morgan Lee",
+    role: "Frontend Developer",
+    bio: "React and performance.",
+    photoUrl: "https://picsum.photos/seed/hilo-f4/256/256",
+    sortOrder: 3,
+    linkedinUrl: null,
+    githubUrl: null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];

@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Light-only marketing palette (HILO SaaS) */
+  :root {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+    --primary: #22c55e;
+    --primary-dark: #16a34a;
+    --primary-light: #dcfce7;
+    --primary-foreground: #ffffff;
+    --secondary: #f1f5f9;
+    --secondary-foreground: #0f172a;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+    --muted-subtle: #94a3b8;
+    --accent: #3b82f6;
+    --border: #e5e7eb;
+    --input: #e5e7eb;
+    --ring: #22c55e;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Boat cursor experience — static gradient + cursor rules only when effect is active (see BoatCursor.tsx) */
+body.boat-cursor-active {
+  cursor: none;
+  background: linear-gradient(to bottom, #f8fafc, #e0f2fe, #d1fae5);
+}
+
+body.boat-cursor-active input:not([disabled]),
+body.boat-cursor-active textarea:not([disabled]),
+body.boat-cursor-active [contenteditable="true"] {
+  cursor: text;
+}
+
+body.boat-cursor-active a[href],
+body.boat-cursor-active button:not(:disabled),
+body.boat-cursor-active [role="button"]:not([aria-disabled="true"]),
+body.boat-cursor-active label[for],
+body.boat-cursor-active select:not([disabled]),
+body.boat-cursor-active .cursor-pointer {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-marquee {
+    animation: none !important;
+  }
+  .animate-testimonial-marquee {
+    animation: none !important;
+  }
+}
+
+::selection {
+  background: rgba(34, 197, 94, 0.25);
+  color: var(--foreground);
+}
+
+/* Subtle grain (light surfaces) */
+.noise-overlay {
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+.card-pop {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.card-pop:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.1), 0 0 0 1px rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-pop:hover {
+    transform: none;
+  }
+}
+
+.section-pop {
+  transition: background-color 0.45s ease, padding 0.35s ease;
+}
+
+.section-blend-next-dark {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  background-image: linear-gradient(
+    180deg,
+    var(--section-from, #f8fafc) 0%,
+    var(--section-from, #f8fafc) 85%,
+    rgba(15, 23, 42, 0.04) 100%
+  );
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 45s linear infinite;
+}
+
+/* Home testimonials strip — separate duration from footer marquee */
+@keyframes testimonial-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-testimonial-marquee {
+  /* Base ~25s; component overrides via measured width (clamped ~20–30s desktop) */
+  animation: testimonial-marquee 25s linear infinite;
+  will-change: transform;
+}
+
+/* Shared marketing layout — consistent width, padding, alignment across pages */
+/* Use: .page-marketing on outer shell; .page-narrow for reading/blog-width; .page-container for full grids; .page-wide in between; .page-section-y for vertical padding. */
+@layer components {
+  .page-marketing {
+    @apply w-full min-w-0 bg-background text-foreground;
+  }
+  .page-container {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .page-narrow {
+    @apply mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8;
+  }
+  .page-wide {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+  /** Vertical rhythm below fixed header (main already adds pt-20) */
+  .page-section-y {
+    @apply py-10 sm:py-12 md:py-14 lg:py-16;
+  }
+}
