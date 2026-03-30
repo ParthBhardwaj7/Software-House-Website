@@ -25,6 +25,7 @@ export const DEFAULT_FOOTER_CONFIG: FooterConfig = {
     { href: "/about", label: "About Us" },
     { href: "/teams", label: "Our Teams" },
     { href: "/blog", label: "Blogs" },
+    { href: "/pay", label: "Pay online" },
     { href: "/contact", label: "Contact Us" },
   ],
   servicesHeading: "Services",
@@ -39,13 +40,14 @@ export const DEFAULT_FOOTER_CONFIG: FooterConfig = {
   infoLinks: [
     { href: "/privacy", label: "Privacy Policy" },
     { href: "/terms", label: "Terms & Conditions" },
+    { href: "/refund-policy", label: "Refund & cancellation" },
     { href: "/faqs", label: "Faqs" },
   ],
   newsletterHeading: "Subscribe Our Newsletter",
   newsletterDescription:
     "Get ready to work together for the better solution for your business",
-  officeHours: "Sat– Fri: 10:00 AM – 06:30 PM",
-  copyrightEntity: "HILO",
+  officeHours: "Mon–Fri: 10:00 AM – 06:30 PM",
+  copyrightEntity: "APN Codix",
 };
 
 function isFooterLink(x: unknown): x is FooterLink {

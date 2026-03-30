@@ -1,12 +1,11 @@
-"use client";
-
 import { DeliveryTimeline } from "@/components/what-we-deliver/DeliveryTimeline";
+import type { DeliveryStepContent } from "@/lib/marketing-defaults";
 
 /**
- * Scroll-linked process timeline for /services (plan: line + dot + step activation).
- * Implementation lives in {@link DeliveryTimeline}; this section adds services-page framing copy.
+ * Scroll-linked process timeline for /services.
+ * Steps match Admin → Home & delivery (same as home “What we deliver” section).
  */
-export function DeliveryProcessSection() {
+export function DeliveryProcessSection({ steps }: { steps: DeliveryStepContent[] }) {
   return (
     <div className="w-full border-b border-[#E5E7EB]/80 bg-[#F8FAFC]">
       <div className="mx-auto max-w-7xl px-4 pb-2 pt-12 text-center sm:px-6 sm:pt-14 lg:px-8">
@@ -18,7 +17,7 @@ export function DeliveryProcessSection() {
           From discovery to handoff — the milestones we use on every engagement.
         </p>
       </div>
-      <DeliveryTimeline embedded />
+      <DeliveryTimeline embedded steps={steps} />
     </div>
   );
 }

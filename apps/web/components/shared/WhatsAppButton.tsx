@@ -2,11 +2,34 @@
 
 import Link from "next/link";
 import { MessageCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "1234567890";
+function digitsOnly(s: string): string {
+  return s.replace(/\D/g, "");
+}
 
 export function WhatsAppButton() {
-  const href = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`;
+  const [wa, setWa] = useState<string | null>(null);
+
+  useEffect(() => {
+    const env = typeof process !== "undefined" ? process.env.NEXT_PUBLIC_WHATSAPP_NUMBER : undefined;
+    const envDigits = env ? digitsOnly(env) : "";
+    fetch("/api/settings/website")
+      .then((r) => (r.ok ? r.json() : Promise.resolve({})))
+      .then((data: { whatsappNumber?: string }) => {
+        const fromApi = typeof data.whatsappNumber === "string" ? digitsOnly(data.whatsappNumber) : "";
+        const n = fromApi || envDigits;
+        setWa(n || null);
+      })
+      .catch(() => {
+        setWa(envDigits || null);
+      });
+  }, []);
+
+  if (!wa) return null;
+
+  const href = `https://wa.me/${wa}`;
+
   return (
     <Link
       href={href}

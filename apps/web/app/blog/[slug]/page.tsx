@@ -104,7 +104,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl },
     publisher: {
       "@type": "Organization",
-      name: "HILO",
+      name: "APN Codix",
       url: getSiteUrlString(),
     },
   };

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AdminClientLayout from "./AdminClientLayout";
 
 export const metadata: Metadata = {
-  title: { default: "Admin", template: "%s | HILO Admin" },
+  title: { default: "Admin", template: "%s | APN Codix Admin" },
   robots: { index: false, follow: false },
 };
 

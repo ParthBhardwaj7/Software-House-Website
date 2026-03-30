@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  transpilePackages: ["@marsidev/react-turnstile"],
   // Smaller client bundles for icon + animation libs (tree-shake per-import)
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],

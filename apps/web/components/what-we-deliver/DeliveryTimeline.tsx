@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { MotionValue } from "framer-motion";
 import {
   AnimatePresence,
@@ -9,12 +9,12 @@ import {
   useSpring,
   useTransform,
   useInView,
-  useReducedMotion,
 } from "framer-motion";
-import { DELIVERY_STEPS } from "@/lib/dummy-data";
 import { cn } from "@/lib/utils";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
+import type { DeliveryStepContent } from "@/lib/marketing-defaults";
 
-type Step = (typeof DELIVERY_STEPS)[number];
+type Step = DeliveryStepContent;
 
 function AnimatedStepNumber({
   index,
@@ -61,11 +61,13 @@ function TimelineStepContent({
   step,
   index,
   isFirst,
+  layoutReady,
   onBecomeActive,
 }: {
   step: Step;
   index: number;
   isFirst: boolean;
+  layoutReady: boolean;
   onBecomeActive: (i: number) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -73,6 +75,7 @@ function TimelineStepContent({
     amount: 0.42,
     margin: "-12% 0px -12% 0px",
   });
+  const inViewForMotion = layoutReady && isInView;
 
   useEffect(() => {
     if (isInView) onBecomeActive(index);
@@ -83,8 +86,8 @@ function TimelineStepContent({
       ref={ref}
       initial={false}
       animate={{
-        opacity: isInView ? 1 : 0.4,
-        y: isInView ? 0 : 40,
+        opacity: inViewForMotion ? 1 : 0.4,
+        y: inViewForMotion ? 0 : 40,
       }}
       transition={{
         duration: 0.5,
@@ -144,11 +147,16 @@ function ScrollTrack({
 
 type DeliveryTimelineProps = {
   embedded?: boolean;
+  steps: Step[];
 };
 
-export function DeliveryTimeline({ embedded = false }: DeliveryTimelineProps) {
+export function DeliveryTimeline({ embedded = false, steps }: DeliveryTimelineProps) {
   const containerRef = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotionUI = usePrefersReducedMotion();
+  const [layoutReady, setLayoutReady] = useState(false);
+  useLayoutEffect(() => {
+    setLayoutReady(true);
+  }, []);
   const [activeStep, setActiveStep] = useState(0);
 
   const handleActive = useCallback((i: number) => {
@@ -175,12 +183,12 @@ export function DeliveryTimeline({ embedded = false }: DeliveryTimelineProps) {
       )}
     >
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <ScrollTrack smoothProgress={smoothProgress} reduceMotion={!!reduceMotion} />
+        <ScrollTrack smoothProgress={smoothProgress} reduceMotion={reduceMotionUI} />
 
         {/* Mobile: sticky single number that increments (same behavior as desktop) */}
         <div className="pointer-events-none sticky top-20 z-[3] -mx-4 mb-6 flex justify-center border-b border-[#E5E7EB]/60 bg-[#F8FAFC]/90 py-3 backdrop-blur-sm sm:-mx-6 lg:hidden">
           <div className="pointer-events-auto">
-            <AnimatedStepNumber index={activeStep} reduceMotion={!!reduceMotion} />
+            <AnimatedStepNumber index={activeStep} reduceMotion={reduceMotionUI} />
           </div>
         </div>
 
@@ -194,21 +202,22 @@ export function DeliveryTimeline({ embedded = false }: DeliveryTimelineProps) {
           <div className="pointer-events-none relative hidden lg:pointer-events-auto lg:col-span-1 lg:flex lg:min-h-0 lg:h-full lg:flex-col">
             <div className="sticky top-[max(6rem,calc(50vh-4.5rem))] z-[2] py-6">
               <span className="sr-only" aria-live="polite" aria-atomic="true">
-                Step {activeStep + 1} of {DELIVERY_STEPS.length}
+                Step {activeStep + 1} of {steps.length}
               </span>
-              <AnimatedStepNumber index={activeStep} reduceMotion={!!reduceMotion} />
+              <AnimatedStepNumber index={activeStep} reduceMotion={reduceMotionUI} />
             </div>
           </div>
 
           <div className="hidden min-h-0 lg:col-span-1 lg:block" aria-hidden />
 
           <div className="min-w-0 lg:col-span-1">
-            {DELIVERY_STEPS.map((step, i) => (
+            {steps.map((step, i) => (
               <TimelineStepContent
-                key={step.num}
+                key={`${i}-${step.title.slice(0, 24)}`}
                 step={step}
                 index={i}
                 isFirst={i === 0}
+                layoutReady={layoutReady}
                 onBecomeActive={handleActive}
               />
             ))}

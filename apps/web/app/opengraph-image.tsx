@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "HILO — Modern software agency";
+export const alt = "APN Codix — Modern software agency";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -38,16 +38,28 @@ export default function OpenGraphImage() {
             padding: 48,
           }}
         >
-          <span
-            style={{
-              fontSize: 96,
-              fontWeight: 600,
-              letterSpacing: "-0.04em",
-              color: "#0f172a",
-            }}
-          >
-            HILO
-          </span>
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "baseline", gap: 14 }}>
+            <span
+              style={{
+                fontSize: 88,
+                fontWeight: 700,
+                letterSpacing: "-0.04em",
+                color: "#0f172a",
+              }}
+            >
+              APN
+            </span>
+            <span
+              style={{
+                fontSize: 72,
+                fontWeight: 600,
+                letterSpacing: "-0.03em",
+                color: "#475569",
+              }}
+            >
+              Codix
+            </span>
+          </div>
           <span style={{ fontSize: 28, color: "#64748b", textAlign: "center", maxWidth: 720 }}>
             Modern software agency — AI, web, and product engineering
           </span>

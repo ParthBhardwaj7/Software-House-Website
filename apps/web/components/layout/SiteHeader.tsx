@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { X } from "lucide-react";
 import { Twitter, Instagram, Youtube, Linkedin, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { RollingContactCta } from "./RollingContactCta";
+import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
 import { DUMMY_SITE_SETTINGS } from "@/lib/dummy-data";
+import type { SocialLinks } from "@/lib/public-website-settings";
 
 const STATIC_NAV_START = [
   { href: "/", label: "Home" },
@@ -17,7 +20,18 @@ const STATIC_NAV_START = [
   { href: "/testimonials", label: "Testimonials" },
 ] as const;
 
-const STATIC_NAV_END = [{ href: "/contact", label: "Contact" }] as const;
+const STATIC_NAV_END = [
+  { href: "/pay", label: "Pay" },
+  { href: "/contact", label: "Contact" },
+] as const;
+
+const emptySocial = (): SocialLinks => ({
+  twitter: "",
+  instagram: "",
+  youtube: "",
+  linkedin: "",
+  telegram: "",
+});
 
 /** Clear separator under bar — slightly thicker + stronger so it reads vs hero */
 const headerSurface = (scrolled: boolean) =>
@@ -26,13 +40,56 @@ const headerSurface = (scrolled: boolean) =>
     scrolled && "border-gray-300/75 bg-white/80 shadow-sm backdrop-blur-lg"
   );
 
+function SocialIconRow({
+  links,
+  className,
+  showHeading,
+}: {
+  links: SocialLinks;
+  className?: string;
+  showHeading?: boolean;
+}) {
+  const items: { href: string; label: string; Icon: typeof Twitter }[] = [];
+  if (links.twitter) items.push({ href: links.twitter, label: "Twitter", Icon: Twitter });
+  if (links.instagram) items.push({ href: links.instagram, label: "Instagram", Icon: Instagram });
+  if (links.youtube) items.push({ href: links.youtube, label: "YouTube", Icon: Youtube });
+  if (links.linkedin) items.push({ href: links.linkedin, label: "LinkedIn", Icon: Linkedin });
+  if (links.telegram) items.push({ href: links.telegram, label: "Telegram", Icon: Send });
+  if (items.length === 0) return null;
+  return (
+    <div className={className}>
+      {showHeading ? (
+        <p className="mb-4 text-xs font-medium uppercase tracking-wider text-[#64748B]">Social Media</p>
+      ) : null}
+      <div className="flex gap-4 text-[#0F172A]">
+        {items.map(({ href, label, Icon }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:opacity-70"
+            aria-label={label}
+          >
+            <Icon className="h-6 w-6" />
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const [contactEmail, setContactEmail] = useState<string>(DUMMY_SITE_SETTINGS.contactEmail);
   const [contactPhone, setContactPhone] = useState<string>(DUMMY_SITE_SETTINGS.phoneNumber);
+  const [websiteName, setWebsiteName] = useState<string>(DUMMY_SITE_SETTINGS.websiteName);
+  const [addressLine, setAddressLine] = useState<string>(DUMMY_SITE_SETTINGS.addressLine);
+  const [logoUrl, setLogoUrl] = useState<string>("");
   const [customNav, setCustomNav] = useState<{ href: string; label: string }[]>([]);
+  const [socialLinks, setSocialLinks] = useState<SocialLinks>(emptySocial);
 
   const overlayLinks = useMemo(
     () => [...STATIC_NAV_START, ...customNav, ...STATIC_NAV_END],
@@ -62,12 +119,36 @@ export function SiteHeader() {
   useEffect(() => {
     fetch("/api/settings/website")
       .then((r) => (r.ok ? r.json() : Promise.resolve({})))
-      .then((data: Record<string, unknown>) => {
-        const e = typeof data.contactEmail === "string" ? data.contactEmail.trim() : "";
-        const p = typeof data.phoneNumber === "string" ? data.phoneNumber.trim() : "";
-        if (e) setContactEmail(e);
-        if (p) setContactPhone(p);
-      })
+      .then(
+        (data: {
+          contactEmail?: string;
+          phoneNumber?: string;
+          websiteName?: string;
+          addressLine?: string;
+          logoUrl?: string;
+          socialLinks?: SocialLinks;
+        }) => {
+          const e = typeof data.contactEmail === "string" ? data.contactEmail.trim() : "";
+          const p = typeof data.phoneNumber === "string" ? data.phoneNumber.trim() : "";
+          const w = typeof data.websiteName === "string" ? data.websiteName.trim() : "";
+          const a = typeof data.addressLine === "string" ? data.addressLine.trim() : "";
+          const l = typeof data.logoUrl === "string" ? data.logoUrl.trim() : "";
+          if (e) setContactEmail(e);
+          if (p) setContactPhone(p);
+          if (w) setWebsiteName(w);
+          if (a) setAddressLine(a);
+          if (l) setLogoUrl(l);
+          if (data.socialLinks && typeof data.socialLinks === "object") {
+            setSocialLinks({
+              twitter: String(data.socialLinks.twitter ?? "").trim(),
+              instagram: String(data.socialLinks.instagram ?? "").trim(),
+              youtube: String(data.socialLinks.youtube ?? "").trim(),
+              linkedin: String(data.socialLinks.linkedin ?? "").trim(),
+              telegram: String(data.socialLinks.telegram ?? "").trim(),
+            });
+          }
+        }
+      )
       .catch(() => {});
   }, []);
 
@@ -84,6 +165,20 @@ export function SiteHeader() {
     closeMenu();
   }, [pathname, closeMenu]);
 
+  const navLinkClass = (active: boolean) =>
+    cn(
+      "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+      active ? "bg-[#0F172A]/5 text-[#0F172A]" : "text-[#475569] hover:bg-black/[0.04] hover:text-[#0F172A]"
+    );
+
+  const mobileNavLinkClass = (active: boolean) =>
+    cn(
+      "min-h-11 py-2 font-display text-3xl font-normal leading-tight tracking-tight",
+      active ? "text-[#0F172A]" : "text-[#64748B]"
+    );
+
+  const headerLogoSrc = logoUrl.trim() || DEFAULT_SITE_LOGO_PATH;
+
   return (
     <>
       <header
@@ -95,11 +190,32 @@ export function SiteHeader() {
         <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-2 pl-4 pr-2.5 sm:gap-4 sm:pl-6 sm:pr-3 lg:pl-8 lg:pr-5">
           <Link
             href="/"
-            className="shrink-0 text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl"
-            aria-label="HILO home"
+            className="flex min-w-0 shrink-0 items-center gap-2 text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl"
+            aria-label={`${websiteName} home`}
           >
-            HIL<span className="text-[#22C55E]">O</span>
+            <span className="relative block h-9 w-[min(100%,168px)] shrink-0 sm:h-10 sm:w-[min(100%,180px)]">
+              <Image
+                src={headerLogoSrc}
+                alt={websiteName}
+                fill
+                className="object-contain object-left"
+                sizes="180px"
+                unoptimized
+              />
+            </span>
           </Link>
+
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 md:flex lg:gap-1" aria-label="Main">
+            {overlayLinks.map((link) => {
+              const active =
+                pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+              return (
+                <Link key={link.href} href={link.href} className={navLinkClass(active)}>
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
 
           <div className="flex min-w-0 shrink-0 items-center justify-end gap-2 sm:gap-2.5 md:gap-3">
             <RollingContactCta
@@ -117,6 +233,7 @@ export function SiteHeader() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label="Open menu"
+              suppressHydrationWarning
             >
               <span className="flex flex-col gap-1.5" aria-hidden>
                 <span className="h-0.5 w-6 bg-current" />
@@ -139,11 +256,18 @@ export function SiteHeader() {
         >
           <div className="flex items-start justify-between border-b border-[#E5E7EB] bg-white p-6">
             <div className="flex gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#22C55E] text-lg font-bold text-white">
-                H
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#22C55E] text-lg font-bold text-white">
+                <Image
+                  src={headerLogoSrc}
+                  alt=""
+                  width={56}
+                  height={56}
+                  className="h-full w-full object-contain p-1"
+                  unoptimized
+                />
               </div>
               <div>
-                <p className="text-xs text-[#64748B]">{DUMMY_SITE_SETTINGS.addressLine}</p>
+                <p className="text-xs text-[#64748B]">{addressLine}</p>
                 <p className="text-xs text-[#64748B]">
                   {new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false })}{" "}
                   IST
@@ -155,6 +279,7 @@ export function SiteHeader() {
               onClick={closeMenu}
               className="min-h-11 min-w-11 rounded-lg p-2 text-[#0F172A] hover:bg-[#F1F5F9]"
               aria-label="Close menu"
+              suppressHydrationWarning
             >
               <X className="h-8 w-8" strokeWidth={2} />
             </button>
@@ -182,10 +307,7 @@ export function SiteHeader() {
                     key={link.href}
                     href={link.href}
                     onClick={closeMenu}
-                    className={cn(
-                      "min-h-11 py-2 font-display text-3xl font-normal leading-tight tracking-tight",
-                      active ? "text-[#0F172A]" : "text-[#64748B]"
-                    )}
+                    className={mobileNavLinkClass(active)}
                   >
                     {link.label}
                   </Link>
@@ -203,24 +325,11 @@ export function SiteHeader() {
               {contactPhone}
             </a>
 
-            <p className="mb-4 mt-10 text-xs font-medium uppercase tracking-wider text-[#64748B]">Social Media</p>
-            <div className="flex gap-4 text-[#0F172A]">
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70" aria-label="Twitter">
-                <Twitter className="h-6 w-6" />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70" aria-label="Instagram">
-                <Instagram className="h-6 w-6" />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70" aria-label="YouTube">
-                <Youtube className="h-6 w-6" />
-              </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70" aria-label="LinkedIn">
-                <Linkedin className="h-6 w-6" />
-              </a>
-              <a href="https://telegram.org" target="_blank" rel="noopener noreferrer" className="hover:opacity-70" aria-label="Telegram">
-                <Send className="h-6 w-6" />
-              </a>
-            </div>
+            <SocialIconRow
+              links={socialLinks}
+              className="mt-10"
+              showHeading
+            />
           </div>
         </div>
       )}

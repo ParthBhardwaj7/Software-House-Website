@@ -1,12 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
+import type { TurnstileWidgetHandle } from "@/lib/turnstile-ref";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TeamMemberAvatar } from "@/components/team/TeamMemberAvatar";
+import { TurnstileField } from "@/components/security/TurnstileField";
 import { cn } from "@/lib/utils";
 import type { TeamMemberPublic } from "@/lib/team-types";
+
+const HAS_TURNSTILE = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim());
 
 const SERVICES = [
   { id: "web_design", label: "Web Design" },
@@ -20,6 +24,8 @@ type ContactFormProps = {
 };
 
 export function ContactForm({ variant = "default", teamMembers }: ContactFormProps) {
+  const turnstileRef = useRef<TurnstileWidgetHandle>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [formError, setFormError] = useState<string | null>(null);
   const [form, setForm] = useState({
@@ -45,6 +51,9 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
     if (!form.message.trim()) err.message = "Message is required";
     else if (form.message.trim().length < 10) err.message = "Please write at least 10 characters";
     if (!form.consent) err.consent = "You must agree to the terms";
+    if (HAS_TURNSTILE && !turnstileToken?.trim()) {
+      err.turnstile = "Complete the security check below";
+    }
 
     setFieldErrors(err);
     return Object.keys(err).length === 0;
@@ -60,6 +69,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
       serviceInterest: true,
       message: true,
       consent: true,
+      turnstile: true,
     });
     if (!validate()) return;
 
@@ -75,6 +85,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
           message: form.message.trim(),
           serviceInterest: form.serviceInterest,
           consentAccepted: true,
+          turnstileToken: turnstileToken ?? undefined,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -92,6 +103,8 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
       });
       setTouched({});
       setFieldErrors({});
+      setTurnstileToken(null);
+      turnstileRef.current?.reset();
     } catch (err) {
       console.error("Contact form error:", err);
       setStatus("error");
@@ -179,6 +192,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
                 We are here for you, regardless of the size of the challenge.
               </p>
 
+              {/* Extensions (password managers, etc.) may add attrs like fdprocessedid before hydrate */}
               <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
                 {status === "success" && (
                   <p
@@ -206,6 +220,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
                     onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                     onBlur={() => setTouched((t) => ({ ...t, name: true }))}
                     className={cn("mt-1.5", inputBase)}
+                    suppressHydrationWarning
                   />
                   {touched.name && fieldErrors.name && (
                     <p className="mt-1 text-xs text-destructive">{fieldErrors.name}</p>
@@ -225,6 +240,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
                       onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                       onBlur={() => setTouched((t) => ({ ...t, email: true }))}
                       className={cn("mt-1.5", inputBase)}
+                      suppressHydrationWarning
                     />
                     {touched.email && fieldErrors.email && (
                       <p className="mt-1 text-xs text-destructive">{fieldErrors.email}</p>
@@ -242,6 +258,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
                       onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                       onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
                       className={cn("mt-1.5", inputBase)}
+                      suppressHydrationWarning
                     />
                     {touched.phone && fieldErrors.phone && (
                       <p className="mt-1 text-xs text-destructive">{fieldErrors.phone}</p>
@@ -292,6 +309,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
                     onBlur={() => setTouched((t) => ({ ...t, message: true }))}
                     placeholder="Tell us about your goals, timeline, and budget…"
                     className={cn("mt-1.5 resize-none", inputBase)}
+                    suppressHydrationWarning
                   />
                   {touched.message && fieldErrors.message && (
                     <p className="mt-1 text-xs text-destructive">{fieldErrors.message}</p>
@@ -307,12 +325,22 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
                       setTouched((t) => ({ ...t, consent: true }));
                     }}
                     className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                    suppressHydrationWarning
                   />
                   <span>I agree to the terms and conditions.</span>
                 </label>
                 {touched.consent && fieldErrors.consent && (
                   <p className="text-xs text-destructive">{fieldErrors.consent}</p>
                 )}
+
+                {HAS_TURNSTILE ? (
+                  <div className="space-y-2">
+                    <TurnstileField ref={turnstileRef} onToken={setTurnstileToken} />
+                    {touched.turnstile && fieldErrors.turnstile ? (
+                      <p className="text-xs text-destructive">{fieldErrors.turnstile}</p>
+                    ) : null}
+                  </div>
+                ) : null}
 
                 <Button
                   type="submit"

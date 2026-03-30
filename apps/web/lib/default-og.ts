@@ -8,12 +8,12 @@ const BUILT_IN_OG_PATH = "/opengraph-image";
  * Default social preview images for metadata.
  * Set `NEXT_PUBLIC_OG_IMAGE` to an absolute URL for a custom static asset.
  */
-export function defaultOgImages(): NonNullable<Metadata["openGraph"]>["images"] {
+export function defaultOgImages(brandName = "Brand"): NonNullable<Metadata["openGraph"]>["images"] {
   const env = process.env.NEXT_PUBLIC_OG_IMAGE?.trim();
   if (env) {
     try {
       const absolute = env.startsWith("http") ? env : new URL(env, getSiteUrlString()).toString();
-      return [{ url: absolute, width: 1200, height: 630, alt: "HILO" }];
+      return [{ url: absolute, width: 1200, height: 630, alt: brandName }];
     } catch {
       /* use built-in */
     }
@@ -24,7 +24,7 @@ export function defaultOgImages(): NonNullable<Metadata["openGraph"]>["images"] 
       url: `${base}${BUILT_IN_OG_PATH}`,
       width: 1200,
       height: 630,
-      alt: "HILO — Modern software agency",
+      alt: `${brandName} — Software studio`,
     },
   ];
 }

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { DeliveryProcessSection } from "@/components/services/DeliveryProcessSection";
+import { getPublicWebsiteSettings } from "@/lib/server-website-settings";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
     "Web & Mobile App Development, Digital Marketing, AI Integration, Automation, Machine Learning & Cloud Computing.",
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const { marketingDelivery } = await getPublicWebsiteSettings();
+
   return (
     <div className="page-marketing w-full">
       <section className="bg-[#0F172A] py-14 text-center sm:py-16 md:py-20 lg:py-24">
@@ -21,7 +24,7 @@ export default function ServicesPage() {
           </p>
         </div>
       </section>
-      <DeliveryProcessSection />
+      <DeliveryProcessSection steps={marketingDelivery.steps} />
       <ServicesSection showHeading={false} compact={false} />
     </div>
   );

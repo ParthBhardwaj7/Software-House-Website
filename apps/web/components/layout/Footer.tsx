@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
 import { DUMMY_SITE_SETTINGS } from "@/lib/dummy-data";
 import { DEFAULT_FOOTER_CONFIG, type FooterConfig, type FooterLink } from "@/lib/footer-defaults";
 import { FooterNewsletter } from "./FooterNewsletter";
@@ -11,6 +13,7 @@ type WebsitePayload = {
   websiteName: string;
   contactEmail: string;
   phoneNumber: string;
+  logoUrl: string;
   footerConfig: FooterConfig;
 };
 
@@ -18,6 +21,7 @@ const initialPayload: WebsitePayload = {
   websiteName: DUMMY_SITE_SETTINGS.websiteName,
   contactEmail: DUMMY_SITE_SETTINGS.contactEmail,
   phoneNumber: DUMMY_SITE_SETTINGS.phoneNumber,
+  logoUrl: "",
   footerConfig: {
     ...DEFAULT_FOOTER_CONFIG,
     quickLinks: [...DEFAULT_FOOTER_CONFIG.quickLinks],
@@ -61,6 +65,10 @@ export function Footer() {
           fc && typeof fc === "object" && "quickLinks" in (fc as object)
             ? (fc as FooterConfig)
             : initialPayload.footerConfig;
+        const logoRaw =
+          typeof o.logoUrl === "string" && o.logoUrl.trim()
+            ? o.logoUrl.trim()
+            : DEFAULT_SITE_LOGO_PATH;
         setData({
           websiteName:
             typeof o.websiteName === "string" && o.websiteName.trim()
@@ -74,6 +82,7 @@ export function Footer() {
             typeof o.phoneNumber === "string" && o.phoneNumber.trim()
               ? o.phoneNumber.trim()
               : initialPayload.phoneNumber,
+          logoUrl: logoRaw,
           footerConfig: {
             ...footerConfig,
             quickLinks: [...footerConfig.quickLinks],
@@ -88,7 +97,7 @@ export function Footer() {
   const fc = data.footerConfig;
   const linkClass =
     "text-sm text-[#94A3B8] transition-colors duration-200 hover:text-[#22C55E]";
-  const copyrightName = fc.copyrightEntity.trim() || data.websiteName.trim() || "HILO";
+  const copyrightName = fc.copyrightEntity.trim() || data.websiteName.trim() || "Company";
 
   return (
     <footer className="relative bg-[#0F172A] text-[#F8FAFC]">
@@ -110,9 +119,16 @@ export function Footer() {
       <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-3">
-            <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[#22C55E] to-[#16A34A] shadow-lg shadow-[#22C55E]/20">
-                <span className="text-sm font-bold text-white">H</span>
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <div className="relative flex h-9 min-w-[7rem] max-w-[10rem] shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-[#22C55E] to-[#16A34A] px-2 shadow-lg shadow-[#22C55E]/20 sm:h-10 sm:min-w-[8rem] sm:max-w-[11rem]">
+                <Image
+                  src={data.logoUrl || DEFAULT_SITE_LOGO_PATH}
+                  alt=""
+                  width={176}
+                  height={40}
+                  className="h-7 w-auto max-h-full object-contain object-left sm:h-8"
+                  unoptimized
+                />
               </div>
               <span className="font-display text-lg font-semibold text-white">{data.websiteName}</span>
             </div>

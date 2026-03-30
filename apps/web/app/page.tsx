@@ -6,21 +6,30 @@ import { ContactForm } from "@/components/home/ContactForm";
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { WhatWeDeliverSection } from "@/components/what-we-deliver/WhatWeDeliverSection";
 import { getTeamMembers } from "@/lib/team";
+import { getPublicWebsiteSettings } from "@/lib/server-website-settings";
+import { getSiteUrlString } from "@/lib/site-url";
 
-export const metadata: Metadata = {
-  title: "Home",
-  description:
-    "We build high-performance software solutions for modern businesses — strategy, engineering, and launch with one team.",
-  alternates: { canonical: "/" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const s = await getPublicWebsiteSettings();
+  const base = getSiteUrlString();
+  return {
+    title: "Home",
+    description: s.siteDescription,
+    alternates: { canonical: `${base}/` },
+  };
+}
 
 export default async function HomePage() {
-  const teamMembers = await getTeamMembers();
+  const [teamMembers, site] = await Promise.all([getTeamMembers(), getPublicWebsiteSettings()]);
 
   return (
     <>
-      <HomeHero />
-      <WhatWeDeliverSection titleTag="h2" />
+      <HomeHero
+        content={site.marketingHome}
+        logoUrl={site.logoUrl}
+        websiteName={site.websiteName}
+      />
+      <WhatWeDeliverSection titleTag="h2" delivery={site.marketingDelivery} />
       <ServicesSection showHeading={true} compact={true} variant="default" tone="light" />
       <Portfolio showHeading={true} variant="default" />
       <Testimonials variant="default" tone="light" />

@@ -1,9 +1,9 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import { useReducedMotion } from "framer-motion";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 
 export type TestimonialMarqueeItem = {
   id: string;
@@ -72,7 +72,7 @@ function TestimonialCard({
  * Infinite marquee: duplicate items, translate3d(-50%). Full-width outer; pause only on card hover.
  */
 export function TestimonialMarquee({ items, className }: Props) {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const trackRef = useRef<HTMLDivElement>(null);
   const [durationSec, setDurationSec] = useState(25);
   /** Nested hover count so moving between cards does not resume mid-row */

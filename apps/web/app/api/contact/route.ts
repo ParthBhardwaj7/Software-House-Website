@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireTurnstile } from "@/lib/turnstile-verify";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -12,7 +13,11 @@ export async function POST(req: NextRequest) {
       message,
       serviceInterest,
       consentAccepted,
+      turnstileToken,
     } = body as Record<string, unknown>;
+
+    const captcha = await requireTurnstile(req, turnstileToken);
+    if (captcha) return captcha;
 
     if (!name || !email || !message) {
       return NextResponse.json(

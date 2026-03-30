@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
@@ -10,9 +12,18 @@ import { ServicesModule } from './modules/services/services.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { TeamMembersModule } from './modules/team/team-members.module';
 import { CustomPagesModule } from './modules/custom-pages/custom-pages.module';
+import { FaqsModule } from './modules/faqs/faqs.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { PublicFormsThrottlerGuard } from './common/guards/public-forms-throttler.guard';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      {
+        ttl: 600000,
+        limit: 12,
+      },
+    ]),
     PrismaModule,
     AuthModule,
     UsersModule,
@@ -24,6 +35,14 @@ import { CustomPagesModule } from './modules/custom-pages/custom-pages.module';
     SettingsModule,
     TeamMembersModule,
     CustomPagesModule,
+    FaqsModule,
+    PaymentsModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: PublicFormsThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}

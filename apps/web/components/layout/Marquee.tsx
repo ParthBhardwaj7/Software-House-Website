@@ -1,17 +1,32 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { DUMMY_SITE_SETTINGS } from "@/lib/dummy-data";
+
 const TEXT = "Let's Work Together * ";
 
-const spans = Array.from({ length: 12 }).map((_, i) => (
-  <span
-    key={i}
-    className="mx-6 inline-block shrink-0 pb-[0.2em] pt-[0.08em] font-display text-4xl font-semibold leading-[1.22] tracking-tight text-[#0F172A] sm:mx-10 sm:text-5xl sm:leading-[1.2] md:text-6xl md:leading-[1.18] lg:text-7xl lg:leading-[1.16] xl:text-8xl xl:leading-[1.14]"
-  >
-    {TEXT}
-  </span>
-));
-
 export function Marquee() {
+  const [brand, setBrand] = useState<string>(DUMMY_SITE_SETTINGS.websiteName);
+
+  useEffect(() => {
+    fetch("/api/settings/website")
+      .then((r) => (r.ok ? r.json() : Promise.resolve({})))
+      .then((data: { websiteName?: string }) => {
+        const w = typeof data.websiteName === "string" ? data.websiteName.trim() : "";
+        if (w) setBrand(w);
+      })
+      .catch(() => {});
+  }, []);
+
+  const spans = Array.from({ length: 12 }).map((_, i) => (
+    <span
+      key={i}
+      className="mx-6 inline-block shrink-0 pb-[0.2em] pt-[0.08em] font-display text-4xl font-semibold leading-[1.22] tracking-tight text-[#0F172A] sm:mx-10 sm:text-5xl sm:leading-[1.2] md:text-6xl md:leading-[1.18] lg:text-7xl lg:leading-[1.16] xl:text-8xl xl:leading-[1.14]"
+    >
+      {TEXT}
+    </span>
+  ));
+
   return (
     <section className="relative flex min-h-[min(48vh,440px)] flex-col items-center justify-center overflow-x-hidden overflow-y-visible bg-white pb-6 pt-2 sm:pb-8 sm:pt-3">
       {/* Base */}
@@ -23,7 +38,7 @@ export function Marquee() {
         aria-hidden
       />
 
-      {/* HILO watermark — behind marquee text */}
+      {/* Brand watermark — behind marquee text */}
       <div
         className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center overflow-visible px-6 py-16 sm:px-10 sm:py-20"
         aria-hidden
@@ -32,7 +47,7 @@ export function Marquee() {
           className="max-w-[100%] whitespace-nowrap text-center font-display font-semibold tracking-tight text-[#0F172A]/[0.07] [font-size:clamp(6.5rem,18vw,18rem)] [line-height:1.15]"
           style={{ paddingBlock: "0.1em" }}
         >
-          HILO
+          {brand}
         </span>
       </div>
 

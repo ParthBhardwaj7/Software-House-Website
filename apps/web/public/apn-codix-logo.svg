@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 96" fill="none" role="img" aria-label="APN Codix">
+  <text
+    x="0"
+    y="64"
+    font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif"
+    font-size="48"
+    font-weight="700"
+    fill="#0f172a"
+  >APN</text>
+  <text
+    x="118"
+    y="62"
+    font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif"
+    font-size="38"
+    font-weight="600"
+    fill="#475569"
+    letter-spacing="-0.02em"
+  >Codix</text>
+</svg>

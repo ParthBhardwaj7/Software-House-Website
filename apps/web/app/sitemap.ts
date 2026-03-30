@@ -21,6 +21,8 @@ const STATIC_PATHS = [
   "/faqs",
   "/privacy",
   "/terms",
+  "/refund-policy",
+  "/pay",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

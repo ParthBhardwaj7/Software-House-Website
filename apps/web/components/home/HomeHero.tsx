@@ -1,32 +1,56 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
+import { useLayoutEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RollingContactCta } from "@/components/layout/RollingContactCta";
 import { useHeroParallax } from "@/hooks/use-hero-parallax";
 import { cn } from "@/lib/utils";
+import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
+import type { MarketingHomeContent } from "@/lib/marketing-defaults";
+import { DEFAULT_MARKETING_HOME } from "@/lib/marketing-defaults";
 
-export function HomeHero() {
+type HomeHeroProps = {
+  content?: MarketingHomeContent;
+  /** Merged site logo (falls back to bundled wordmark). */
+  logoUrl?: string;
+  websiteName?: string;
+};
+
+export function HomeHero({
+  content = DEFAULT_MARKETING_HOME,
+  logoUrl = DEFAULT_SITE_LOGO_PATH,
+  websiteName = "APN Codix",
+}: HomeHeroProps) {
+  const m = content;
   const { enabled: parallaxEnabled, bgX, bgY, orbX, orbY, reduceMotion } = useHeroParallax();
 
+  /** SSR + hydration must match server; then apply real `prefers-reduced-motion` before paint (useLayoutEffect). */
+  const [reduceMotionReady, setReduceMotionReady] = useState(false);
+  useLayoutEffect(() => {
+    setReduceMotionReady(true);
+  }, []);
+  const animReduce = reduceMotionReady && reduceMotion;
+
   const container = {
-    hidden: { opacity: reduceMotion ? 1 : 0 },
+    hidden: { opacity: animReduce ? 1 : 0 },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: reduceMotion ? 0 : 0.08,
-        delayChildren: reduceMotion ? 0 : 0.08,
+        staggerChildren: animReduce ? 0 : 0.08,
+        delayChildren: animReduce ? 0 : 0.08,
       },
     },
   };
 
   const item = {
-    hidden: { opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 24 },
+    hidden: { opacity: animReduce ? 1 : 0, y: animReduce ? 0 : 24 },
     show: {
       opacity: 1,
       y: 0,
-      transition: { duration: reduceMotion ? 0 : 0.65, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: animReduce ? 0 : 0.65, ease: [0.22, 1, 0.36, 1] },
     },
   };
 
@@ -93,28 +117,43 @@ export function HomeHero() {
           animate="show"
           variants={container}
         >
+          <motion.div
+            className="mb-6 flex justify-center lg:justify-start"
+            variants={item}
+          >
+            <Image
+              src={logoUrl.trim() || DEFAULT_SITE_LOGO_PATH}
+              alt={websiteName}
+              width={280}
+              height={72}
+              priority
+              unoptimized
+              className="h-14 w-auto max-w-[min(100%,280px)] object-contain object-left sm:h-16 md:h-[4.25rem]"
+            />
+          </motion.div>
           <motion.p
             className="mb-4 text-[11px] font-semibold uppercase tracking-[0.35em] text-[#64748B] sm:text-xs"
             variants={item}
           >
-            HILO Studio
+            {m.eyebrow}
           </motion.p>
           <motion.h1
             className="text-balance font-display text-[2.125rem] font-normal leading-[1.08] tracking-tight text-[#0F172A] sm:text-5xl md:text-6xl lg:text-6xl xl:text-[4.25rem] xl:leading-[1.05]"
             variants={item}
           >
-            Powering the <em className="not-italic text-[#16A34A]">next</em> generation of{" "}
+            {m.headingPrefix}
+            <em className="not-italic text-[#16A34A]">{m.headingEmphasis}</em>
+            {m.headingMiddle}
             <span className="bg-gradient-to-r from-[#0F172A] to-[#334155] bg-clip-text text-transparent">
-              AI &amp; software
-            </span>{" "}
-            brands.
+              {m.headingGradient}
+            </span>
+            {m.headingSuffix}
           </motion.h1>
           <motion.p
             className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[#64748B] md:text-lg lg:mx-0 lg:mt-8"
             variants={item}
           >
-            We build high-performance software solutions. Clean, scalable, and built for growth — strategy,
-            engineering, and launch with one team.
+            {m.subtext}
           </motion.p>
           <motion.div
             className="mt-10 flex flex-wrap items-center justify-center gap-4 lg:justify-start"
@@ -122,14 +161,21 @@ export function HomeHero() {
           >
             <motion.div
               className="inline-flex"
-              whileHover={reduceMotion ? undefined : { scale: 1.02 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+              whileHover={animReduce ? undefined : { scale: 1.02 }}
+              whileTap={animReduce ? undefined : { scale: 0.98 }}
             >
-              <RollingContactCta lineClassName="h-12" className="h-12 px-6 py-0 text-base" />
+              <RollingContactCta
+                variant="consultation"
+                href={m.primaryCtaHref}
+                label="Book a Consultation"
+                duplicateLabel="It's free"
+                lineClassName="h-12"
+                className="h-12 px-6 py-0 text-base"
+              />
             </motion.div>
             <motion.div
-              whileHover={reduceMotion ? undefined : { scale: 1.02 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+              whileHover={animReduce ? undefined : { scale: 1.02 }}
+              whileTap={animReduce ? undefined : { scale: 0.98 }}
               className="inline-flex"
             >
               <Button
@@ -138,7 +184,7 @@ export function HomeHero() {
                 size="lg"
                 className="h-12 rounded-full border-[#E5E7EB] bg-white px-6 text-base font-medium text-[#0F172A] shadow-sm hover:bg-[#F8FAFC]"
               >
-                <Link href="/portfolio">Learn more</Link>
+                <Link href={m.secondaryButtonHref}>{m.secondaryButtonLabel}</Link>
               </Button>
             </motion.div>
           </motion.div>
@@ -147,15 +193,15 @@ export function HomeHero() {
         {/* Right — glass / lagoon focal (scaled up for balance) */}
         <motion.div
           className="relative mx-auto flex w-full max-w-[min(100%,22rem)] shrink-0 items-center justify-center sm:max-w-md lg:mx-0 lg:max-w-none"
-          initial={{ opacity: reduceMotion ? 1 : 0, scale: reduceMotion ? 1 : 0.94 }}
+          initial={{ opacity: animReduce ? 1 : 0, scale: animReduce ? 1 : 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: reduceMotion ? 0 : 0.75, ease: [0.22, 1, 0.36, 1], delay: reduceMotion ? 0 : 0.1 }}
+          transition={{ duration: animReduce ? 0 : 0.75, ease: [0.22, 1, 0.36, 1], delay: animReduce ? 0 : 0.1 }}
           aria-hidden
         >
           <motion.div
             className="relative aspect-square w-full max-w-[min(92vw,20rem)] sm:max-w-[22rem] lg:max-w-[min(100%,28rem)] xl:max-w-[min(100%,30rem)]"
             animate={
-              reduceMotion
+              animReduce
                 ? undefined
                 : {
                     y: [0, -12, 0],
@@ -180,11 +226,10 @@ export function HomeHero() {
       <div className="relative z-10 mt-auto w-full shrink-0 border-t border-emerald-200/25 bg-gradient-to-r from-white/50 via-cyan-50/35 to-emerald-50/45 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-6 lg:px-8">
           <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#64748B] sm:text-xs">
-            / Scroll
+            {m.bottomEyebrow}
           </p>
           <p className="max-w-md text-left text-sm leading-relaxed text-[#64748B] sm:max-w-lg sm:text-right">
-            Community-first delivery, creative product thinking, and cutting-edge engineering for teams that want to
-            ship fast — without cutting corners.
+            {m.bottomText}
           </p>
         </div>
       </div>

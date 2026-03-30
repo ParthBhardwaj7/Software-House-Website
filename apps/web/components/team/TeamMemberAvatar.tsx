@@ -92,7 +92,7 @@ export function TeamMemberAvatar({
             !loaded && "opacity-0",
             loaded && "opacity-100 transition-opacity duration-300"
           )}
-          onLoadingComplete={() => setLoaded(true)}
+          onLoad={() => setLoaded(true)}
           onError={() => {
             setFailed(true);
             setLoaded(true);

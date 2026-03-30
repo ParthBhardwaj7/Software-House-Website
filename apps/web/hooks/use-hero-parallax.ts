@@ -1,13 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import {
-  useMotionValue,
-  useSpring,
-  useTransform,
-  useReducedMotion,
-} from "framer-motion";
+import { useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 
 function clamp01(n: number) {
   return Math.max(-1, Math.min(1, n));
@@ -18,7 +14,7 @@ function clamp01(n: number) {
  * Off when reduced motion, coarse pointer, or &lt; lg.
  */
 export function useHeroParallax() {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const isLg = useMediaQuery("(min-width: 1024px)");
   const isCoarsePointer = useMediaQuery("(pointer: coarse)");
 
@@ -70,6 +66,6 @@ export function useHeroParallax() {
     bgY,
     orbX,
     orbY,
-    reduceMotion: !!reduceMotion,
+    reduceMotion,
   };
 }

@@ -15,8 +15,37 @@ import {
   type FooterConfig,
   type FooterLink,
 } from "@/lib/footer-defaults";
+import { MAX_ABOUT_PAGE_CONTENT } from "@/lib/public-website-settings";
 
 const MAX_LINKS = 12;
+
+type SocialForm = {
+  twitter: string;
+  instagram: string;
+  youtube: string;
+  linkedin: string;
+  telegram: string;
+};
+
+function parseSocialFromApi(raw: string | undefined): SocialForm {
+  const empty: SocialForm = {
+    twitter: "",
+    instagram: "",
+    youtube: "",
+    linkedin: "",
+    telegram: "",
+  };
+  if (!raw?.trim()) return empty;
+  try {
+    const o = JSON.parse(raw) as Record<string, unknown>;
+    (Object.keys(empty) as (keyof SocialForm)[]).forEach((k) => {
+      if (typeof o[k] === "string") empty[k] = o[k];
+    });
+  } catch {
+    /* keep empty */
+  }
+  return empty;
+}
 
 function isInternalFooterHref(href: string): boolean {
   const h = href.trim();
@@ -110,13 +139,31 @@ function LinksBlock({
   );
 }
 
+const jump = [
+  { href: "#site-info", label: "Contact" },
+  { href: "#brand-seo", label: "Brand & SEO" },
+  { href: "#about-page", label: "About page" },
+  { href: "#social-whatsapp", label: "Social & WhatsApp" },
+  { href: "#effects", label: "Effects" },
+  { href: "#footer", label: "Footer" },
+];
+
 export default function AdminSettingsPage() {
   const token = getAccessToken();
   const [form, setForm] = useState({
-    websiteName: "HILO",
+    websiteName: "APN Codix",
     contactEmail: "",
     phoneNumber: "",
+    tagline: "",
+    addressLine: "",
+    logoUrl: "",
+    siteDescription: "",
+    seoTitleSuffix: "",
+    aboutPageContent: "",
+    enableBoatCursor: false,
+    whatsappNumber: "",
   });
+  const [social, setSocial] = useState<SocialForm>(parseSocialFromApi(undefined));
   const [footer, setFooter] = useState<FooterConfig>(() => cloneFooter(DEFAULT_FOOTER_CONFIG));
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -130,13 +177,31 @@ export default function AdminSettingsPage() {
         contactEmail?: string;
         phoneNumber?: string;
         footerConfig?: string;
+        tagline?: string;
+        addressLine?: string;
+        logoUrl?: string;
+        siteDescription?: string;
+        seoTitleSuffix?: string;
+        aboutPageContent?: string;
+        enableBoatCursor?: string;
+        whatsappNumber?: string;
+        socialLinks?: string;
       }>("/admin/settings", token)
       .then((r) => {
         setForm({
-          websiteName: r.websiteName || "HILO",
+          websiteName: r.websiteName || "APN Codix",
           contactEmail: r.contactEmail || "",
           phoneNumber: r.phoneNumber || "",
+          tagline: r.tagline || "",
+          addressLine: r.addressLine || "",
+          logoUrl: r.logoUrl || "",
+          siteDescription: r.siteDescription || "",
+          seoTitleSuffix: r.seoTitleSuffix || "",
+          aboutPageContent: r.aboutPageContent || "",
+          enableBoatCursor: r.enableBoatCursor === "true" || r.enableBoatCursor === "1" || r.enableBoatCursor === "yes",
+          whatsappNumber: r.whatsappNumber || "",
         });
+        setSocial(parseSocialFromApi(r.socialLinks));
         setFooter(cloneFooter(mergeFooterConfig(typeof r.footerConfig === "string" ? r.footerConfig : null)));
       })
       .catch(() => {});
@@ -152,7 +217,18 @@ export default function AdminSettingsPage() {
       await api.put(
         "/admin/settings",
         {
-          ...form,
+          websiteName: form.websiteName,
+          contactEmail: form.contactEmail,
+          phoneNumber: form.phoneNumber,
+          tagline: form.tagline,
+          addressLine: form.addressLine,
+          logoUrl: form.logoUrl,
+          siteDescription: form.siteDescription,
+          seoTitleSuffix: form.seoTitleSuffix,
+          aboutPageContent: form.aboutPageContent,
+          enableBoatCursor: form.enableBoatCursor ? "true" : "false",
+          whatsappNumber: form.whatsappNumber,
+          socialLinks: JSON.stringify(social),
           footerConfig: JSON.stringify(footer),
         },
         token
@@ -166,58 +242,202 @@ export default function AdminSettingsPage() {
   }
 
   return (
-    <div className="space-y-10">
-      <h1 className="text-2xl font-bold text-[#0F172A]">Website Settings</h1>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-2xl font-bold text-[#0F172A]">Website Settings</h1>
+        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+          One place to control branding, SEO defaults, the About page, social links, optional effects, and the footer.
+          Save once at the bottom — all sections update together.
+        </p>
+        <nav className="mt-4 flex flex-wrap gap-2 text-sm" aria-label="On this page">
+          {jump.map((j) => (
+            <a
+              key={j.href}
+              href={j.href}
+              className="rounded-full border border-[#E5E7EB] bg-white px-3 py-1 text-[#64748B] transition hover:border-[#22C55E] hover:text-[#0F172A]"
+            >
+              {j.label}
+            </a>
+          ))}
+        </nav>
+      </div>
 
-      <Card className="max-w-xl border-[#E5E7EB]">
-        <CardHeader>
-          <CardTitle className="text-[#0F172A]">Site Info</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
+      <Card className="max-w-3xl border-[#E5E7EB]">
+        <CardContent className="pt-6">
+          <form onSubmit={handleSubmit} className="space-y-10">
+            <section id="site-info" className="scroll-mt-8 space-y-4">
+              <h2 className="text-lg font-semibold text-[#0F172A]">Site & contact</h2>
               <div>
-                <Label htmlFor="websiteName" className="text-[#0F172A]">
-                  Website Name
-                </Label>
+                <Label htmlFor="websiteName">Website name</Label>
                 <Input
                   id="websiteName"
                   value={form.websiteName}
                   onChange={(e) => setForm((f) => ({ ...f, websiteName: e.target.value }))}
-                  className="border-[#E5E7EB]"
+                  className="mt-1 border-[#E5E7EB]"
                 />
+                <p className="mt-1 text-xs text-muted-foreground">Shown in header, footer, browser tab, and structured data.</p>
               </div>
               <div>
-                <Label htmlFor="contactEmail" className="text-[#0F172A]">
-                  Contact Email
-                </Label>
+                <Label htmlFor="contactEmail">Contact email</Label>
                 <Input
                   id="contactEmail"
                   type="email"
                   value={form.contactEmail}
                   onChange={(e) => setForm((f) => ({ ...f, contactEmail: e.target.value }))}
-                  className="border-[#E5E7EB]"
+                  className="mt-1 border-[#E5E7EB]"
                 />
               </div>
               <div>
-                <Label htmlFor="phoneNumber" className="text-[#0F172A]">
-                  Phone Number
-                </Label>
+                <Label htmlFor="phoneNumber">Phone number</Label>
                 <Input
                   id="phoneNumber"
                   value={form.phoneNumber}
                   onChange={(e) => setForm((f) => ({ ...f, phoneNumber: e.target.value }))}
-                  className="border-[#E5E7EB]"
+                  className="mt-1 border-[#E5E7EB]"
                 />
               </div>
-            </div>
+            </section>
 
-            <Card className="border-[#E5E7EB] bg-[#F8FAFC]">
+            <section id="brand-seo" className="scroll-mt-8 space-y-4 border-t border-[#E5E7EB] pt-8">
+              <h2 className="text-lg font-semibold text-[#0F172A]">Brand & SEO</h2>
+              <div>
+                <Label htmlFor="tagline">Short tagline</Label>
+                <Input
+                  id="tagline"
+                  value={form.tagline}
+                  onChange={(e) => setForm((f) => ({ ...f, tagline: e.target.value }))}
+                  className="mt-1 border-[#E5E7EB]"
+                  placeholder="e.g. Modern software for ambitious teams"
+                />
+              </div>
+              <div>
+                <Label htmlFor="addressLine">Address / location line</Label>
+                <Input
+                  id="addressLine"
+                  value={form.addressLine}
+                  onChange={(e) => setForm((f) => ({ ...f, addressLine: e.target.value }))}
+                  className="mt-1 border-[#E5E7EB]"
+                  placeholder="City, country — shown in mobile menu"
+                />
+              </div>
+              <div>
+                <Label htmlFor="logoUrl">Logo image URL</Label>
+                <Input
+                  id="logoUrl"
+                  value={form.logoUrl}
+                  onChange={(e) => setForm((f) => ({ ...f, logoUrl: e.target.value }))}
+                  className="mt-1 border-[#E5E7EB]"
+                  placeholder="https://… (PNG/SVG/JPG, https only)"
+                />
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Leave empty to use the default wordmark. For a custom logo, use a wide transparent PNG or SVG (~480×120px
+                  source, or 960×240@2x). The header shows ~40px height; the home hero ~56–68px.
+                </p>
+              </div>
+              <div>
+                <Label htmlFor="seoTitleSuffix">Browser tab suffix</Label>
+                <Input
+                  id="seoTitleSuffix"
+                  value={form.seoTitleSuffix}
+                  onChange={(e) => setForm((f) => ({ ...f, seoTitleSuffix: e.target.value }))}
+                  className="mt-1 border-[#E5E7EB]"
+                  placeholder="e.g. Modern Software Agency"
+                />
+                <p className="mt-1 text-xs text-muted-foreground">Home title becomes: Website name | this suffix.</p>
+              </div>
+              <div>
+                <Label htmlFor="siteDescription">Meta description (search & social)</Label>
+                <Textarea
+                  id="siteDescription"
+                  value={form.siteDescription}
+                  onChange={(e) => setForm((f) => ({ ...f, siteDescription: e.target.value.slice(0, 500) }))}
+                  className="mt-1 border-[#E5E7EB]"
+                  rows={3}
+                  placeholder="One or two sentences about what you do."
+                />
+              </div>
+            </section>
+
+            <section id="about-page" className="scroll-mt-8 space-y-4 border-t border-[#E5E7EB] pt-8">
+              <h2 className="text-lg font-semibold text-[#0F172A]">About page (/about)</h2>
+              <p className="text-sm text-muted-foreground">
+                Plain text only. Separate paragraphs with a blank line. This replaces the placeholder on the public About
+                page.
+              </p>
+              <div>
+                <Label htmlFor="aboutPageContent">About content</Label>
+                <Textarea
+                  id="aboutPageContent"
+                  value={form.aboutPageContent}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, aboutPageContent: e.target.value.slice(0, MAX_ABOUT_PAGE_CONTENT) }))
+                  }
+                  className="mt-1 min-h-[200px] border-[#E5E7EB] font-mono text-sm"
+                  rows={12}
+                  placeholder={"Who you are.\n\nHow you work with clients.\n\nWhere you’re based."}
+                />
+              </div>
+            </section>
+
+            <section id="social-whatsapp" className="scroll-mt-8 space-y-4 border-t border-[#E5E7EB] pt-8">
+              <h2 className="text-lg font-semibold text-[#0F172A]">Social & WhatsApp</h2>
+              <p className="text-sm text-muted-foreground">
+                Full profile URLs (https). Leave blank to hide an icon. WhatsApp uses digits only for the floating button;
+                leave empty to hide the button.
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {(Object.keys(social) as (keyof SocialForm)[]).map((key) => (
+                  <div key={key}>
+                    <Label htmlFor={`soc-${key}`} className="capitalize">
+                      {key}
+                    </Label>
+                    <Input
+                      id={`soc-${key}`}
+                      value={social[key]}
+                      onChange={(e) => setSocial((s) => ({ ...s, [key]: e.target.value }))}
+                      className="mt-1 border-[#E5E7EB]"
+                      placeholder="https://…"
+                    />
+                  </div>
+                ))}
+              </div>
+              <div>
+                <Label htmlFor="whatsappNumber">WhatsApp number</Label>
+                <Input
+                  id="whatsappNumber"
+                  value={form.whatsappNumber}
+                  onChange={(e) => setForm((f) => ({ ...f, whatsappNumber: e.target.value }))}
+                  className="mt-1 border-[#E5E7EB]"
+                  placeholder="+91… or country code + number"
+                />
+              </div>
+            </section>
+
+            <section id="effects" className="scroll-mt-8 space-y-4 border-t border-[#E5E7EB] pt-8">
+              <h2 className="text-lg font-semibold text-[#0F172A]">Effects</h2>
+              <div className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  id="enableBoatCursor"
+                  checked={form.enableBoatCursor}
+                  onChange={(e) => setForm((f) => ({ ...f, enableBoatCursor: e.target.checked }))}
+                  className="mt-1 h-4 w-4 rounded border-[#E5E7EB] text-[#22C55E] focus:ring-[#22C55E]"
+                />
+                <div>
+                  <Label htmlFor="enableBoatCursor" className="cursor-pointer font-normal text-[#0F172A]">
+                    Enable boat cursor animation
+                  </Label>
+                  <p className="text-sm text-muted-foreground">Turn off for a more formal, corporate feel.</p>
+                </div>
+              </div>
+            </section>
+
+            <Card id="footer" className="scroll-mt-8 border-[#E5E7EB] bg-[#F8FAFC]">
               <CardHeader>
                 <CardTitle className="text-lg text-[#0F172A]">Footer</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Controls footer columns, newsletter copy, office hours, and copyright name. Link URLs are validated on save;
-                  internal links can include optional page text (careers, refund policy, privacy copy, etc.).
+                  Columns, newsletter copy, office hours, copyright. Internal links can carry optional page text (privacy,
+                  terms, etc.).
                 </p>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -270,13 +490,21 @@ export default function AdminSettingsPage() {
                   </div>
                 </div>
 
-                <LinksBlock label="Quick links" links={footer.quickLinks} onChange={(quickLinks) => setFooter((f) => ({ ...f, quickLinks }))} />
+                <LinksBlock
+                  label="Quick links"
+                  links={footer.quickLinks}
+                  onChange={(quickLinks) => setFooter((f) => ({ ...f, quickLinks }))}
+                />
                 <LinksBlock
                   label="Service links"
                   links={footer.serviceLinks}
                   onChange={(serviceLinks) => setFooter((f) => ({ ...f, serviceLinks }))}
                 />
-                <LinksBlock label="Information links" links={footer.infoLinks} onChange={(infoLinks) => setFooter((f) => ({ ...f, infoLinks }))} />
+                <LinksBlock
+                  label="Information links"
+                  links={footer.infoLinks}
+                  onChange={(infoLinks) => setFooter((f) => ({ ...f, infoLinks }))}
+                />
 
                 <div>
                   <Label htmlFor="nlH">Newsletter section title</Label>
@@ -311,8 +539,8 @@ export default function AdminSettingsPage() {
 
             {saved && (
               <p className="text-sm text-[#22C55E]">
-                Saved. Refresh the site to see footer changes; newsletter signups appear in Leads with source
-                &quot;newsletter&quot;.
+                Saved. Refresh the public site to see changes. Newsletter signups still appear in Leads (source
+                &quot;newsletter&quot;).
               </p>
             )}
             {error && <p className="text-sm text-[#EF4444]">{error}</p>}

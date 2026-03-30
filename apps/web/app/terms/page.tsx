@@ -7,7 +7,7 @@ import { getSiteUrlString } from "@/lib/site-url";
 const PATH = "/terms";
 const FALLBACK_TITLE = "Terms & Conditions";
 const FALLBACK_DESC =
-  "Terms of use for HILO’s website and services — please read before engaging or submitting inquiries.";
+  "Terms of use for APN Codix’s website and services — please read before engaging or submitting inquiries.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getPublicFooterConfig();

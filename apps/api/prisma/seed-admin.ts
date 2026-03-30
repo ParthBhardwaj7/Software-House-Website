@@ -17,9 +17,21 @@ async function main() {
 
   // Seed default website settings
   const settings = [
-    { key: 'websiteName', value: 'HILO' },
-    { key: 'contactEmail', value: 'info@hilo.com' },
+    { key: 'websiteName', value: 'APN Codix' },
+    { key: 'logoUrl', value: '/apn-codix-logo.svg' },
+    { key: 'contactEmail', value: 'info@apncodix.com' },
     { key: 'phoneNumber', value: '32423423423' },
+    { key: 'enableBoatCursor', value: 'false' },
+    {
+      key: 'socialLinks',
+      value: JSON.stringify({
+        twitter: '',
+        instagram: '',
+        youtube: '',
+        linkedin: '',
+        telegram: '',
+      }),
+    },
   ];
   for (const s of settings) {
     await prisma.settings.upsert({

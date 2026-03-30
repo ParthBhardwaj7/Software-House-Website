@@ -92,6 +92,34 @@ model Settings {
   value String @db.Text
 }
 
+model Faq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String   @db.Text
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+/// Razorpay payment rows from webhooks (e.g. payment.captured) for reconciliation and support.
+model RazorpayPayment {
+  id                String   @id @default(cuid())
+  razorpayPaymentId String   @unique
+  razorpayOrderId   String?
+  amountPaise       Int
+  currency          String   @default("INR")
+  status            String
+  eventType         String
+  customerEmail     String?
+  customerContact   String?
+  method            String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  rawEvent          Json?
+
+  @@index([razorpayOrderId])
+  @@index([createdAt])
+}
+
 /// CMS-style marketing pages; public URL /site/{slug}
 model CustomPage {
   id              String   @id @default(cuid())

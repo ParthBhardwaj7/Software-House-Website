@@ -12,6 +12,17 @@ export class SettingsController {
       'contactEmail',
       'phoneNumber',
       'footerConfig',
+      'tagline',
+      'addressLine',
+      'logoUrl',
+      'siteDescription',
+      'seoTitleSuffix',
+      'aboutPageContent',
+      'enableBoatCursor',
+      'whatsappNumber',
+      'socialLinks',
+      'marketingHomeJson',
+      'marketingDeliveryJson',
     ]);
   }
 }
