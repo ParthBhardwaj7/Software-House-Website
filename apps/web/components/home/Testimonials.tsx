@@ -52,7 +52,7 @@ export function Testimonials({ variant = "default", tone = "light" }: Testimonia
       <div
         className={cn(
           "mx-auto w-full",
-          isStacked ? "" : "container max-w-7xl px-4 sm:px-6 lg:px-8"
+          isStacked ? "" : "container max-w-7xl px-5 sm:px-6 lg:px-8"
         )}
       >
         <div className={cn("text-center", isStacked ? "mb-5 md:mb-6" : "mb-10 md:mb-14")}>

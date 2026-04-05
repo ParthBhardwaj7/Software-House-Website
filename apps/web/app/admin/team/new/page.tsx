@@ -59,7 +59,7 @@ export default function NewTeamMemberPage() {
       },
       token
     );
-    router.push("/admin/team");
+    router.push("/anish/team");
     router.refresh();
   }
 
@@ -68,7 +68,7 @@ export default function NewTeamMemberPage() {
   return (
     <div>
       <Link
-        href="/admin/team"
+        href="/anish/team"
         className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground"
       >
         ← Back to Team

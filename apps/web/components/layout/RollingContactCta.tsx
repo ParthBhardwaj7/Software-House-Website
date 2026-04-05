@@ -11,6 +11,9 @@ type Props = {
   lineClassName?: string;
   label?: string;
   duplicateLabel?: string;
+  /** Shown below `min-[401px]` when set — keeps nav usable on very narrow phones */
+  compactLabel?: string;
+  compactDuplicate?: string;
   /** `navbar` = white pill / dark text (legacy dark glass bar) */
   /** `consultation` = green pill, sentence case, roll to duplicate (e.g. It's free) */
   variant?: "default" | "navbar" | "consultation";
@@ -23,10 +26,13 @@ export function RollingContactCta({
   lineClassName = "h-10",
   label = "Get in Touch",
   duplicateLabel = "Get in Touch",
+  compactLabel,
+  compactDuplicate,
   variant = "default",
 }: Props) {
   const isNav = variant === "navbar";
   const isConsultation = variant === "consultation";
+  const useCompact = Boolean(compactLabel?.trim() && compactDuplicate?.trim());
 
   return (
     <Link
@@ -53,7 +59,14 @@ export function RollingContactCta({
               isConsultation && "leading-none"
             )}
           >
-            {label}
+            {useCompact ? (
+              <>
+                <span className="hidden min-[401px]:inline">{label}</span>
+                <span className="inline min-[401px]:hidden">{compactLabel}</span>
+              </>
+            ) : (
+              label
+            )}
           </span>
           <span
             className={cn(
@@ -63,7 +76,14 @@ export function RollingContactCta({
               isNav ? "text-[#0F172A]" : "text-white"
             )}
           >
-            {duplicateLabel}
+            {useCompact ? (
+              <>
+                <span className="hidden min-[401px]:inline">{duplicateLabel}</span>
+                <span className="inline min-[401px]:hidden">{compactDuplicate}</span>
+              </>
+            ) : (
+              duplicateLabel
+            )}
           </span>
         </span>
       </span>

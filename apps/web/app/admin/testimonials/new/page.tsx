@@ -29,13 +29,13 @@ export default function NewTestimonialPage() {
       company: form.company || undefined,
       rating: form.rating || undefined,
     }, token);
-    router.push("/admin/testimonials");
+    router.push("/anish/testimonials");
     router.refresh();
   }
 
   return (
     <div>
-      <Link href="/admin/testimonials" className="text-sm text-muted-foreground hover:text-foreground mb-6 inline-block">
+      <Link href="/anish/testimonials" className="text-sm text-muted-foreground hover:text-foreground mb-6 inline-block">
         ← Back to Testimonials
       </Link>
       <h1 className="text-2xl font-bold mb-8">New Testimonial</h1>

@@ -25,13 +25,13 @@ export default function NewBlogPage() {
     e.preventDefault();
     if (!token) return;
     await api.post("/admin/blogs", form, token);
-    router.push("/admin/blogs");
+    router.push("/anish/blogs");
     router.refresh();
   }
 
   return (
     <div>
-      <Link href="/admin/blogs" className="text-sm text-muted-foreground hover:text-foreground mb-6 inline-block">
+      <Link href="/anish/blogs" className="text-sm text-muted-foreground hover:text-foreground mb-6 inline-block">
         ← Back to Blogs
       </Link>
       <h1 className="text-2xl font-bold mb-8">New Blog Post</h1>

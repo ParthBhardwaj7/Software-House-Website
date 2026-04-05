@@ -2,6 +2,15 @@ import { clearTokens } from "./auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+/** Nest ValidationPipe returns `message` as string or string[] */
+function formatApiErrorMessage(body: unknown): string {
+  if (!body || typeof body !== "object") return "";
+  const m = (body as { message?: unknown }).message;
+  if (typeof m === "string") return m;
+  if (Array.isArray(m) && m.every((x) => typeof x === "string")) return m.join(" ");
+  return "";
+}
+
 function getBaseUrl() {
   if (typeof window !== "undefined") return "";
   return process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
@@ -29,12 +38,18 @@ async function fetchAPI<T>(
   });
 
   if (!res.ok) {
-    if (res.status === 401 && typeof window !== "undefined") {
+    /** Don’t redirect on failed sign-in — user stays on login and sees the error */
+    if (
+      res.status === 401 &&
+      typeof window !== "undefined" &&
+      !endpoint.includes("/auth/login")
+    ) {
       clearTokens();
-      window.location.href = "/admin/login";
+      window.location.href = "/anish/login";
     }
     const err = await res.json().catch(() => ({ message: res.statusText }));
-    throw new Error(err.message || `API error ${res.status}`);
+    const message = formatApiErrorMessage(err);
+    throw new Error(message || `API error ${res.status}`);
   }
   return res.json();
 }

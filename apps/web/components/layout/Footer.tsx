@@ -106,7 +106,7 @@ export function Footer() {
         aria-hidden
       />
       <div className="relative py-8 transition-opacity duration-500">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-6 px-4 sm:flex-row sm:gap-12">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-6 px-5 sm:flex-row sm:gap-12">
           <FooterContact
             variant="strip"
             contactEmail={data.contactEmail}
@@ -116,7 +116,7 @@ export function Footer() {
         </div>
       </div>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#020617]/30" />
-      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-3">
             <div className="mb-4 flex flex-wrap items-center gap-3">

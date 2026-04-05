@@ -11,18 +11,23 @@ import { cn } from "@/lib/utils";
 import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
 import type { MarketingHomeContent } from "@/lib/marketing-defaults";
 import { DEFAULT_MARKETING_HOME } from "@/lib/marketing-defaults";
+import { parseSocialLinksFromRaw, type SocialLinks } from "@/lib/public-website-settings";
+import { HeroSocialRail } from "./HeroSocialRail";
 
 type HomeHeroProps = {
   content?: MarketingHomeContent;
   /** Merged site logo (falls back to bundled wordmark). */
   logoUrl?: string;
   websiteName?: string;
+  /** Profile URLs from admin; empty links are hidden in the rail. */
+  socialLinks?: SocialLinks;
 };
 
 export function HomeHero({
   content = DEFAULT_MARKETING_HOME,
   logoUrl = DEFAULT_SITE_LOGO_PATH,
   websiteName = "APN Codix",
+  socialLinks = parseSocialLinksFromRaw(""),
 }: HomeHeroProps) {
   const m = content;
   const { enabled: parallaxEnabled, bgX, bgY, orbX, orbY, reduceMotion } = useHeroParallax();
@@ -110,7 +115,7 @@ export function HomeHero({
       />
 
       {/* Main hero: flex-1 + justify-center fills viewport; grid centers on large screens */}
-      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col justify-center gap-12 px-4 pt-16 sm:gap-14 sm:px-6 sm:pt-20 lg:grid lg:h-full lg:min-h-0 lg:grid-cols-2 lg:items-center lg:gap-x-20 lg:gap-y-10 lg:px-8 lg:py-10 lg:pt-24">
+      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col justify-center gap-12 px-5 pt-16 sm:gap-14 sm:px-6 sm:pt-20 lg:grid lg:h-full lg:min-h-0 lg:grid-cols-2 lg:items-center lg:gap-x-20 lg:gap-y-10 lg:px-8 lg:py-10 lg:pt-24">
         <motion.div
           className="flex min-w-0 flex-col justify-center text-center lg:text-left"
           initial="hidden"
@@ -118,7 +123,7 @@ export function HomeHero({
           variants={container}
         >
           <motion.div
-            className="mb-6 flex justify-center lg:justify-start"
+            className="mb-6 flex w-full justify-center lg:justify-start"
             variants={item}
           >
             <Image
@@ -128,7 +133,7 @@ export function HomeHero({
               height={72}
               priority
               unoptimized
-              className="h-14 w-auto max-w-[min(100%,280px)] object-contain object-left sm:h-16 md:h-[4.25rem]"
+              className="h-14 w-auto max-w-[min(100%,280px)] object-contain object-center lg:object-left sm:h-16 md:h-[4.25rem]"
             />
           </motion.div>
           <motion.p
@@ -223,12 +228,14 @@ export function HomeHero({
         </motion.div>
       </div>
 
+      <HeroSocialRail links={socialLinks} />
+
       <div className="relative z-10 mt-auto w-full shrink-0 border-t border-emerald-200/25 bg-gradient-to-r from-white/50 via-cyan-50/35 to-emerald-50/45 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-5 py-5 text-center sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-6 sm:text-left lg:px-8">
           <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#64748B] sm:text-xs">
             {m.bottomEyebrow}
           </p>
-          <p className="max-w-md text-left text-sm leading-relaxed text-[#64748B] sm:max-w-lg sm:text-right">
+          <p className="mx-auto max-w-md text-sm leading-relaxed text-[#64748B] sm:mx-0 sm:max-w-lg sm:text-right">
             {m.bottomText}
           </p>
         </div>

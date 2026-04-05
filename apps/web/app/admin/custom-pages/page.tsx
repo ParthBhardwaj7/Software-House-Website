@@ -39,7 +39,7 @@ export default function AdminCustomPagesPage() {
           </p>
         </div>
         <Button asChild>
-          <Link href="/admin/custom-pages/new">New page</Link>
+          <Link href="/anish/custom-pages/new">New page</Link>
         </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -72,12 +72,12 @@ export default function AdminCustomPagesPage() {
                 </Button>
               ) : null}
               <Button variant="outline" size="sm" asChild>
-                <Link href={`/admin/custom-pages/${row.id}/preview`} target="_blank" rel="noreferrer">
+                <Link href={`/anish/custom-pages/${row.id}/preview`} target="_blank" rel="noreferrer">
                   Preview
                 </Link>
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <Link href={`/admin/custom-pages/${row.id}`}>Edit</Link>
+                <Link href={`/anish/custom-pages/${row.id}`}>Edit</Link>
               </Button>
               <Button
                 variant="destructive"

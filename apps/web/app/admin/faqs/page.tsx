@@ -31,7 +31,7 @@ export default function AdminFaqsPage() {
           <p className="mt-1 text-sm text-muted-foreground">Shown on the public /faqs page (order = sort order, then date).</p>
         </div>
         <Button asChild className="bg-[#22C55E] hover:bg-[#16A34A]">
-          <Link href="/admin/faqs/new">New FAQ</Link>
+          <Link href="/anish/faqs/new">New FAQ</Link>
         </Button>
       </div>
       <div className="grid gap-4">
@@ -48,7 +48,7 @@ export default function AdminFaqsPage() {
               </div>
               <div className="flex shrink-0 gap-2">
                 <Button variant="outline" size="sm" asChild>
-                  <Link href={`/admin/faqs/${item.id}`}>Edit</Link>
+                  <Link href={`/anish/faqs/${item.id}`}>Edit</Link>
                 </Button>
                 <Button
                   variant="destructive"

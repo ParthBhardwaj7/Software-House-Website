@@ -25,20 +25,20 @@ export default function EditBlogPage() {
 
   useEffect(() => {
     if (!token) return;
-    api.get<typeof form>(`/admin/blogs/${id}`, token).then(setForm).catch(() => router.push("/admin/blogs"));
+    api.get<typeof form>(`/admin/blogs/${id}`, token).then(setForm).catch(() => router.push("/anish/blogs"));
   }, [id, token, router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!token) return;
     await api.put(`/admin/blogs/${id}`, form, token);
-    router.push("/admin/blogs");
+    router.push("/anish/blogs");
     router.refresh();
   }
 
   return (
     <div>
-      <Link href="/admin/blogs" className="text-sm text-muted-foreground hover:text-foreground mb-6 inline-block">
+      <Link href="/anish/blogs" className="text-sm text-muted-foreground hover:text-foreground mb-6 inline-block">
         ← Back to Blogs
       </Link>
       <h1 className="text-2xl font-bold mb-8">Edit Blog Post</h1>

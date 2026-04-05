@@ -42,6 +42,8 @@ npm run seed:admin
 
 Admin: `admin@hilo.com` / `strongpassword123`
 
+If login always fails, your database may have been seeded with an older default (`admin@softwarehouse.com` / `admin123`). Run `npm run db:seed` or `npm run seed:admin` from `apps/api` again to reset the admin password, then use the credentials above.
+
 ### 3. Frontend env
 
 Copy `apps/web/.env.local.example` to `apps/web/.env.local` and set:

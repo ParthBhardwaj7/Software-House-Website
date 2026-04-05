@@ -25,10 +25,15 @@ export default function AdminLoginPage() {
         password,
       });
       setTokens(res.accessToken, res.refreshToken);
-      router.push("/admin");
+      router.push("/anish");
       router.refresh();
     } catch (err) {
-      setError("Invalid email or password");
+      const msg = err instanceof Error ? err.message.trim() : "";
+      setError(
+        msg && !/^API error \d+$/.test(msg)
+          ? msg
+          : "Invalid email or password. Use admin@hilo.com after seeding (see README)."
+      );
     } finally {
       setLoading(false);
     }

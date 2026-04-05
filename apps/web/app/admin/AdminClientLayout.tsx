@@ -17,7 +17,7 @@ function NavLabel({ children }: { children: React.ReactNode }) {
 
 function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
   const pathname = usePathname();
-  const active = pathname === href || (href !== "/admin" && pathname.startsWith(href + "/"));
+  const active = pathname === href || (href !== "/anish" && pathname.startsWith(href + "/"));
   return (
     <Link
       href={href}
@@ -34,13 +34,13 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
 export default function AdminClientLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const isLoginPage = pathname === "/admin/login";
+  const isLoginPage = pathname === "/anish/login";
   const [authGate, setAuthGate] = useState(false);
 
   useEffect(() => {
     setAuthGate(true);
     if (!isLoginPage && !isAuthenticated()) {
-      router.replace("/admin/login");
+      router.replace("/anish/login");
     }
   }, [isLoginPage, router]);
 
@@ -61,23 +61,23 @@ export default function AdminClientLayout({ children }: { children: React.ReactN
       <aside className="fixed bottom-0 left-0 top-14 z-40 w-60 overflow-y-auto border-r border-[#E5E7EB] bg-[#FFFFFF] p-3 sm:top-16">
         <nav className="pb-8">
           <NavLabel>Overview</NavLabel>
-          <NavLink href="/admin">Dashboard</NavLink>
+          <NavLink href="/anish">Dashboard</NavLink>
 
           <NavLabel>Site &amp; pages</NavLabel>
-          <NavLink href="/admin/settings">Website settings</NavLink>
-          <NavLink href="/admin/marketing">Home &amp; delivery</NavLink>
-          <NavLink href="/admin/faqs">FAQs</NavLink>
+          <NavLink href="/anish/settings">Website settings</NavLink>
+          <NavLink href="/anish/marketing">Home &amp; delivery</NavLink>
+          <NavLink href="/anish/faqs">FAQs</NavLink>
 
           <NavLabel>Content</NavLabel>
-          <NavLink href="/admin/projects">Portfolio</NavLink>
-          <NavLink href="/admin/services">Services</NavLink>
-          <NavLink href="/admin/testimonials">Testimonials</NavLink>
-          <NavLink href="/admin/team">Team</NavLink>
-          <NavLink href="/admin/blogs">Blog posts</NavLink>
-          <NavLink href="/admin/custom-pages">Custom pages</NavLink>
+          <NavLink href="/anish/projects">Portfolio</NavLink>
+          <NavLink href="/anish/services">Services</NavLink>
+          <NavLink href="/anish/testimonials">Testimonials</NavLink>
+          <NavLink href="/anish/team">Team</NavLink>
+          <NavLink href="/anish/blogs">Blog posts</NavLink>
+          <NavLink href="/anish/custom-pages">Custom pages</NavLink>
 
           <NavLabel>Inbox</NavLabel>
-          <NavLink href="/admin/leads">Leads</NavLink>
+          <NavLink href="/anish/leads">Leads</NavLink>
         </nav>
         <div className="sticky bottom-0 border-t border-[#E5E7EB] bg-white pt-3">
           <Button
@@ -87,7 +87,7 @@ export default function AdminClientLayout({ children }: { children: React.ReactN
             onClick={() => {
               if (typeof window !== "undefined") {
                 localStorage.clear();
-                router.push("/admin/login");
+                router.push("/anish/login");
                 router.refresh();
               }
             }}

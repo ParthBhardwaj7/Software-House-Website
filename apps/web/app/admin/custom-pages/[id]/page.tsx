@@ -68,7 +68,7 @@ export default function EditCustomPagePage() {
         });
         setBlocks(parseBlocks(p.blocks));
       })
-      .catch(() => router.push("/admin/custom-pages"));
+      .catch(() => router.push("/anish/custom-pages"));
   }, [id, token, router]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -93,7 +93,7 @@ export default function EditCustomPagePage() {
         },
         token
       );
-      router.push("/admin/custom-pages");
+      router.push("/anish/custom-pages");
       router.refresh();
     } catch (ex: unknown) {
       setErr(ex instanceof Error ? ex.message : "Save failed");
@@ -102,7 +102,7 @@ export default function EditCustomPagePage() {
 
   return (
     <div>
-      <Link href="/admin/custom-pages" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
+      <Link href="/anish/custom-pages" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
         ← Back to custom pages
       </Link>
       <h1 className="mb-8 text-2xl font-bold">Edit custom page</h1>
@@ -190,7 +190,7 @@ export default function EditCustomPagePage() {
               Published
             </label>
             <Button type="button" variant="outline" size="sm" asChild>
-              <Link href={`/admin/custom-pages/${id}/preview`} target="_blank" rel="noreferrer">
+              <Link href={`/anish/custom-pages/${id}/preview`} target="_blank" rel="noreferrer">
                 Preview
               </Link>
             </Button>

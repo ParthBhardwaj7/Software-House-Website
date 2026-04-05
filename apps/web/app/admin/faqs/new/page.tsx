@@ -27,13 +27,13 @@ export default function NewFaqPage() {
       },
       token
     );
-    router.push("/admin/faqs");
+    router.push("/anish/faqs");
     router.refresh();
   }
 
   return (
     <div>
-      <Link href="/admin/faqs" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
+      <Link href="/anish/faqs" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
         ← Back to FAQs
       </Link>
       <h1 className="mb-8 text-2xl font-bold text-[#0F172A]">New FAQ</h1>

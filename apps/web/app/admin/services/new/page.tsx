@@ -32,13 +32,13 @@ export default function NewServicePage() {
       solution: form.solution || undefined,
       outcome: form.outcome || undefined,
     }, token);
-    router.push("/admin/services");
+    router.push("/anish/services");
     router.refresh();
   }
 
   return (
     <div>
-      <Link href="/admin/services" className="text-sm text-primary hover:underline mb-6 inline-block">
+      <Link href="/anish/services" className="text-sm text-primary hover:underline mb-6 inline-block">
         ← Back to Services
       </Link>
       <h1 className="text-2xl font-bold mb-8">Add Service</h1>

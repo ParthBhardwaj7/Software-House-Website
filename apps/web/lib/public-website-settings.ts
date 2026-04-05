@@ -20,6 +20,8 @@ export type SocialLinks = {
   instagram: string;
   youtube: string;
   linkedin: string;
+  facebook: string;
+  github: string;
   telegram: string;
 };
 
@@ -46,6 +48,8 @@ const EMPTY_SOCIAL: SocialLinks = {
   instagram: "",
   youtube: "",
   linkedin: "",
+  facebook: "",
+  github: "",
   telegram: "",
 };
 
@@ -60,6 +64,8 @@ export function parseSocialLinksFromRaw(raw: unknown): SocialLinks {
       instagram: pick("instagram"),
       youtube: pick("youtube"),
       linkedin: pick("linkedin"),
+      facebook: pick("facebook"),
+      github: pick("github"),
       telegram: pick("telegram"),
     };
   } catch {

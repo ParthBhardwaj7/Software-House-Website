@@ -29,6 +29,8 @@ async function main() {
         instagram: '',
         youtube: '',
         linkedin: '',
+        facebook: '',
+        github: '',
         telegram: '',
       }),
     },

@@ -4,7 +4,7 @@ import { DUMMY_SERVICES } from "@/lib/dummy-data";
 export function ServicesPreview() {
   return (
     <section className="py-16 md:py-24 bg-[#FFFFFF]">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <div className="mb-12 text-center md:mb-16">
           <h2 className="font-display text-3xl font-normal tracking-tight text-[#0F172A] md:text-4xl">Services</h2>
           <p className="mx-auto mt-4 max-w-2xl text-[#64748B]">

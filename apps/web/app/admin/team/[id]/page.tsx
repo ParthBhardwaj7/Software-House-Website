@@ -60,7 +60,7 @@ export default function EditTeamMemberPage() {
           githubUrl: p.githubUrl || "",
         })
       )
-      .catch(() => router.push("/admin/team"));
+      .catch(() => router.push("/anish/team"));
   }, [id, token, router]);
 
   function validate(): boolean {
@@ -90,7 +90,7 @@ export default function EditTeamMemberPage() {
       },
       token
     );
-    router.push("/admin/team");
+    router.push("/anish/team");
     router.refresh();
   }
 
@@ -99,7 +99,7 @@ export default function EditTeamMemberPage() {
   return (
     <div>
       <Link
-        href="/admin/team"
+        href="/anish/team"
         className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground"
       >
         ← Back to Team

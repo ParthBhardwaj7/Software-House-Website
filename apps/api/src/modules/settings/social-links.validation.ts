@@ -23,6 +23,8 @@ export type SocialLinksParsed = {
   instagram: string;
   youtube: string;
   linkedin: string;
+  facebook: string;
+  github: string;
   telegram: string;
 };
 
@@ -40,6 +42,8 @@ export function parseAndValidateSocialLinksJson(jsonStr: string): string {
     'instagram',
     'youtube',
     'linkedin',
+    'facebook',
+    'github',
     'telegram',
   ];
   const out: SocialLinksParsed = {
@@ -47,6 +51,8 @@ export function parseAndValidateSocialLinksJson(jsonStr: string): string {
     instagram: '',
     youtube: '',
     linkedin: '',
+    facebook: '',
+    github: '',
     telegram: '',
   };
   for (const k of keys) {

@@ -28,6 +28,7 @@ export default async function HomePage() {
         content={site.marketingHome}
         logoUrl={site.logoUrl}
         websiteName={site.websiteName}
+        socialLinks={site.socialLinks}
       />
       <WhatWeDeliverSection titleTag="h2" delivery={site.marketingDelivery} />
       <ServicesSection showHeading={true} compact={true} variant="default" tone="light" />

@@ -62,7 +62,7 @@ export default function AdminCustomPagePreviewPage() {
   if (loading) {
     return (
       <div>
-        <Link href="/admin/custom-pages" className="mb-4 inline-block text-sm text-muted-foreground hover:text-foreground">
+        <Link href="/anish/custom-pages" className="mb-4 inline-block text-sm text-muted-foreground hover:text-foreground">
           ← Back
         </Link>
         <p className="text-muted-foreground">Loading preview…</p>
@@ -73,7 +73,7 @@ export default function AdminCustomPagePreviewPage() {
   if (err || !page) {
     return (
       <div>
-        <Link href="/admin/custom-pages" className="mb-4 inline-block text-sm text-muted-foreground hover:text-foreground">
+        <Link href="/anish/custom-pages" className="mb-4 inline-block text-sm text-muted-foreground hover:text-foreground">
           ← Back
         </Link>
         <p className="text-destructive">{err || "Page not found."}</p>
@@ -105,8 +105,8 @@ export default function AdminCustomPagePreviewPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <ButtonLink href={`/admin/custom-pages/${id}`}>Edit</ButtonLink>
-          <ButtonLink href="/admin/custom-pages">All pages</ButtonLink>
+          <ButtonLink href={`/anish/custom-pages/${id}`}>Edit</ButtonLink>
+          <ButtonLink href="/anish/custom-pages">All pages</ButtonLink>
         </div>
       </div>
 

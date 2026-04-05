@@ -52,7 +52,7 @@ export default function AdminDashboardPage() {
         leads.
       </p>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        <Link href="/admin/settings">
+        <Link href="/anish/settings">
           <div className="h-full rounded-xl border border-[#E5E7EB] bg-white p-5 transition-shadow hover:shadow-md">
             <h2 className="text-lg font-semibold text-[#0F172A]">Website settings</h2>
             <p className="mt-1 text-sm text-[#64748B]">
@@ -60,61 +60,61 @@ export default function AdminDashboardPage() {
             </p>
           </div>
         </Link>
-        <Link href="/admin/marketing">
+        <Link href="/anish/marketing">
           <div className="h-full rounded-xl border border-[#E5E7EB] bg-white p-5 transition-shadow hover:shadow-md">
             <h2 className="text-lg font-semibold text-[#0F172A]">Home &amp; delivery</h2>
             <p className="mt-1 text-sm text-[#64748B]">Hero headline, CTAs, and process steps (home + /what-we-deliver + /services)</p>
           </div>
         </Link>
-        <Link href="/admin/faqs">
+        <Link href="/anish/faqs">
           <div className="h-full rounded-xl border border-[#E5E7EB] bg-white p-5 transition-shadow hover:shadow-md">
             <h2 className="text-lg font-semibold text-[#0F172A]">FAQs</h2>
             <p className="text-3xl font-bold text-[#22C55E]">{counts.faqs}</p>
             <p className="mt-1 text-sm text-[#64748B]">Questions on /faqs</p>
           </div>
         </Link>
-        <Link href="/admin/projects">
+        <Link href="/anish/projects">
           <div className="h-full rounded-xl border border-[#E5E7EB] bg-white p-5 transition-shadow hover:shadow-md">
             <h2 className="text-lg font-semibold text-[#0F172A]">Portfolio</h2>
             <p className="text-3xl font-bold text-[#22C55E]">{counts.projects}</p>
             <p className="mt-1 text-sm text-[#64748B]">Case studies &amp; gallery</p>
           </div>
         </Link>
-        <Link href="/admin/services">
+        <Link href="/anish/services">
           <div className="h-full rounded-xl border border-[#E5E7EB] bg-white p-5 transition-shadow hover:shadow-md">
             <h2 className="text-lg font-semibold text-[#0F172A]">Services</h2>
             <p className="text-3xl font-bold text-[#22C55E]">{counts.services}</p>
             <p className="mt-1 text-sm text-[#64748B]">Offerings on /services</p>
           </div>
         </Link>
-        <Link href="/admin/testimonials">
+        <Link href="/anish/testimonials">
           <div className="h-full rounded-xl border border-[#E5E7EB] bg-white p-5 transition-shadow hover:shadow-md">
             <h2 className="text-lg font-semibold text-[#0F172A]">Testimonials</h2>
             <p className="text-3xl font-bold text-[#22C55E]">{counts.testimonials}</p>
             <p className="mt-1 text-sm text-[#64748B]">Client quotes</p>
           </div>
         </Link>
-        <Link href="/admin/team">
+        <Link href="/anish/team">
           <div className="h-full rounded-xl border border-[#E5E7EB] bg-white p-5 transition-shadow hover:shadow-md">
             <h2 className="text-lg font-semibold text-[#0F172A]">Team</h2>
             <p className="text-3xl font-bold text-[#22C55E]">{counts.team}</p>
             <p className="mt-1 text-sm text-[#64748B]">/team &amp; contact dropdown</p>
           </div>
         </Link>
-        <Link href="/admin/blogs">
+        <Link href="/anish/blogs">
           <div className="h-full rounded-xl border border-[#E5E7EB] bg-white p-5 transition-shadow hover:shadow-md">
             <h2 className="text-lg font-semibold text-[#0F172A]">Blog</h2>
             <p className="text-3xl font-bold text-[#22C55E]">{counts.blogs}</p>
             <p className="mt-1 text-sm text-[#64748B]">Posts &amp; SEO</p>
           </div>
         </Link>
-        <Link href="/admin/custom-pages">
+        <Link href="/anish/custom-pages">
           <div className="h-full rounded-xl border border-[#E5E7EB] bg-white p-5 transition-shadow hover:shadow-md">
             <h2 className="text-lg font-semibold text-[#0F172A]">Custom pages</h2>
             <p className="mt-1 text-sm text-[#64748B]">Extra nav pages at /site/…</p>
           </div>
         </Link>
-        <Link href="/admin/leads">
+        <Link href="/anish/leads">
           <div className="h-full rounded-xl border border-[#E5E7EB] bg-white p-5 transition-shadow hover:shadow-md">
             <h2 className="text-lg font-semibold text-[#0F172A]">Leads</h2>
             <p className="text-3xl font-bold text-[#22C55E]">{counts.leads}</p>

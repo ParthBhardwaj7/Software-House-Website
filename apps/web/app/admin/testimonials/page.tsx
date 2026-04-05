@@ -30,7 +30,7 @@ export default function AdminTestimonialsPage() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">Testimonials</h1>
         <Button asChild>
-          <Link href="/admin/testimonials/new">New Testimonial</Link>
+          <Link href="/anish/testimonials/new">New Testimonial</Link>
         </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -43,7 +43,7 @@ export default function AdminTestimonialsPage() {
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" asChild>
-                  <Link href={`/admin/testimonials/${item.id}`}>Edit</Link>
+                  <Link href={`/anish/testimonials/${item.id}`}>Edit</Link>
                 </Button>
                 <Button
                   variant="destructive"

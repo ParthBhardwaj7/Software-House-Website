@@ -29,7 +29,7 @@ export default function EditFaqPage() {
     api
       .get<Faq>(`/admin/faqs/${id}`, token)
       .then(setForm)
-      .catch(() => router.push("/admin/faqs"));
+      .catch(() => router.push("/anish/faqs"));
   }, [token, id, router]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -44,7 +44,7 @@ export default function EditFaqPage() {
       },
       token
     );
-    router.push("/admin/faqs");
+    router.push("/anish/faqs");
     router.refresh();
   }
 
@@ -54,7 +54,7 @@ export default function EditFaqPage() {
 
   return (
     <div>
-      <Link href="/admin/faqs" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
+      <Link href="/anish/faqs" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
         ← Back to FAQs
       </Link>
       <h1 className="mb-8 text-2xl font-bold text-[#0F172A]">Edit FAQ</h1>

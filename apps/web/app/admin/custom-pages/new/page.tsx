@@ -47,7 +47,7 @@ export default function NewCustomPagePage() {
     }
     try {
       await api.post("/admin/custom-pages", { ...form, blocks: sanitized }, token);
-      router.push("/admin/custom-pages");
+      router.push("/anish/custom-pages");
       router.refresh();
     } catch (ex: unknown) {
       setErr(ex instanceof Error ? ex.message : "Save failed");
@@ -56,7 +56,7 @@ export default function NewCustomPagePage() {
 
   return (
     <div>
-      <Link href="/admin/custom-pages" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
+      <Link href="/anish/custom-pages" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
         ← Back to custom pages
       </Link>
       <h1 className="mb-2 text-2xl font-bold">New custom page</h1>

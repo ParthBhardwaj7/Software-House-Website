@@ -8,7 +8,7 @@ import type { DeliveryStepContent } from "@/lib/marketing-defaults";
 export function DeliveryProcessSection({ steps }: { steps: DeliveryStepContent[] }) {
   return (
     <div className="w-full border-b border-[#E5E7EB]/80 bg-[#F8FAFC]">
-      <div className="mx-auto max-w-7xl px-4 pb-2 pt-12 text-center sm:px-6 sm:pt-14 lg:px-8">
+      <div className="mx-auto max-w-7xl px-5 pb-2 pt-12 text-center sm:px-6 sm:pt-14 lg:px-8">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#64748B]">Process</p>
         <h2 className="mt-2 font-display text-2xl font-normal tracking-tight text-[#0F172A] sm:text-3xl">
           How we deliver

@@ -24,8 +24,20 @@ type SocialForm = {
   instagram: string;
   youtube: string;
   linkedin: string;
+  facebook: string;
+  github: string;
   telegram: string;
 };
+
+const SOCIAL_URL_FIELDS: { key: keyof SocialForm; label: string }[] = [
+  { key: "twitter", label: "X (Twitter)" },
+  { key: "instagram", label: "Instagram" },
+  { key: "youtube", label: "YouTube" },
+  { key: "linkedin", label: "LinkedIn" },
+  { key: "facebook", label: "Facebook" },
+  { key: "github", label: "GitHub" },
+  { key: "telegram", label: "Telegram" },
+];
 
 function parseSocialFromApi(raw: string | undefined): SocialForm {
   const empty: SocialForm = {
@@ -33,6 +45,8 @@ function parseSocialFromApi(raw: string | undefined): SocialForm {
     instagram: "",
     youtube: "",
     linkedin: "",
+    facebook: "",
+    github: "",
     telegram: "",
   };
   if (!raw?.trim()) return empty;
@@ -382,15 +396,14 @@ export default function AdminSettingsPage() {
             <section id="social-whatsapp" className="scroll-mt-8 space-y-4 border-t border-[#E5E7EB] pt-8">
               <h2 className="text-lg font-semibold text-[#0F172A]">Social & WhatsApp</h2>
               <p className="text-sm text-muted-foreground">
-                Full profile URLs (https). Leave blank to hide an icon. WhatsApp uses digits only for the floating button;
-                leave empty to hide the button.
+                Full profile URLs (https). Leave blank to hide an icon on the site. Filled links show in the mobile menu
+                and as a vertical strip on the right side of the home hero. WhatsApp uses digits only for the floating
+                button; leave empty to hide the button.
               </p>
               <div className="grid gap-4 sm:grid-cols-2">
-                {(Object.keys(social) as (keyof SocialForm)[]).map((key) => (
+                {SOCIAL_URL_FIELDS.map(({ key, label }) => (
                   <div key={key}>
-                    <Label htmlFor={`soc-${key}`} className="capitalize">
-                      {key}
-                    </Label>
+                    <Label htmlFor={`soc-${key}`}>{label}</Label>
                     <Input
                       id={`soc-${key}`}
                       value={social[key]}

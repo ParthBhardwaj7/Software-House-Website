@@ -30,13 +30,13 @@ export default function NewProjectPage() {
       ...form,
       techStack: form.techStack ? form.techStack.split(",").map((s) => s.trim()) : [],
     }, token);
-    router.push("/admin/projects");
+    router.push("/anish/projects");
     router.refresh();
   }
 
   return (
     <div>
-      <Link href="/admin/projects" className="text-sm text-muted-foreground hover:text-foreground mb-6 inline-block">
+      <Link href="/anish/projects" className="text-sm text-muted-foreground hover:text-foreground mb-6 inline-block">
         ← Back to Projects
       </Link>
       <h1 className="text-2xl font-bold mb-8">New Project</h1>

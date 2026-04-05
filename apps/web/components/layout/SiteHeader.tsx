@@ -5,8 +5,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { X } from "lucide-react";
-import { Twitter, Instagram, Youtube, Linkedin, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getSocialLinkDisplayItems } from "@/lib/social-links-display";
 import { RollingContactCta } from "./RollingContactCta";
 import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
 import { DUMMY_SITE_SETTINGS } from "@/lib/dummy-data";
@@ -30,6 +30,8 @@ const emptySocial = (): SocialLinks => ({
   instagram: "",
   youtube: "",
   linkedin: "",
+  facebook: "",
+  github: "",
   telegram: "",
 });
 
@@ -49,12 +51,7 @@ function SocialIconRow({
   className?: string;
   showHeading?: boolean;
 }) {
-  const items: { href: string; label: string; Icon: typeof Twitter }[] = [];
-  if (links.twitter) items.push({ href: links.twitter, label: "Twitter", Icon: Twitter });
-  if (links.instagram) items.push({ href: links.instagram, label: "Instagram", Icon: Instagram });
-  if (links.youtube) items.push({ href: links.youtube, label: "YouTube", Icon: Youtube });
-  if (links.linkedin) items.push({ href: links.linkedin, label: "LinkedIn", Icon: Linkedin });
-  if (links.telegram) items.push({ href: links.telegram, label: "Telegram", Icon: Send });
+  const items = getSocialLinkDisplayItems(links);
   if (items.length === 0) return null;
   return (
     <div className={className}>
@@ -62,9 +59,9 @@ function SocialIconRow({
         <p className="mb-4 text-xs font-medium uppercase tracking-wider text-[#64748B]">Social Media</p>
       ) : null}
       <div className="flex gap-4 text-[#0F172A]">
-        {items.map(({ href, label, Icon }) => (
+        {items.map(({ key, href, label, Icon }) => (
           <a
-            key={label}
+            key={key}
             href={href}
             target="_blank"
             rel="noopener noreferrer"
@@ -144,6 +141,8 @@ export function SiteHeader() {
               instagram: String(data.socialLinks.instagram ?? "").trim(),
               youtube: String(data.socialLinks.youtube ?? "").trim(),
               linkedin: String(data.socialLinks.linkedin ?? "").trim(),
+              facebook: String(data.socialLinks.facebook ?? "").trim(),
+              github: String(data.socialLinks.github ?? "").trim(),
               telegram: String(data.socialLinks.telegram ?? "").trim(),
             });
           }
@@ -187,19 +186,20 @@ export function SiteHeader() {
           headerSurface(scrolled)
         )}
       >
-        <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-2 pl-4 pr-2.5 sm:gap-4 sm:pl-6 sm:pr-3 lg:pl-8 lg:pr-5">
+        <div className="mx-auto grid h-full w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 pl-4 pr-2.5 sm:gap-4 sm:pl-6 sm:pr-3 md:flex md:justify-between lg:pl-8 lg:pr-5">
+          <div className="min-w-0 md:hidden" aria-hidden />
           <Link
             href="/"
-            className="flex min-w-0 shrink-0 items-center gap-2 text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl"
+            className="col-start-2 flex min-w-0 shrink-0 justify-self-center text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl md:col-auto md:justify-self-auto"
             aria-label={`${websiteName} home`}
           >
-            <span className="relative block h-9 w-[min(100%,168px)] shrink-0 sm:h-10 sm:w-[min(100%,180px)]">
+            <span className="relative block h-8 w-[min(100%,112px)] shrink-0 min-[401px]:h-9 min-[401px]:w-[min(100%,200px)] sm:h-10 sm:w-[min(100%,220px)]">
               <Image
                 src={headerLogoSrc}
                 alt={websiteName}
                 fill
-                className="object-contain object-left"
-                sizes="180px"
+                className="object-contain object-center md:object-left"
+                sizes="220px"
                 unoptimized
               />
             </span>
@@ -217,13 +217,15 @@ export function SiteHeader() {
             })}
           </nav>
 
-          <div className="flex min-w-0 shrink-0 items-center justify-end gap-2 sm:gap-2.5 md:gap-3">
+          <div className="col-start-3 flex min-w-0 shrink-0 items-center justify-end justify-self-end gap-2 sm:gap-2.5 md:col-auto md:justify-self-auto md:gap-3">
             <RollingContactCta
               variant="consultation"
               href="/contact"
               label="Book a Consultation"
               duplicateLabel="It's free"
-              className="inline-flex max-w-[min(100%,11.5rem)] shrink-0 whitespace-nowrap px-3 py-1.5 text-xs font-medium leading-tight sm:max-w-none sm:px-4 sm:py-2 sm:text-sm sm:leading-none"
+              compactLabel="Book"
+              compactDuplicate="Free"
+              className="inline-flex max-w-[min(100%,8.5rem)] shrink-0 whitespace-nowrap px-2.5 py-1.5 text-[11px] font-medium leading-tight min-[401px]:max-w-[min(100%,11.5rem)] min-[401px]:px-3 min-[401px]:text-xs sm:max-w-none sm:px-4 sm:py-2 sm:text-sm sm:leading-none"
               lineClassName="h-7 sm:h-9"
             />
             <button
@@ -240,7 +242,7 @@ export function SiteHeader() {
                 <span className="h-0.5 w-6 bg-current" />
                 <span className="h-0.5 w-6 bg-current" />
               </span>
-              <span className="text-sm font-medium">Menu</span>
+              <span className="text-sm font-medium max-[400px]:sr-only">Menu</span>
             </button>
           </div>
         </div>

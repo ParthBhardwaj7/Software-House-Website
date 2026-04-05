@@ -33,7 +33,7 @@ export default function AdminTeamPage() {
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Team</h1>
         <Button asChild>
-          <Link href="/admin/team/new">New team member</Link>
+          <Link href="/anish/team/new">New team member</Link>
         </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -49,7 +49,7 @@ export default function AdminTeamPage() {
               </div>
               <div className="flex shrink-0 flex-col gap-2">
                 <Button variant="outline" size="sm" asChild>
-                  <Link href={`/admin/team/${item.id}`}>Edit</Link>
+                  <Link href={`/anish/team/${item.id}`}>Edit</Link>
                 </Button>
                 <Button
                   variant="destructive"

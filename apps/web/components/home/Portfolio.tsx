@@ -59,7 +59,7 @@ export function Portfolio({ showHeading = true, variant = "default" }: Portfolio
       <div
         className={cn(
           "mx-auto w-full",
-          isStacked ? "" : "container max-w-7xl px-4 sm:px-6 lg:px-8"
+          isStacked ? "" : "container max-w-7xl px-5 sm:px-6 lg:px-8"
         )}
       >
         {showHeading && (

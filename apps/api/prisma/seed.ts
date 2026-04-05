@@ -4,16 +4,19 @@ import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await bcrypt.hash('admin123', 10);
+  /** Must match README and `npm run seed:admin` — single admin account for local/prod bootstrap */
+  const adminEmail = 'admin@hilo.com';
+  const adminPlainPassword = 'strongpassword123';
+  const hashedPassword = await bcrypt.hash(adminPlainPassword, 10);
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@softwarehouse.com' },
-    update: {},
+    where: { email: adminEmail },
+    update: { password: hashedPassword },
     create: {
-      email: 'admin@softwarehouse.com',
+      email: adminEmail,
       password: hashedPassword,
     },
   });
-  console.log('Admin user created:', admin.email);
+  console.log('Admin user:', admin.email, '(default password: strongpassword123 — see repo README)');
 
   const serviceCount = await prisma.service.count();
   if (serviceCount === 0) {

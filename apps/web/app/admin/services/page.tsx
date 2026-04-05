@@ -31,7 +31,7 @@ export default function AdminServicesPage() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">Services</h1>
         <Button asChild variant="default">
-          <Link href="/admin/services/new">Add Service</Link>
+          <Link href="/anish/services/new">Add Service</Link>
         </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -41,7 +41,7 @@ export default function AdminServicesPage() {
               <CardTitle className="text-lg">{item.title}</CardTitle>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" asChild>
-                  <Link href={`/admin/services/${item.id}`}>Edit</Link>
+                  <Link href={`/anish/services/${item.id}`}>Edit</Link>
                 </Button>
                 <Button
                   variant="destructive"

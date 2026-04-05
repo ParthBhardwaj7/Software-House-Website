@@ -29,7 +29,7 @@ export default function AdminBlogsPage() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">Blog Posts</h1>
         <Button asChild>
-          <Link href="/admin/blogs/new">New Post</Link>
+          <Link href="/anish/blogs/new">New Post</Link>
         </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -42,7 +42,7 @@ export default function AdminBlogsPage() {
                   {post.published ? "Published" : "Draft"}
                 </span>
                 <Button variant="outline" size="sm" asChild>
-                  <Link href={`/admin/blogs/${post.id}`}>Edit</Link>
+                  <Link href={`/anish/blogs/${post.id}`}>Edit</Link>
                 </Button>
                 <Button
                   variant="destructive"

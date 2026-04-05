@@ -152,13 +152,13 @@ body.boat-cursor-active .cursor-pointer {
     @apply w-full min-w-0 bg-background text-foreground;
   }
   .page-container {
-    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8;
   }
   .page-narrow {
-    @apply mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-3xl px-5 sm:px-6 lg:px-8;
   }
   .page-wide {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8;
   }
   /** Vertical rhythm below fixed header (main already adds pt-20) */
   .page-section-y {

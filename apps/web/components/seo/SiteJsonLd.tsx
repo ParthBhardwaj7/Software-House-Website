@@ -9,6 +9,8 @@ export async function SiteJsonLd() {
     s.socialLinks.instagram,
     s.socialLinks.youtube,
     s.socialLinks.linkedin,
+    s.socialLinks.facebook,
+    s.socialLinks.github,
     s.socialLinks.telegram,
   ].filter(Boolean);
 

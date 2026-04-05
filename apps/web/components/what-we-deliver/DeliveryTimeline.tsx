@@ -94,15 +94,17 @@ function TimelineStepContent({
         ease: [0.22, 1, 0.36, 1],
       }}
       className={cn(
-        "flex min-h-[min(88vh,52rem)] flex-col justify-center py-8 pl-8 sm:pl-10 lg:min-h-[min(85vh,52rem)] lg:py-12 lg:pl-0",
+        "flex min-h-[min(88vh,52rem)] flex-col justify-center px-4 py-8 text-center sm:px-5 lg:min-h-[min(85vh,52rem)] lg:px-0 lg:py-12 lg:text-left",
         !isFirst && "border-t border-[#E5E7EB]/80"
       )}
     >
-      <div className="min-w-0">
+      <div className="min-w-0 lg:max-w-none">
         <h2 className="font-display text-2xl font-normal tracking-tight text-[#0F172A] sm:text-3xl lg:text-4xl">
           {step.title}
         </h2>
-        <p className="mt-4 max-w-xl text-base leading-relaxed text-[#64748B] sm:text-lg">{step.body}</p>
+        <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-[#64748B] sm:text-lg lg:mx-0">
+          {step.body}
+        </p>
       </div>
     </motion.div>
   );
@@ -119,7 +121,7 @@ function ScrollTrack({
 
   return (
     <div
-      className="pointer-events-none absolute bottom-0 left-4 top-0 z-[1] w-[2px] lg:left-1/2 lg:-translate-x-1/2"
+      className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[1] hidden w-[2px] -translate-x-1/2 lg:block lg:left-1/2 lg:-translate-x-1/2"
       aria-hidden
     >
       <div className="relative h-full w-full bg-[#E5E7EB]">
@@ -182,11 +184,11 @@ export function DeliveryTimeline({ embedded = false, steps }: DeliveryTimelinePr
         embedded ? "pt-4 sm:pt-6 md:pt-8" : "pt-8 sm:pt-12 md:pt-16"
       )}
     >
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <ScrollTrack smoothProgress={smoothProgress} reduceMotion={reduceMotionUI} />
 
         {/* Mobile: sticky single number that increments (same behavior as desktop) */}
-        <div className="pointer-events-none sticky top-20 z-[3] -mx-4 mb-6 flex justify-center border-b border-[#E5E7EB]/60 bg-[#F8FAFC]/90 py-3 backdrop-blur-sm sm:-mx-6 lg:hidden">
+        <div className="pointer-events-none sticky top-16 z-[3] -mx-5 mb-6 flex justify-center border-b border-[#E5E7EB]/60 bg-[#F8FAFC]/95 py-3 backdrop-blur-sm sm:-mx-6 md:top-[4.5rem] lg:hidden">
           <div className="pointer-events-auto">
             <AnimatedStepNumber index={activeStep} reduceMotion={reduceMotionUI} />
           </div>

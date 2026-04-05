@@ -37,7 +37,7 @@ export default function EditServicePage() {
         outcome: p.outcome || "",
         sortOrder: p.sortOrder || 0,
       }))
-      .catch(() => router.push("/admin/services"));
+      .catch(() => router.push("/anish/services"));
   }, [id, token, router]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -49,13 +49,13 @@ export default function EditServicePage() {
       solution: form.solution || undefined,
       outcome: form.outcome || undefined,
     }, token);
-    router.push("/admin/services");
+    router.push("/anish/services");
     router.refresh();
   }
 
   return (
     <div>
-      <Link href="/admin/services" className="text-sm text-primary hover:underline mb-6 inline-block">
+      <Link href="/anish/services" className="text-sm text-primary hover:underline mb-6 inline-block">
         ← Back to Services
       </Link>
       <h1 className="text-2xl font-bold mb-8">Edit Service</h1>

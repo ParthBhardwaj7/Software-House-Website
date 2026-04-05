@@ -2,6 +2,14 @@
 const nextConfig = {
   poweredByHeader: false,
   transpilePackages: ["@marsidev/react-turnstile"],
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { source: "/anish", destination: "/admin" },
+        { source: "/anish/:path*", destination: "/admin/:path*" },
+      ],
+    };
+  },
   // Smaller client bundles for icon + animation libs (tree-shake per-import)
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
