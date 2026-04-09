@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -23,46 +22,59 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci --no-optional
 
+      - name: 🔧 Generate Prisma Client
+        run: npx prisma generate
+        working-directory: apps/api
+
       - name: 🔨 Build API
         run: npm run build --workspace=api
 
       - name: 🔨 Build Web
         run: npm run build --workspace=web
 
-      - name: 🚀 Deploy & Restart PM2
-        uses: appleboy/ssh-action@v1.0.3
+      - name: 📦 Archive built artifacts
+        run: tar -czf deploy.tar.gz apps/api/dist apps/web/.next
+
+      - name: 📤 Upload to Server
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USERNAME }}
           key: ${{ secrets.DO_SSH_KEY }}
+          source: "deploy.tar.gz"
+          target: "~/Software-House-Website/"
+          rm: true
+          command_timeout: 15m
+
+      - name: 🔄 Apply Migrations & Restart PM2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USERNAME }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          command_timeout: 5m
           script: |
             set -e
             cd ~/Software-House-Website
-            
-            # Pull latest code
-            git pull origin main
-            
-            # Install fresh dependencies
-            npm ci --no-optional
-            
-            # Prisma generate (if you have custom scripts)
+
+            # 1. Extract built files (overwrite old safely)
+            tar -xzf deploy.tar.gz
+            rm deploy.tar.gz
+
+            # 2. Install prod dependencies only (fast & light)
+            npm ci --production --no-optional
+
+            # 3. Safe DB migration (never drops data)
             cd apps/api
+            npx prisma migrate deploy
             npx prisma generate
-            
-            # Build with memory limit (prevents OOM on 512MB droplet)
-            NODE_OPTIONS="--max-old-space-size=512" npm run build
-            
-            cd ../web
-            NODE_OPTIONS="--max-old-space-size=512" npm run build
-            
+
+            # 4. Restart API (fallback if not running)
             cd ../..
-            
-            # Remove devDependencies to save RAM/Disk
-            npm prune --omit=dev
-            
-            # Restart apps
-            pm2 restart api
-            pm2 restart web
+            pm2 restart api 2>/dev/null || pm2 start apps/api/dist/src/main.js --name api
+
+            # 5. Restart Web
+            pm2 restart web 2>/dev/null || pm2 start npm --name web --cwd apps/web -- run start
+
             pm2 save
-            
             echo "✅ Deployment successful!"
