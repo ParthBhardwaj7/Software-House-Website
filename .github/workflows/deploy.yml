@@ -80,4 +80,4 @@ jobs:
             pm2 restart web 2>/dev/null || pm2 start npm --name web --cwd apps/web -- run start
 
             pm2 save
-            echo "✅ Deployment successful!"
+            echo "✅ Deployment successfull!"
