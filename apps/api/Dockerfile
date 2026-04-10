@@ -24,7 +24,10 @@ COPY apps/api/ ./apps/api/
 # Generate Prisma client + compile NestJS
 WORKDIR /app/apps/api
 RUN npx prisma generate
-RUN npm run build
+# Use tsc directly — more reliable than nest build (webpack) in a Docker/monorepo context
+RUN npx tsc -p tsconfig.build.json
+# Fail the build loudly if the entrypoint wasn't produced
+RUN test -f dist/main.js || (echo "ERROR: dist/main.js missing after tsc — check tsconfig.build.json" && exit 1)
 
 # ────────────────────────────────────────────────────────────
 # Stage 2 – Runner (production image)
