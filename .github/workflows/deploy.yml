@@ -36,6 +36,9 @@ jobs:
       - name: 🛠️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: 🔡 Lowercase image owner
+        run: echo "OWNER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       # ─────────────────────────────────────────────────────
       # 3. Build + push API image
       #    Separate cache scope so API and web layer caches don't collide
@@ -47,8 +50,8 @@ jobs:
           file: apps/api/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/software-house-api:latest
-            ghcr.io/${{ github.repository_owner }}/software-house-api:${{ github.sha }}
+            ghcr.io/${{ env.OWNER }}/software-house-api:latest
+            ghcr.io/${{ env.OWNER }}/software-house-api:${{ github.sha }}
           cache-from: type=gha,scope=api
           cache-to: type=gha,mode=max,scope=api
 
@@ -64,8 +67,8 @@ jobs:
           file: apps/web/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/software-house-web:latest
-            ghcr.io/${{ github.repository_owner }}/software-house-web:${{ github.sha }}
+            ghcr.io/${{ env.OWNER }}/software-house-web:latest
+            ghcr.io/${{ env.OWNER }}/software-house-web:${{ github.sha }}
           build-args: |
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
             NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
@@ -83,8 +86,8 @@ jobs:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
           # Full image URIs passed to docker-compose.prod.yml via environment
-          API_IMAGE: ghcr.io/${{ github.repository_owner }}/software-house-api:latest
-          WEB_IMAGE: ghcr.io/${{ github.repository_owner }}/software-house-web:latest
+          API_IMAGE: ghcr.io/${{ env.OWNER }}/software-house-api:latest
+          WEB_IMAGE: ghcr.io/${{ env.OWNER }}/software-house-web:latest
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USERNAME }}
