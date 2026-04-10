@@ -45,8 +45,8 @@ ENV HOSTNAME=0.0.0.0
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
 # With outputFileTracingRoot=/app (monorepo root), the standalone directory
-# mirrors the monorepo structure:
-#   standalone/server.js          ← Next.js server entrypoint
+# mirrors the monorepo structure relative to the tracing root:
+#   standalone/apps/web/server.js ← Next.js server entrypoint
 #   standalone/node_modules/      ← minimal runtime deps traced from /app
 #   standalone/apps/web/.next/    ← server-side chunks
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
@@ -61,5 +61,5 @@ USER nextjs
 
 EXPOSE 3000
 
-# server.js is at the root of standalone — run it from WORKDIR /app
-CMD ["node", "server.js"]
+# server.js is nested at apps/web/server.js because outputFileTracingRoot mirrors monorepo structure
+CMD ["node", "apps/web/server.js"]
