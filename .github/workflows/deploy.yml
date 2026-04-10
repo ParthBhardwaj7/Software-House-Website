@@ -98,8 +98,9 @@ jobs:
             set -e
             cd ~/Software-House-Website
 
-            # Pull latest docker-compose.prod.yml and any other repo changes
-            git pull origin main
+            # Always sync server to match remote exactly — discard any local drift
+            git fetch origin main
+            git reset --hard origin/main
 
             # Authenticate with GHCR to pull private images
             echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
