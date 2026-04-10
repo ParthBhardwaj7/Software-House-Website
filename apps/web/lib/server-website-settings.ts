@@ -4,8 +4,9 @@ import {
   mergePublicWebsiteSettings,
   type PublicWebsiteSettings,
 } from "@/lib/public-website-settings";
+import { getApiUrl } from "@/lib/get-api-url";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:3001";
+const API_URL = getApiUrl();
 
 /** Server-only: full merged public settings (same rules as `/api/settings/website`). Cached per request. */
 export const getPublicWebsiteSettings = cache(async (): Promise<PublicWebsiteSettings> => {

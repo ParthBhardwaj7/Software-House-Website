@@ -1,83 +1,114 @@
-name: 🚀 Deploy to DigitalOcean
+name: 🚀 Build, Push & Deploy
 
+# Triggers on every push to main, or manually from GitHub Actions UI
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
+    # Required so this job can push Docker images to GHCR
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: 📥 Checkout code
+      # ─────────────────────────────────────────────────────
+      # 1. Source code
+      # ─────────────────────────────────────────────────────
+      - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: ⚙️ Setup Node.js
-        uses: actions/setup-node@v4
+      # ─────────────────────────────────────────────────────
+      # 2. Docker setup
+      # ─────────────────────────────────────────────────────
+      - name: 🔑 Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: package-lock.json
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          # GITHUB_TOKEN is auto-provided — no extra secret needed for push
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 📦 Install dependencies
-        run: npm ci --no-optional
+      - name: 🛠️ Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: 🔧 Generate Prisma Client
-        run: npx prisma generate
-        working-directory: apps/api
+      # ─────────────────────────────────────────────────────
+      # 3. Build + push API image
+      #    Separate cache scope so API and web layer caches don't collide
+      # ─────────────────────────────────────────────────────
+      - name: 🔨 Build & push API image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/software-house-api:latest
+            ghcr.io/${{ github.repository_owner }}/software-house-api:${{ github.sha }}
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
 
-      - name: 🔨 Build API
-        run: npm run build --workspace=api
+      # ─────────────────────────────────────────────────────
+      # 4. Build + push Web image
+      #    NEXT_PUBLIC_* vars are baked into the client bundle at this step.
+      #    They are NOT runtime env vars — the .env on the server does nothing for them.
+      # ─────────────────────────────────────────────────────
+      - name: 🔨 Build & push Web image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/software-house-web:latest
+            ghcr.io/${{ github.repository_owner }}/software-house-web:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web
 
-      - name: 🔨 Build Web
-        run: npm run build --workspace=web
-
-      - name: 📦 Archive built artifacts
-        run: tar -czf deploy.tar.gz apps/api/dist apps/web/.next
-
-      - name: 📤 Upload to Server
-        uses: appleboy/scp-action@v0.1.7
+      # ─────────────────────────────────────────────────────
+      # 5. Deploy to DigitalOcean droplet
+      #    Server only pulls pre-built images — never builds anything
+      # ─────────────────────────────────────────────────────
+      - name: 🚀 Deploy to DigitalOcean
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          # Pass GITHUB_TOKEN so the server can pull from GHCR during this run
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          # Full image URIs passed to docker-compose.prod.yml via environment
+          API_IMAGE: ghcr.io/${{ github.repository_owner }}/software-house-api:latest
+          WEB_IMAGE: ghcr.io/${{ github.repository_owner }}/software-house-web:latest
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USERNAME }}
           key: ${{ secrets.DO_SSH_KEY }}
-          port: 22
-          source: "deploy.tar.gz"
-          target: "/root/Software-House-Website/"
-          rm: true
-          strip_components: 0
-          command_timeout: 30m
-          debug: true
-
-      - name: 🔄 Apply Migrations & Restart PM2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.DO_HOST }}
-          username: ${{ secrets.DO_USERNAME }}
-          key: ${{ secrets.DO_SSH_KEY }}
-          command_timeout: 5m
+          envs: GHCR_TOKEN,GITHUB_ACTOR,API_IMAGE,WEB_IMAGE
+          command_timeout: 10m
           script: |
             set -e
             cd ~/Software-House-Website
 
-            # 1. Extract built files (overwrite old safely)
-            tar -xzf deploy.tar.gz
-            rm deploy.tar.gz
+            # Pull latest docker-compose.prod.yml and any other repo changes
+            git pull origin main
 
-            # 2. Install prod dependencies only (fast & light)
-            npm ci --production --no-optional
+            # Authenticate with GHCR to pull private images
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
 
-            # 3. Safe DB migration (never drops data)
-            cd apps/api
-            npx prisma migrate deploy
-            npx prisma generate
+            # Pull updated images (only downloads changed layers — fast)
+            docker compose -f docker-compose.prod.yml pull
 
-            # 4. Restart API (fallback if not running)
-            cd ../..
-            pm2 restart api 2>/dev/null || pm2 start apps/api/dist/src/main.js --name api
+            # Restart containers with zero config
+            # --remove-orphans removes containers for services no longer in compose file
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
-            # 5. Restart Web
-            pm2 restart web 2>/dev/null || pm2 start npm --name web --cwd apps/web -- run start
+            # Clean up old dangling images to save disk space
+            docker image prune -f
 
-            pm2 save
-            echo "✅ Deployment successfull!"
+            echo "✅ Deployment successful!"

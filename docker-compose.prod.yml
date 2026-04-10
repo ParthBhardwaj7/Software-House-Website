@@ -1,0 +1,84 @@
+# docker-compose.prod.yml — PRODUCTION (DigitalOcean 512MB droplet)
+#
+# Images are pulled from GHCR (built by GitHub Actions — never built on the server).
+# Image names are passed as environment variables by the GitHub Actions SSH deploy step:
+#   API_IMAGE=ghcr.io/OWNER/software-house-api:latest
+#   WEB_IMAGE=ghcr.io/OWNER/software-house-web:latest
+#
+# To run manually on the server:
+#   export API_IMAGE=ghcr.io/YOUR_GITHUB_USERNAME/software-house-api:latest
+#   export WEB_IMAGE=ghcr.io/YOUR_GITHUB_USERNAME/software-house-web:latest
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# Required files on the server (create once manually — see README):
+#   ~/Software-House-Website/.env.api
+#   ~/Software-House-Website/.env.postgres
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    env_file: .env.postgres
+    # Tuned for 512MB droplet — default postgres uses 128MB shared_buffers
+    command: >
+      postgres
+      -c shared_buffers=32MB
+      -c effective_cache_size=96MB
+      -c work_mem=4MB
+      -c max_connections=50
+      -c wal_buffers=4MB
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    mem_limit: 80m
+    restart: unless-stopped
+    networks:
+      - app_network
+
+  api:
+    image: ${API_IMAGE}
+    env_file: .env.api
+    environment:
+      # Cap Node.js heap to leave room for other containers on 512MB droplet
+      NODE_OPTIONS: --max-old-space-size=200
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    mem_limit: 220m
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3001 >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - app_network
+
+  web:
+    image: ${WEB_IMAGE}
+    environment:
+      NODE_OPTIONS: --max-old-space-size=180
+      # Server-side Next.js routes use Docker's internal network to reach the API
+      # (avoids the external IP roundtrip — stays within the Docker bridge network)
+      API_INTERNAL_URL: http://api:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    mem_limit: 200m
+    restart: unless-stopped
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+
+networks:
+  app_network:
+    driver: bridge

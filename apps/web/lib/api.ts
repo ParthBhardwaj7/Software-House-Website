@@ -1,6 +1,5 @@
 import { clearTokens } from "./auth";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+import { getApiUrl } from "./get-api-url";
 
 /** Nest ValidationPipe returns `message` as string or string[] */
 function formatApiErrorMessage(body: unknown): string {
@@ -11,16 +10,11 @@ function formatApiErrorMessage(body: unknown): string {
   return "";
 }
 
-function getBaseUrl() {
-  if (typeof window !== "undefined") return "";
-  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-}
-
 async function fetchAPI<T>(
   endpoint: string,
   options?: RequestInit & { token?: string }
 ): Promise<T> {
-  const base = typeof window !== "undefined" ? API_URL : getBaseUrl();
+  const base = getApiUrl();
   const url = endpoint.startsWith("http") ? endpoint : `${base}${endpoint}`;
 
   const headers: HeadersInit = {

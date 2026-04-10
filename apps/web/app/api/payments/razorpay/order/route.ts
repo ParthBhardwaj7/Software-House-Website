@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireTurnstile } from "@/lib/turnstile-verify";
+import { getApiUrl } from "@/lib/get-api-url";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_URL = getApiUrl();
 
 const MIN_INR = 1;
 const MAX_INR = 500_000;

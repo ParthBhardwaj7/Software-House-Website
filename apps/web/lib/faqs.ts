@@ -1,7 +1,8 @@
 import { allowDummyMarketingContent } from "@/lib/allow-dummy-content";
 import { DUMMY_FAQS } from "@/lib/dummy-data";
+import { getApiUrl } from "@/lib/get-api-url";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:3001";
+const API_URL = getApiUrl();
 
 export type PublicFaq = { id: string; question: string; answer: string; sortOrder: number };
 

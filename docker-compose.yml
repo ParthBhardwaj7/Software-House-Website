@@ -1,0 +1,65 @@
+# docker-compose.yml — LOCAL TESTING (production-like build)
+#
+# This file runs a full production-like build locally so you can verify
+# everything works before pushing to GitHub.
+#
+# For day-to-day development with hot reload, use:
+#   npm run dev          (runs both api + web with watch mode natively)
+#
+# To test with Docker locally:
+#   docker compose build
+#   docker compose up
+#   → http://localhost:3000  (web)
+#   → http://localhost:3001  (api)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: software_house
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: devpassword123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://postgres:devpassword123@postgres:5432/software_house
+      PORT: "3001"
+      NODE_ENV: production
+      JWT_SECRET: dev_jwt_secret_not_for_production_use
+      JWT_REFRESH_SECRET: dev_refresh_secret_not_for_production_use
+      CORS_ORIGIN: http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3001
+        NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  postgres_dev_data:
