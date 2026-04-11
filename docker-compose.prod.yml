@@ -44,6 +44,9 @@ services:
     environment:
       # Cap Node.js heap to leave room for other containers on 512MB droplet
       NODE_OPTIONS: --max-old-space-size=200
+      # Override in .env.api — set ADMIN_EMAIL and ADMIN_PASSWORD for your account
+      # ADMIN_EMAIL: admin@yourdomain.com
+      # ADMIN_PASSWORD: YourStrongPassword
     ports:
       - "3001:3001"
     depends_on:

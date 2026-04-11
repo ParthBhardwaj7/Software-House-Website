@@ -26,7 +26,7 @@ export function FooterNewsletter() {
     setStatus("loading");
     setMessage(null);
     try {
-      const res = await fetch("/api/newsletter", {
+      const res = await fetch("/submit/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), turnstileToken: turnstileToken ?? undefined }),

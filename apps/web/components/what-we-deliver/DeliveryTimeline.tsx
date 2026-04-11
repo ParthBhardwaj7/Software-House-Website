@@ -4,7 +4,9 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import type { MotionValue } from "framer-motion";
 import {
   AnimatePresence,
-  motion,
+  LazyMotion,
+  domAnimation,
+  m,
   useScroll,
   useSpring,
   useTransform,
@@ -41,7 +43,7 @@ function AnimatedStepNumber({
       </span>
       <div className="absolute inset-0 h-[1em] min-w-[3ch] overflow-hidden tabular-nums">
         <AnimatePresence initial={false} mode="wait">
-          <motion.span
+          <m.span
             key={label}
             initial={{ opacity: 0, scale: 0.96, filter: "blur(4px)" }}
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
@@ -50,7 +52,7 @@ function AnimatedStepNumber({
             className="absolute inset-0 flex items-center justify-center"
           >
             {label}
-          </motion.span>
+          </m.span>
         </AnimatePresence>
       </div>
     </div>
@@ -82,7 +84,7 @@ function TimelineStepContent({
   }, [isInView, index, onBecomeActive]);
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       initial={false}
       animate={{
@@ -106,7 +108,7 @@ function TimelineStepContent({
           {step.body}
         </p>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -128,13 +130,13 @@ function ScrollTrack({
         {reduceMotion ? (
           <div className="absolute inset-0 origin-top bg-[#22C55E]" style={{ transform: "scaleY(1)" }} />
         ) : (
-          <motion.div className="absolute inset-0 origin-top bg-[#22C55E]" style={{ scaleY: smoothProgress }} />
+          <m.div className="absolute inset-0 origin-top bg-[#22C55E]" style={{ scaleY: smoothProgress }} />
         )}
       </div>
       {reduceMotion ? (
         <div className="absolute left-1/2 top-full z-[2] h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#22C55E] shadow-[0_0_18px_rgba(34,197,94,0.55)]" />
       ) : (
-        <motion.div
+        <m.div
           className="absolute left-1/2 z-[2] h-3.5 w-3.5 rounded-full bg-[#22C55E] shadow-[0_0_18px_rgba(34,197,94,0.55)]"
           style={{
             top: dotTop,
@@ -177,6 +179,7 @@ export function DeliveryTimeline({ embedded = false, steps }: DeliveryTimelinePr
   });
 
   return (
+    <LazyMotion features={domAnimation}>
     <section
       ref={containerRef}
       className={cn(
@@ -227,5 +230,6 @@ export function DeliveryTimeline({ embedded = false, steps }: DeliveryTimelinePr
         </div>
       </div>
     </section>
+    </LazyMotion>
   );
 }

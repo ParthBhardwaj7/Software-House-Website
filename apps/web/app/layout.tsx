@@ -13,8 +13,8 @@ import { defaultOgImages } from "@/lib/default-og";
 import { getSiteUrl } from "@/lib/site-url";
 import { getPublicWebsiteSettings } from "@/lib/server-website-settings";
 
-const sans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
-const display = Playfair_Display({ subsets: ["latin"], variable: "--font-display" });
+const sans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+const display = Playfair_Display({ subsets: ["latin"], variable: "--font-display", display: "swap" });
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getPublicWebsiteSettings();
@@ -28,6 +28,9 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: s.siteDescription,
     robots: { index: true, follow: true },
+    verification: {
+      google: "FX-W6EPCJZszrR1KI73wOURHYZIu8MEWAk5zswqL43o",
+    },
     openGraph: {
       type: "website",
       locale: "en_US",

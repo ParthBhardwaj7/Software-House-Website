@@ -119,18 +119,17 @@ export function Footer() {
       <div className="relative mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-3">
-            <div className="mb-4 flex flex-wrap items-center gap-3">
+            <div className="mb-4">
               <div className="relative flex h-9 min-w-[7rem] max-w-[10rem] shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-[#22C55E] to-[#16A34A] px-2 shadow-lg shadow-[#22C55E]/20 sm:h-10 sm:min-w-[8rem] sm:max-w-[11rem]">
                 <Image
                   src={data.logoUrl || DEFAULT_SITE_LOGO_PATH}
-                  alt=""
+                  alt={data.websiteName}
                   width={176}
                   height={40}
                   className="h-7 w-auto max-h-full object-contain object-left sm:h-8"
                   unoptimized
                 />
               </div>
-              <span className="font-display text-lg font-semibold text-white">{data.websiteName}</span>
             </div>
             <p className="mb-6 text-sm leading-relaxed text-[#94A3B8]">{fc.brandTagline}</p>
             <FooterContact

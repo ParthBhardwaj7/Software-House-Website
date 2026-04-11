@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import { Star } from "lucide-react";
 import { api } from "@/lib/api";
 import { DUMMY_TESTIMONIALS } from "@/lib/dummy-data";
@@ -42,7 +42,7 @@ const item = {
 };
 
 const headerMotion = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 1, y: 28 },
   show: {
     opacity: 1,
     y: 0,
@@ -85,92 +85,94 @@ export function TestimonialsPageView() {
   }, [items]);
 
   return (
-    <div className="min-h-screen pb-28" style={{ backgroundColor: BG }}>
-      <div className="page-wide pb-20 pt-6 sm:pt-8 lg:pt-10">
-        <motion.header
-          className="mb-14 md:mb-20"
-          initial="hidden"
-          animate="show"
-          variants={{
-            hidden: { opacity: 0 },
-            show: { opacity: 1, transition: { staggerChildren: 0.15 } },
-          }}
-        >
-          <motion.p
-            variants={headerMotion}
-            className="mb-4 text-[11px] font-semibold uppercase tracking-[0.35em] text-[#777777] sm:text-xs"
-          >
-            / Community Trust — Testimonials
-          </motion.p>
-          <motion.h1
-            variants={headerMotion}
-            className="font-display text-4xl font-normal leading-[1.1] tracking-tight md:text-5xl lg:text-6xl"
-            style={{ color: TEXT }}
-          >
-            What{" "}
-            <span className="relative inline-block" style={{ color: ACCENT }}>
-              people
-            </span>{" "}
-            say
-          </motion.h1>
-          <motion.p
-            variants={headerMotion}
-            className="mt-6 max-w-2xl text-lg leading-relaxed md:text-xl"
-            style={{ color: MUTED }}
-          >
-            A few thoughts from people who have experienced the value of working together.
-          </motion.p>
-        </motion.header>
-
-        {loading && (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div
-                key={i}
-                className="h-64 animate-pulse rounded-2xl bg-white/60"
-              />
-            ))}
-          </div>
-        )}
-
-        {!loading && (
-          <motion.div
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            variants={container}
+    <LazyMotion features={domAnimation}>
+      <div className="min-h-screen pb-28" style={{ backgroundColor: BG }}>
+        <div className="page-wide pb-20 pt-6 sm:pt-8 lg:pt-10">
+          <m.header
+            className="mb-14 md:mb-20"
             initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-40px" }}
+            animate="show"
+            variants={{
+              hidden: { opacity: 1 },
+              show: { opacity: 1, transition: { staggerChildren: 0.15 } },
+            }}
           >
-            {display.map((t) => (
-              <motion.article
-                key={t.id}
-                variants={item}
-                className="flex flex-col rounded-2xl border border-black/[0.04] bg-white p-6 shadow-sm"
-              >
-                <Stars count={t.rating ?? 5} />
-                <p className="flex-1 leading-relaxed" style={{ color: TEXT }}>
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-                <hr className="my-5 border-[#E5E5E5]" />
-                <div>
-                  <p className="font-semibold" style={{ color: TEXT }}>
-                    {t.name}
+            <m.p
+              variants={headerMotion}
+              className="mb-4 text-[11px] font-semibold uppercase tracking-[0.35em] text-[#777777] sm:text-xs"
+            >
+              / Community Trust — Testimonials
+            </m.p>
+            <m.h1
+              variants={headerMotion}
+              className="font-display text-4xl font-normal leading-[1.1] tracking-tight md:text-5xl lg:text-6xl"
+              style={{ color: TEXT }}
+            >
+              What{" "}
+              <span className="relative inline-block" style={{ color: ACCENT }}>
+                people
+              </span>{" "}
+              say
+            </m.h1>
+            <m.p
+              variants={headerMotion}
+              className="mt-6 max-w-2xl text-lg leading-relaxed md:text-xl"
+              style={{ color: MUTED }}
+            >
+              A few thoughts from people who have experienced the value of working together.
+            </m.p>
+          </m.header>
+
+          {loading && (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div
+                  key={i}
+                  className="h-64 animate-pulse rounded-2xl bg-white/60"
+                />
+              ))}
+            </div>
+          )}
+
+          {!loading && (
+            <m.div
+              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+              variants={container}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-40px" }}
+            >
+              {display.map((t) => (
+                <m.article
+                  key={t.id}
+                  variants={item}
+                  className="flex flex-col rounded-2xl border border-black/[0.04] bg-white p-6 shadow-sm"
+                >
+                  <Stars count={t.rating ?? 5} />
+                  <p className="flex-1 leading-relaxed" style={{ color: TEXT }}>
+                    &ldquo;{t.quote}&rdquo;
                   </p>
-                  <p className="mt-1 text-sm" style={{ color: MUTED }}>
-                    {t.role}
-                    {t.company ? ` · ${t.company}` : ""}
-                  </p>
-                  {t.date && (
-                    <p className="mt-3 text-xs" style={{ color: "#999" }}>
-                      {t.date}
+                  <hr className="my-5 border-[#E5E5E5]" />
+                  <div>
+                    <p className="font-semibold" style={{ color: TEXT }}>
+                      {t.name}
                     </p>
-                  )}
-                </div>
-              </motion.article>
-            ))}
-          </motion.div>
-        )}
+                    <p className="mt-1 text-sm" style={{ color: MUTED }}>
+                      {t.role}
+                      {t.company ? ` · ${t.company}` : ""}
+                    </p>
+                    {t.date && (
+                      <p className="mt-3 text-xs" style={{ color: "#999" }}>
+                        {t.date}
+                      </p>
+                    )}
+                  </div>
+                </m.article>
+              ))}
+            </m.div>
+          )}
+        </div>
       </div>
-    </div>
+    </LazyMotion>
   );
 }

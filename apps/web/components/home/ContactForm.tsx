@@ -75,7 +75,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
 
     setStatus("loading");
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("/submit/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
