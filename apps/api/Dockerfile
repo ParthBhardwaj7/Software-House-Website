@@ -29,14 +29,6 @@ RUN npx tsc -p tsconfig.build.json
 # Fail the build loudly if the entrypoint wasn't produced
 RUN test -f dist/main.js || (echo "ERROR: dist/main.js missing after tsc — check tsconfig.build.json" && exit 1)
 
-# Compile seed-admin script separately (excluded from main tsconfig.build.json)
-# Output goes to dist/prisma/seed-admin.js so it's available in the runner stage
-RUN npx tsc --target ES2019 --module CommonJS --moduleResolution node \
-    --esModuleInterop true --skipLibCheck true \
-    --outDir /app/apps/api/dist \
-    /app/apps/api/prisma/seed-admin.ts \
-  && echo "seed-admin.js compiled OK"
-
 # ────────────────────────────────────────────────────────────
 # Stage 2 – Runner (production image)
 # Only production deps; no build tools in the final image
