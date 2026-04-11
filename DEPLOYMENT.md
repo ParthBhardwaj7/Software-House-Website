@@ -134,7 +134,7 @@ GitHub repo → Settings → Secrets and Variables → Actions → New repositor
 | `DO_HOST` | `167.71.230.103` | Server ka IP |
 | `DO_USERNAME` | `root` | SSH login user |
 | `DO_SSH_KEY` | Private SSH key (pura, `-----BEGIN` se `-----END` tak) | Server pe SSH karne ke liye |
-| `NEXT_PUBLIC_API_URL` | `http://apncodix.com/api` | Next.js mein API calls ke liye (build time) |
+| `NEXT_PUBLIC_API_URL` | `https://apncodix.com/api` | Next.js mein API calls ke liye (build time) � HTTPS required |
 | `NEXT_PUBLIC_SITE_URL` | `http://apncodix.com` | Site URL (build time) |
 
 ### SSH Key Generate Kaise Karo (agar nahi hai)
