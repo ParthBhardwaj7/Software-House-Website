@@ -76,6 +76,21 @@ jobs:
           cache-to: type=gha,mode=max,scope=web
 
       # ─────────────────────────────────────────────────────
+      # 4b. Make both GHCR packages public so the server can pull
+      #     without credentials (manual docker compose pull works too)
+      # ─────────────────────────────────────────────────────
+      - name: 🌐 Make GHCR packages public
+        run: |
+          for PKG in software-house-api software-house-web; do
+            curl -s -X PATCH \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/user/packages/container/${PKG}" \
+              -d '{"visibility":"public"}' \
+              | grep -E '"visibility"|"message"' || true
+          done
+
+      # ─────────────────────────────────────────────────────
       # 5. Deploy to DigitalOcean droplet
       #    Server only pulls pre-built images — never builds anything
       # ─────────────────────────────────────────────────────
