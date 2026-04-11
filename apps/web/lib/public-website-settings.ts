@@ -1,5 +1,6 @@
 import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
 import { DUMMY_SITE_SETTINGS } from "@/lib/dummy-data";
+import { getSiteUrlString } from "@/lib/site-url";
 import { mergeFooterConfig, type FooterConfig } from "@/lib/footer-defaults";
 import {
   parseMarketingDeliveryJson,
@@ -14,6 +15,7 @@ export const DEFAULT_SITE_DESCRIPTION =
 
 export const MAX_ABOUT_PAGE_CONTENT = 100_000;
 export const MAX_LOGO_URL_LEN = 2000;
+export const MAX_FAVICON_URL_LEN = 2000;
 
 export type SocialLinks = {
   twitter: string;
@@ -32,6 +34,8 @@ export type PublicWebsiteSettings = {
   tagline: string;
   addressLine: string;
   logoUrl: string;
+  /** Empty = use built-in app/icon.tsx. Otherwise full https URL or site-relative path /... */
+  faviconUrl: string;
   siteDescription: string;
   seoTitleSuffix: string;
   aboutPageContent: string;
@@ -130,6 +134,7 @@ export function mergePublicWebsiteSettings(data: Record<string, unknown>): Publi
       if (typeof raw === "string" && raw.trim()) return raw.trim().slice(0, MAX_LOGO_URL_LEN);
       return DEFAULT_SITE_LOGO_PATH;
     })(),
+    faviconUrl: strPick(data, "faviconUrl", "", MAX_FAVICON_URL_LEN),
     siteDescription: siteDescription || DEFAULT_SITE_DESCRIPTION,
     seoTitleSuffix: seoTitleSuffix || "Modern Software Agency",
     aboutPageContent: strPick(data, "aboutPageContent", "", MAX_ABOUT_PAGE_CONTENT),
@@ -144,4 +149,16 @@ export function mergePublicWebsiteSettings(data: Record<string, unknown>): Publi
       typeof data.marketingDeliveryJson === "string" ? data.marketingDeliveryJson : null
     ),
   };
+}
+
+/** Absolute URL for Next.js `metadata.icons`, or null to keep file-based `app/icon.tsx`. */
+export function resolveFaviconUrlForMetadata(faviconUrl: string): string | null {
+  const t = faviconUrl.trim().slice(0, MAX_FAVICON_URL_LEN);
+  if (!t) return null;
+  if (/^https?:\/\//i.test(t)) return t;
+  if (t.startsWith("/")) {
+    const base = getSiteUrlString().replace(/\/$/, "");
+    return `${base}${t}`;
+  }
+  return null;
 }

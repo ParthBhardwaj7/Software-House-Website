@@ -11,6 +11,7 @@ import { BoatCursor } from "@/components/effects/BoatCursor";
 import { SiteJsonLd } from "@/components/seo/SiteJsonLd";
 import { defaultOgImages } from "@/lib/default-og";
 import { getSiteUrl } from "@/lib/site-url";
+import { resolveFaviconUrlForMetadata } from "@/lib/public-website-settings";
 import { getPublicWebsiteSettings } from "@/lib/server-website-settings";
 
 const sans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
@@ -20,6 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const s = await getPublicWebsiteSettings();
   const titleDefault = `${s.websiteName} | ${s.seoTitleSuffix}`;
   const ogImages = defaultOgImages(s.websiteName);
+  const faviconAbs = resolveFaviconUrlForMetadata(s.faviconUrl);
   return {
     metadataBase: getSiteUrl(),
     title: {
@@ -45,6 +47,14 @@ export async function generateMetadata(): Promise<Metadata> {
       description: s.siteDescription,
       images: ogImages,
     },
+    ...(faviconAbs
+      ? {
+          icons: {
+            icon: [{ url: faviconAbs }],
+            apple: [{ url: faviconAbs }],
+          },
+        }
+      : {}),
   };
 }
 

@@ -15,6 +15,7 @@ export class SettingsController {
       'tagline',
       'addressLine',
       'logoUrl',
+      'faviconUrl',
       'siteDescription',
       'seoTitleSuffix',
       'aboutPageContent',

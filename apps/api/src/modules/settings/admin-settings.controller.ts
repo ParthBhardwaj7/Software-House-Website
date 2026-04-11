@@ -51,6 +51,11 @@ class UpdateSettingsDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(2000)
+  faviconUrl?: string;
+
+  @IsOptional()
+  @IsString()
   @MaxLength(500)
   siteDescription?: string;
 
@@ -105,6 +110,7 @@ export class AdminSettingsController {
       'tagline',
       'addressLine',
       'logoUrl',
+      'faviconUrl',
       'siteDescription',
       'seoTitleSuffix',
       'aboutPageContent',
@@ -128,6 +134,7 @@ export class AdminSettingsController {
     if (dto.tagline != null) data.tagline = String(dto.tagline).trim().slice(0, 500);
     if (dto.addressLine != null) data.addressLine = String(dto.addressLine).trim().slice(0, 500);
     if (dto.logoUrl != null) data.logoUrl = String(dto.logoUrl).trim().slice(0, 2000);
+    if (dto.faviconUrl != null) data.faviconUrl = String(dto.faviconUrl).trim().slice(0, 2000);
     if (dto.siteDescription != null) data.siteDescription = String(dto.siteDescription).trim().slice(0, 500);
     if (dto.seoTitleSuffix != null) data.seoTitleSuffix = String(dto.seoTitleSuffix).trim().slice(0, 120);
     if (dto.aboutPageContent != null)
@@ -156,6 +163,7 @@ export class AdminSettingsController {
       'tagline',
       'addressLine',
       'logoUrl',
+      'faviconUrl',
       'siteDescription',
       'seoTitleSuffix',
       'aboutPageContent',

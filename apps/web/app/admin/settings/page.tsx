@@ -171,6 +171,7 @@ export default function AdminSettingsPage() {
     tagline: "",
     addressLine: "",
     logoUrl: "",
+    faviconUrl: "",
     siteDescription: "",
     seoTitleSuffix: "",
     aboutPageContent: "",
@@ -194,6 +195,7 @@ export default function AdminSettingsPage() {
         tagline?: string;
         addressLine?: string;
         logoUrl?: string;
+        faviconUrl?: string;
         siteDescription?: string;
         seoTitleSuffix?: string;
         aboutPageContent?: string;
@@ -209,6 +211,7 @@ export default function AdminSettingsPage() {
           tagline: r.tagline || "",
           addressLine: r.addressLine || "",
           logoUrl: r.logoUrl || "",
+          faviconUrl: r.faviconUrl || "",
           siteDescription: r.siteDescription || "",
           seoTitleSuffix: r.seoTitleSuffix || "",
           aboutPageContent: r.aboutPageContent || "",
@@ -237,6 +240,7 @@ export default function AdminSettingsPage() {
           tagline: form.tagline,
           addressLine: form.addressLine,
           logoUrl: form.logoUrl,
+          faviconUrl: form.faviconUrl,
           siteDescription: form.siteDescription,
           seoTitleSuffix: form.seoTitleSuffix,
           aboutPageContent: form.aboutPageContent,
@@ -346,6 +350,21 @@ export default function AdminSettingsPage() {
                 <p className="mt-1 text-xs text-muted-foreground">
                   Leave empty to use the default wordmark. For a custom logo, use a wide transparent PNG or SVG (~480×120px
                   source, or 960×240@2x). The header shows ~40px height; the home hero ~56–68px.
+                </p>
+              </div>
+              <div>
+                <Label htmlFor="faviconUrl">Favicon URL</Label>
+                <Input
+                  id="faviconUrl"
+                  value={form.faviconUrl}
+                  onChange={(e) => setForm((f) => ({ ...f, faviconUrl: e.target.value }))}
+                  className="mt-1 border-[#E5E7EB]"
+                  placeholder="https://…/favicon.ico or /favicon.ico"
+                />
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Browser tab icon. Use a square image (PNG, ICO, or SVG), ideally 32×32 or 64×64. Full{" "}
+                  <code className="rounded bg-muted px-1">https://</code> URL or a path on this site like{" "}
+                  <code className="rounded bg-muted px-1">/my-icon.png</code>. Leave empty to keep the built-in default icon.
                 </p>
               </div>
               <div>
