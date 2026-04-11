@@ -5,7 +5,7 @@ import { getTeamMembers } from "@/lib/team";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Start a project or book a consultation with APN Codix — tell us about your goals and we’ll respond quickly.",
+    "Start a project or book a consultation with APNCODIX — tell us about your goals and we’ll respond quickly.",
 };
 
 export default async function ContactPage() {

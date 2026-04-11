@@ -18,7 +18,7 @@ export async function generateMetadata({
   const description = (page.metaDescription?.trim() || page.subheadline || page.headline).slice(0, 160);
   const base = getSiteUrlString();
   const canonical = `${base}/site/${encodeURIComponent(slug)}`;
-  const ogTitle = `${title} | APN Codix`;
+  const ogTitle = `${title} | APNCODIX`;
   const images = defaultOgImages();
   return {
     title,
@@ -30,7 +30,7 @@ export async function generateMetadata({
       url: canonical,
       title: ogTitle,
       description,
-      siteName: "APN Codix",
+      siteName: "APNCODIX",
       locale: "en_US",
       images,
     },

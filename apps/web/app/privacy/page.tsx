@@ -7,7 +7,7 @@ import { getSiteUrlString } from "@/lib/site-url";
 const PATH = "/privacy";
 const FALLBACK_TITLE = "Privacy Policy";
 const FALLBACK_DESC =
-  "How APN Codix collects, uses, and protects your information when you use our website and services.";
+  "How APNCODIX collects, uses, and protects your information when you use our website and services.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getPublicFooterConfig();

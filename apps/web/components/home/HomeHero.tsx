@@ -26,7 +26,7 @@ type HomeHeroProps = {
 export function HomeHero({
   content = DEFAULT_MARKETING_HOME,
   logoUrl = DEFAULT_SITE_LOGO_PATH,
-  websiteName = "APN Codix",
+  websiteName = "APNCODIX",
   socialLinks = parseSocialLinksFromRaw(""),
 }: HomeHeroProps) {
   const mk = content;
@@ -137,12 +137,6 @@ export function HomeHero({
                 className="h-14 w-auto max-w-[min(100%,280px)] object-contain object-center lg:object-left sm:h-16 md:h-[4.25rem]"
               />
             </m.div>
-            <m.p
-              className="mb-4 text-[11px] font-semibold uppercase tracking-[0.35em] text-[#64748B] sm:text-xs"
-              variants={item}
-            >
-              {mk.eyebrow}
-            </m.p>
             <m.h1
               className="text-balance font-display text-[2.125rem] font-normal leading-[1.08] tracking-tight text-[#0F172A] sm:text-5xl md:text-6xl lg:text-6xl xl:text-[4.25rem] xl:leading-[1.05]"
               variants={item}

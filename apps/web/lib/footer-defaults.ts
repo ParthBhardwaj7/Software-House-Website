@@ -47,7 +47,7 @@ export const DEFAULT_FOOTER_CONFIG: FooterConfig = {
   newsletterDescription:
     "Get ready to work together for the better solution for your business",
   officeHours: "Mon–Fri: 10:00 AM – 06:30 PM",
-  copyrightEntity: "APN Codix",
+  copyrightEntity: "APNCODIX",
 };
 
 function isFooterLink(x: unknown): x is FooterLink {

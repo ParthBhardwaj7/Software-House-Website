@@ -165,7 +165,7 @@ const jump = [
 export default function AdminSettingsPage() {
   const token = getAccessToken();
   const [form, setForm] = useState({
-    websiteName: "APN Codix",
+    websiteName: "APNCODIX",
     contactEmail: "",
     phoneNumber: "",
     tagline: "",
@@ -205,7 +205,7 @@ export default function AdminSettingsPage() {
       }>("/admin/settings", token)
       .then((r) => {
         setForm({
-          websiteName: r.websiteName || "APN Codix",
+          websiteName: r.websiteName || "APNCODIX",
           contactEmail: r.contactEmail || "",
           phoneNumber: r.phoneNumber || "",
           tagline: r.tagline || "",

@@ -1,7 +1,7 @@
 /** Dummy content for visual QA when API is empty or during development (min 6 items per list where applicable) */
 
 export const DUMMY_SITE_SETTINGS = {
-  websiteName: "APN Codix",
+  websiteName: "APNCODIX",
   contactEmail: "hello@apncodix.com",
   phoneNumber: "+91 98765 43210",
   tagline: "Modern software for ambitious teams.",
@@ -78,7 +78,7 @@ export const DUMMY_TESTIMONIALS = [
     role: "CTO",
     company: "Northwind Labs",
     quote:
-      "APN Codix delivered our platform ahead of schedule. Communication was clear and the quality exceeded expectations.",
+      "APNCODIX delivered our platform ahead of schedule. Communication was clear and the quality exceeded expectations.",
     avatarUrl: null,
     rating: 5,
     date: "September 2025",
@@ -133,7 +133,7 @@ export const DUMMY_TESTIMONIALS = [
     role: "Head of Product",
     company: "FinEdge",
     quote:
-      "From discovery to launch, APN Codix felt like an extension of our team. Metrics moved within the first month.",
+      "From discovery to launch, APNCODIX felt like an extension of our team. Metrics moved within the first month.",
     avatarUrl: null,
     rating: 5,
     date: "April 2025",

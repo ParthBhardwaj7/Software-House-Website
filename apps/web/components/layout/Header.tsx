@@ -39,7 +39,7 @@ export function Header() {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#22C55E] sm:h-9 sm:w-9">
                 <span className="text-sm font-bold text-white">A</span>
               </div>
-              <span className="text-base font-bold text-[#0F172A] sm:text-lg">APN Codix</span>
+              <span className="text-base font-bold text-[#0F172A] sm:text-lg">APNCODIX</span>
             </Link>
 
             <nav className="hidden md:flex md:flex-1 md:justify-center md:gap-6 lg:gap-8">

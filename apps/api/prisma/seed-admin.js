@@ -23,7 +23,7 @@ async function main() {
   console.log('[seed] Admin ready:', admin.email);
 
   const defaults = [
-    { key: 'websiteName',      value: 'APN Codix' },
+    { key: 'websiteName',      value: 'APNCODIX' },
     { key: 'logoUrl',          value: '/apn-codix-logo.svg' },
     { key: 'contactEmail',     value: 'info@apncodix.com' },
     { key: 'phoneNumber',      value: '' },

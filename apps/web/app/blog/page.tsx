@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Engineering notes from APN Codix — AI, backends, product delivery, and how we build software that scales.",
+    "Engineering notes from APNCODIX — AI, backends, product delivery, and how we build software that scales.",
   alternates: { canonical: "/blog" },
 };
 

@@ -25,7 +25,7 @@ export type MarketingDeliveryContent = {
 };
 
 export const DEFAULT_MARKETING_HOME: MarketingHomeContent = {
-  eyebrow: "APN Codix",
+  eyebrow: "APNCODIX",
   headingPrefix: "Powering the ",
   headingEmphasis: "next",
   headingMiddle: " generation of ",

@@ -4,7 +4,7 @@ import { DUMMY_TEAM_MEMBERS } from "@/lib/dummy-data";
 
 export const metadata: Metadata = {
   title: "Our Team",
-  description: "Meet the designers, engineers, and leads behind APN Codix — the team shipping your next product.",
+  description: "Meet the designers, engineers, and leads behind APNCODIX — the team shipping your next product.",
 };
 
 export default function TeamsPage() {
@@ -15,7 +15,7 @@ export default function TeamsPage() {
           Our Team
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
-          The people building products, design, and relationships at APN Codix.
+          The people building products, design, and relationships at APNCODIX.
         </p>
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {DUMMY_TEAM_MEMBERS.map((m) => (
