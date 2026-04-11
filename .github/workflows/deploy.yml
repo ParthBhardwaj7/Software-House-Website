@@ -56,7 +56,34 @@ jobs:
           cache-to: type=gha,mode=max,scope=api
 
       # ─────────────────────────────────────────────────────
-      # 4. Build + push Web image
+      # 4. Resolve NEXT_PUBLIC_* for web build
+      #    Admin login + client fetch use NEXT_PUBLIC_API_URL (must NOT be empty — else bundle
+      #    falls back to localhost:3001). If only SITE_URL is set, derive API as SITE + /api.
+      # ─────────────────────────────────────────────────────
+      - name: Resolve NEXT_PUBLIC_* for web Docker build
+        env:
+          SITE: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          API: ${{ secrets.NEXT_PUBLIC_API_URL }}
+        run: |
+          API_URL="$API"
+          SITE_URL="$SITE"
+          if [ -z "$API_URL" ] && [ -n "$SITE_URL" ]; then
+            API_URL="${SITE_URL%/}/api"
+            echo "::notice::NEXT_PUBLIC_API_URL was empty — using ${API_URL} (SITE_URL + /api)"
+          fi
+          if [ -z "$API_URL" ]; then
+            echo "::error::Set secret NEXT_PUBLIC_API_URL=https://apncodix.com/api OR NEXT_PUBLIC_SITE_URL=https://apncodix.com"
+            exit 1
+          fi
+          if [ -z "$SITE_URL" ]; then
+            SITE_URL="${API_URL%/api}"
+            SITE_URL="${SITE_URL%/}"
+          fi
+          echo "NEXT_PUBLIC_API_URL=$API_URL" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SITE_URL=$SITE_URL" >> $GITHUB_ENV
+
+      # ─────────────────────────────────────────────────────
+      # 4b. Build + push Web image
       #    NEXT_PUBLIC_* vars are baked into the client bundle at this step.
       #    They are NOT runtime env vars — the .env on the server does nothing for them.
       # ─────────────────────────────────────────────────────
@@ -70,13 +97,13 @@ jobs:
             ghcr.io/${{ env.OWNER }}/software-house-web:latest
             ghcr.io/${{ env.OWNER }}/software-house-web:${{ github.sha }}
           build-args: |
-            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
-            NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
+            NEXT_PUBLIC_API_URL=${{ env.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_SITE_URL=${{ env.NEXT_PUBLIC_SITE_URL }}
           cache-from: type=gha,scope=web
           cache-to: type=gha,mode=max,scope=web
 
       # ─────────────────────────────────────────────────────
-      # 4b. Make both GHCR packages public so the server can pull
+      # 4c. Make both GHCR packages public so the server can pull
       #     without credentials (manual docker compose pull works too)
       # ─────────────────────────────────────────────────────
       - name: 🌐 Make GHCR packages public
