@@ -16,6 +16,7 @@ import {
   type FooterLink,
 } from "@/lib/footer-defaults";
 import { MAX_ABOUT_PAGE_CONTENT } from "@/lib/public-website-settings";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 const MAX_LINKS = 12;
 
@@ -339,33 +340,20 @@ export default function AdminSettingsPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="logoUrl">Logo image URL</Label>
-                <Input
-                  id="logoUrl"
+                <ImageUpload
+                  label="Logo image"
                   value={form.logoUrl}
-                  onChange={(e) => setForm((f) => ({ ...f, logoUrl: e.target.value }))}
-                  className="mt-1 border-[#E5E7EB]"
-                  placeholder="https://… (PNG/SVG/JPG, https only)"
+                  onChange={(url) => setForm((f) => ({ ...f, logoUrl: url }))}
+                  hint="Leave empty to use the default wordmark. Use a wide transparent PNG or SVG (~480×120px). Header shows ~40px height."
                 />
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Leave empty to use the default wordmark. For a custom logo, use a wide transparent PNG or SVG (~480×120px
-                  source, or 960×240@2x). The header shows ~40px height; the home hero ~56–68px.
-                </p>
               </div>
               <div>
-                <Label htmlFor="faviconUrl">Favicon URL</Label>
-                <Input
-                  id="faviconUrl"
+                <ImageUpload
+                  label="Favicon (browser tab icon)"
                   value={form.faviconUrl}
-                  onChange={(e) => setForm((f) => ({ ...f, faviconUrl: e.target.value }))}
-                  className="mt-1 border-[#E5E7EB]"
-                  placeholder="https://…/favicon.ico or /favicon.ico"
+                  onChange={(url) => setForm((f) => ({ ...f, faviconUrl: url }))}
+                  hint="Square image (PNG/ICO/SVG), ideally 32×32 or 64×64. Leave empty to keep the built-in default icon."
                 />
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Browser tab icon. Use a square image (PNG, ICO, or SVG), ideally 32×32 or 64×64. Full{" "}
-                  <code className="rounded bg-muted px-1">https://</code> URL or a path on this site like{" "}
-                  <code className="rounded bg-muted px-1">/my-icon.png</code>. Leave empty to keep the built-in default icon.
-                </p>
               </div>
               <div>
                 <Label htmlFor="seoTitleSuffix">Browser tab suffix</Label>

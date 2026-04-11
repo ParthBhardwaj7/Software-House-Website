@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 export default function EditTestimonialPage() {
   const router = useRouter();
@@ -20,18 +21,20 @@ export default function EditTestimonialPage() {
     role: "",
     company: "",
     quote: "",
+    avatarUrl: "",
     rating: 5,
   });
 
   useEffect(() => {
     if (!token) return;
     api
-      .get<{ name: string; role: string; company: string | null; quote: string; rating: number | null }>(`/admin/testimonials/${id}`, token)
+      .get<{ name: string; role: string; company: string | null; quote: string; avatarUrl: string | null; rating: number | null }>(`/admin/testimonials/${id}`, token)
       .then((p) => setForm({
         name: p.name,
         role: p.role,
         company: p.company || "",
         quote: p.quote,
+        avatarUrl: p.avatarUrl || "",
         rating: p.rating || 5,
       }))
       .catch(() => router.push("/anish/testimonials"));
@@ -43,6 +46,7 @@ export default function EditTestimonialPage() {
     await api.put(`/admin/testimonials/${id}`, {
       ...form,
       company: form.company || undefined,
+      avatarUrl: form.avatarUrl || undefined,
       rating: form.rating || undefined,
     }, token);
     router.push("/anish/testimonials");
@@ -71,6 +75,15 @@ export default function EditTestimonialPage() {
         <div>
           <Label htmlFor="quote">Quote</Label>
           <Textarea id="quote" rows={4} value={form.quote} onChange={(e) => setForm((f) => ({ ...f, quote: e.target.value }))} required />
+        </div>
+        <div>
+          <ImageUpload
+            label="Avatar photo"
+            value={form.avatarUrl}
+            onChange={(url) => setForm((f) => ({ ...f, avatarUrl: url }))}
+            hint="Person's photo. Square image works best."
+            previewShape="circle"
+          />
         </div>
         <div>
           <Label htmlFor="rating">Rating (1-5)</Label>

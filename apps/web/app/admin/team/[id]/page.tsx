@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { api } from "@/lib/api";
@@ -11,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 function isProbablyUrl(s: string): boolean {
   const t = s.trim();
@@ -137,37 +137,14 @@ export default function EditTeamMemberPage() {
           />
         </div>
         <div>
-          <Label htmlFor="photoUrl">Photo URL</Label>
-          <Input
-            id="photoUrl"
-            type="url"
+          <ImageUpload
+            label="Photo"
             value={form.photoUrl}
-            onChange={(e) => {
-              setPreviewError(false);
-              setForm((f) => ({ ...f, photoUrl: e.target.value }));
-            }}
-            className={cn(errors.photoUrl && "border-destructive")}
+            onChange={(url) => { setPreviewError(false); setForm((f) => ({ ...f, photoUrl: url })); }}
+            hint="Square headshot works best. Will be displayed as a circle."
+            previewShape="circle"
           />
           {errors.photoUrl && <p className="mt-1 text-xs text-destructive">{errors.photoUrl}</p>}
-          <div className="mt-3">
-            <p className="mb-2 text-xs text-muted-foreground">Preview</p>
-            <div className="relative h-24 w-24 overflow-hidden rounded-full border bg-muted ring-2 ring-border">
-              {showPreview ? (
-                <Image
-                  src={form.photoUrl.trim()}
-                  alt=""
-                  fill
-                  className="object-cover"
-                  onError={() => setPreviewError(true)}
-                  unoptimized
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center px-1 text-center text-xs text-muted-foreground">
-                  {form.photoUrl.trim() ? "Invalid or loading" : "No image"}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
         <div>
           <Label htmlFor="sortOrder">Sort order</Label>

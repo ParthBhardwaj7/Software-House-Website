@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 export default function EditBlogPage() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function EditBlogPage() {
     slug: "",
     content: "",
     excerpt: "",
+    coverUrl: "",
     published: false,
   });
 
@@ -66,6 +68,14 @@ export default function EditBlogPage() {
             id="excerpt"
             value={form.excerpt || ""}
             onChange={(e) => setForm((f) => ({ ...f, excerpt: e.target.value }))}
+          />
+        </div>
+        <div>
+          <ImageUpload
+            label="Cover image"
+            value={form.coverUrl}
+            onChange={(url) => setForm((f) => ({ ...f, coverUrl: url }))}
+            hint="Blog cover image. Recommended: 1200×630px (16:9)."
           />
         </div>
         <div>

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 export default function NewTestimonialPage() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function NewTestimonialPage() {
     role: "",
     company: "",
     quote: "",
+    avatarUrl: "",
     rating: 5,
   });
 
@@ -27,6 +29,7 @@ export default function NewTestimonialPage() {
     await api.post("/admin/testimonials", {
       ...form,
       company: form.company || undefined,
+      avatarUrl: form.avatarUrl || undefined,
       rating: form.rating || undefined,
     }, token);
     router.push("/anish/testimonials");
@@ -55,6 +58,15 @@ export default function NewTestimonialPage() {
         <div>
           <Label htmlFor="quote">Quote</Label>
           <Textarea id="quote" rows={4} value={form.quote} onChange={(e) => setForm((f) => ({ ...f, quote: e.target.value }))} required />
+        </div>
+        <div>
+          <ImageUpload
+            label="Avatar photo"
+            value={form.avatarUrl}
+            onChange={(url) => setForm((f) => ({ ...f, avatarUrl: url }))}
+            hint="Person's photo. Square image works best."
+            previewShape="circle"
+          />
         </div>
         <div>
           <Label htmlFor="rating">Rating (1-5)</Label>

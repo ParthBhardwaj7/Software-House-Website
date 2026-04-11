@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 export default function EditProjectPage() {
   const router = useRouter();
@@ -73,8 +74,12 @@ export default function EditProjectPage() {
           <Textarea id="description" rows={4} value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} required />
         </div>
         <div>
-          <Label htmlFor="imageUrl">Image URL</Label>
-          <Input id="imageUrl" value={form.imageUrl} onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))} />
+          <ImageUpload
+            label="Project image"
+            value={form.imageUrl}
+            onChange={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
+            hint="Recommended: 800×500px or wider, JPG/PNG/WebP."
+          />
         </div>
         <div>
           <Label htmlFor="liveUrl">Live URL</Label>
