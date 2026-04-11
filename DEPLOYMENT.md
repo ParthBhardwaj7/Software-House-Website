@@ -1,6 +1,6 @@
-# Software House ‚?? Full Docker + CI/CD Deployment Guide
+# Software House ? Full Docker + CI/CD Deployment Guide
 
-> **Ye document ek complete reference hai** ‚?? agar server crash ho, naya droplet banana ho,
+> **Ye document ek complete reference hai** ? agar server crash ho, naya droplet banana ho,
 > ya koi aur deploy kare, sab kuch yahan se mil jayega bina kisi se puche.
 
 ---
@@ -26,19 +26,19 @@
 
 ```
 Internet (Browser)
-        ‚??
-        ‚?º
-DigitalOcean Droplet  ‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??
-‚??                                                              ‚??
-‚??   Nginx (port 80 / 443)                                     ‚??
-‚??       ‚??                                                      ‚??
-‚??       ‚??‚??‚?? /api/*  ‚??‚??strips /api/‚??‚??‚?∫ Docker: NestJS :3001    ‚??
-‚??       ‚??                                     ‚??               ‚??
-‚??       ‚??                             PostgreSQL :5432        ‚??
-‚??       ‚??                                                      ‚??
-‚??       ‚??‚??‚?? /*  ‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚?∫ Docker: Next.js :3000    ‚??
-‚??                                                              ‚??
-‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??
+        ?
+        ?
+DigitalOcean Droplet  ?????????????????????????????????????????
+?                                                              ?
+?   Nginx (port 80 / 443)                                     ?
+?       ?                                                      ?
+?       ??? /api/*  ??strips /api/??? Docker: NestJS :3001    ?
+?       ?                                     ?               ?
+?       ?                             PostgreSQL :5432        ?
+?       ?                                                      ?
+?       ??? /*  ??????????????????? Docker: Next.js :3000    ?
+?                                                              ?
+????????????????????????????????????????????????????????????????
 
 GitHub Container Registry (GHCR)
   ghcr.io/parthbhardwaj7/software-house-api:latest
@@ -49,8 +49,8 @@ GitHub Container Registry (GHCR)
 
 | Service    | Internal Docker Port | External (Nginx proxied) |
 |------------|---------------------|--------------------------|
-| Next.js    | 3000                | Port 80 ‚?? `/`            |
-| NestJS API | 3001                | Port 80 ‚?? `/api/`        |
+| Next.js    | 3000                | Port 80 ? `/`            |
+| NestJS API | 3001                | Port 80 ? `/api/`        |
 | PostgreSQL | 5432                | Not exposed publicly     |
 
 ---
@@ -59,35 +59,35 @@ GitHub Container Registry (GHCR)
 
 ```
 git push origin main
-        ‚??
-        ‚?º
+        ?
+        ?
 GitHub Actions (.github/workflows/deploy.yml)
-        ‚??
-        ‚??‚?? Step 1: Checkout code
-        ‚??
-        ‚??‚?? Step 2: Login to GHCR (GitHub's Docker registry)
-        ‚??
-        ‚??‚?? Step 3: Build API Docker image
-        ‚??           apps/api/Dockerfile
-        ‚??           Output: ghcr.io/user/software-house-api:latest
-        ‚??
-        ‚??‚?? Step 4: Build Web Docker image
-        ‚??           apps/web/Dockerfile
-        ‚??           NEXT_PUBLIC_API_URL baked in here permanently
-        ‚??           Output: ghcr.io/user/software-house-web:latest
-        ‚??
-        ‚??‚?? Step 5: SSH into DigitalOcean server
-                    ‚??‚?? git pull (sync code)
-                    ‚??‚?? docker compose pull (download new images)
-                    ‚??‚?? docker compose up -d (restart containers)
+        ?
+        ?? Step 1: Checkout code
+        ?
+        ?? Step 2: Login to GHCR (GitHub's Docker registry)
+        ?
+        ?? Step 3: Build API Docker image
+        ?           apps/api/Dockerfile
+        ?           Output: ghcr.io/user/software-house-api:latest
+        ?
+        ?? Step 4: Build Web Docker image
+        ?           apps/web/Dockerfile
+        ?           NEXT_PUBLIC_API_URL baked in here permanently
+        ?           Output: ghcr.io/user/software-house-web:latest
+        ?
+        ?? Step 5: SSH into DigitalOcean server
+                    ?? git pull (sync code)
+                    ?? docker compose pull (download new images)
+                    ?? docker compose up -d (restart containers)
 ```
 
 ### Important: NEXT_PUBLIC_* Variables
 
 ```
-NEXT_PUBLIC_API_URL aur NEXT_PUBLIC_SITE_URL ‚?? ye SIRF build time pe set hote hain.
+NEXT_PUBLIC_API_URL aur NEXT_PUBLIC_SITE_URL ? ye SIRF build time pe set hote hain.
 Docker image ke andar permanently bake ho jaate hain.
-Agar change karna ho ‚?? GitHub Secret update karo ‚?? naya push karo ‚?? image rebuild hogi.
+Agar change karna ho ? GitHub Secret update karo ? naya push karo ? image rebuild hogi.
 Runtime pe .env se NAHI aate.
 ```
 
@@ -127,14 +127,14 @@ ufw enable
 
 ## 4. GitHub Secrets Setup
 
-GitHub repo ‚?? Settings ‚?? Secrets and Variables ‚?? Actions ‚?? New repository secret
+GitHub repo ? Settings ? Secrets and Variables ? Actions ? New repository secret
 
 | Secret Name | Value | Kahan Use Hota Hai |
 |-------------|-------|--------------------|
 | `DO_HOST` | `167.71.230.103` | Server ka IP |
 | `DO_USERNAME` | `root` | SSH login user |
 | `DO_SSH_KEY` | Private SSH key (pura, `-----BEGIN` se `-----END` tak) | Server pe SSH karne ke liye |
-| `NEXT_PUBLIC_API_URL` | `https://apncodix.com/api` | Browser / admin login ? agar secret khali ho to code `localhost:3001` use karta hai. |
+| `NEXT_PUBLIC_API_URL` | `https://apncodix.com/api` | Browser/admin login. Secret khali ho to bundle `localhost:3001` use karta hai. |
 | `NEXT_PUBLIC_SITE_URL` | `https://apncodix.com` | Site URL (build time). Sirf ye set ho to CI `API_URL = SITE + /api` bana deta hai. |
 
 ### SSH Key Generate Kaise Karo (agar nahi hai)
@@ -150,7 +150,7 @@ ssh-copy-id -i ~/.ssh/deploy_key.pub root@167.71.230.103
 
 # Private key GitHub Secret mein daalo
 cat ~/.ssh/deploy_key
-# Pura output copy karo ‚?? DO_SSH_KEY secret mein paste karo
+# Pura output copy karo ? DO_SSH_KEY secret mein paste karo
 ```
 
 ---
@@ -176,7 +176,7 @@ JWT_REFRESH_SECRET=ANOTHER_RANDOM_LONG_SECRET_YAHAN_LIKHO
 EOF
 
 # 4. GHCR se images pull karne ke liye login karo
-# (GitHub ‚?? Settings ‚?? Developer settings ‚?? Personal access tokens ‚?? Classic)
+# (GitHub ? Settings ? Developer settings ? Personal access tokens ? Classic)
 # Permissions chahiye: read:packages
 echo "YOUR_GITHUB_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
 
@@ -202,7 +202,7 @@ software-house-website-postgres-1    Up X minutes (healthy)
 
 ## 6. Nginx Reverse Proxy Setup
 
-Nginx Docker ke upar baitha hai. Browser ‚?? Nginx (port 80) ‚?? Docker containers.
+Nginx Docker ke upar baitha hai. Browser ? Nginx (port 80) ? Docker containers.
 
 ```bash
 # 1. Config file banao
@@ -212,12 +212,12 @@ server {
     listen [::]:80;
     server_name 167.71.230.103 apncodix.com www.apncodix.com;
 
-    # ‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??
-    # API Routes ‚?? NestJS (port 3001)
+    # ?????????????????????????????????????????????????????
+    # API Routes ? NestJS (port 3001)
     # IMPORTANT: trailing slash in proxy_pass strips /api/ prefix
     # Browser bhejta hai: POST /api/contact
     # NestJS receive karta hai: POST /contact
-    # ‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??
+    # ?????????????????????????????????????????????????????
     location /api/ {
         proxy_pass http://127.0.0.1:3001/;
         proxy_http_version 1.1;
@@ -229,9 +229,9 @@ server {
         proxy_read_timeout 60s;
     }
 
-    # ‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??
-    # All Other Routes ‚?? Next.js (port 3000)
-    # ‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??‚??
+    # ?????????????????????????????????????????????????????
+    # All Other Routes ? Next.js (port 3000)
+    # ?????????????????????????????????????????????????????
     location / {
         proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
@@ -263,12 +263,12 @@ systemctl reload nginx
 ### Nginx Mental Model
 
 ```
-sites-available/  ‚?? Sab config files yahan store hote hain (enabled ho ya na ho)
-sites-enabled/    ‚?? Sirf symlinks hote hain active configs ke
+sites-available/  ? Sab config files yahan store hote hain (enabled ho ya na ho)
+sites-enabled/    ? Sirf symlinks hote hain active configs ke
                     Nginx sirf yahan se padhta hai
 
 Agar sites-available mein config hai par sites-enabled mein symlink nahi
-‚?? Nginx use karega HI NAHI
+? Nginx use karega HI NAHI
 ```
 
 ---
@@ -293,7 +293,7 @@ GitHub Actions baki sab khud karta hai. Track karo:
 
 on:
   push:
-    branches: [main]       # main pe push ‚?? trigger
+    branches: [main]       # main pe push ? trigger
 
 jobs:
   build-and-deploy:
@@ -405,10 +405,10 @@ curl -s -o /dev/null -w "Web: %{http_code}\n" http://localhost:3000
 curl -s -o /dev/null -w "API: %{http_code}\n" http://localhost:3001
 
 # Nginx se web accessible hai?
-curl -s -o /dev/null -w "Nginx‚??Web: %{http_code}\n" http://localhost
+curl -s -o /dev/null -w "Nginx?Web: %{http_code}\n" http://localhost
 
 # API route through nginx
-curl -s -o /dev/null -w "Nginx‚??API: %{http_code}\n" http://localhost/api/health
+curl -s -o /dev/null -w "Nginx?API: %{http_code}\n" http://localhost/api/health
 ```
 
 ### Environment Variables
@@ -462,7 +462,7 @@ docker compose -f docker-compose.prod.yml up -d
 
 ---
 
-### Bug 1 ‚?? `module: nodenext` in tsconfig.json
+### Bug 1 ? `module: nodenext` in tsconfig.json
 
 **Error Message:**
 ```
@@ -476,10 +476,10 @@ Error: Cannot find module '/app/apps/api/dist/main.js'
 "moduleResolution": "nodenext"
 ```
 
-NestJS ek **CommonJS** framework hai ‚?? ye `require()` use karta hai.
-`nodenext` **ESM** (ES Modules) ke liye hai ‚?? ye `import/export` use karta hai.
+NestJS ek **CommonJS** framework hai ? ye `require()` use karta hai.
+`nodenext` **ESM** (ES Modules) ke liye hai ? ye `import/export` use karta hai.
 
-Is mismatch ki wajah se `nest build` (webpack) silently fail hua ‚?? exit code `0` diya
+Is mismatch ki wajah se `nest build` (webpack) silently fail hua ? exit code `0` diya
 (Docker ko laga sab theek hai) lekin `dist/` folder bana hi nahi.
 
 **Fix:**
@@ -494,7 +494,7 @@ Is mismatch ki wajah se `nest build` (webpack) silently fail hua ‚?? exit code `
 
 ---
 
-### Bug 2 ‚?? Next.js `server.js` Wrong Path
+### Bug 2 ? Next.js `server.js` Wrong Path
 
 **Error Message:**
 ```
@@ -518,13 +518,13 @@ Jab `outputFileTracingRoot` monorepo root pe point karta hai, Next.js apna
 ```
 # Galat samajh (jo hum soch rahe the):
 standalone/
-  server.js        ‚?ê root mein hoga
+  server.js        ? root mein hoga
 
 # Actual output:
 standalone/
   apps/
     web/
-      server.js    ‚?ê app ke relative path pe hota hai!
+      server.js    ? app ke relative path pe hota hai!
   node_modules/
 ```
 
@@ -543,7 +543,7 @@ CMD ["node", "apps/web/server.js"]
 
 ---
 
-### Bug 3 ‚?? `nest build` (Webpack) Silent Failure in Docker
+### Bug 3 ? `nest build` (Webpack) Silent Failure in Docker
 
 **Error Message:**
 ```
@@ -562,7 +562,7 @@ Error: Cannot find module '/app/apps/api/dist/main.js'
 **Fix:**
 `nest build` bypass karo, seedha `tsc` use karo:
 ```dockerfile
-# apps/api/Dockerfile ‚?? builder stage mein
+# apps/api/Dockerfile ? builder stage mein
 RUN npx tsc -p tsconfig.build.json
 
 # Guard: agar file nahi bani to build fail karo loudly
@@ -576,26 +576,26 @@ RUN test -f dist/main.js || (echo "ERROR: dist/main.js missing!" && exit 1)
 
 ---
 
-### Bug 4 ‚?? TypeScript Output Galat Path Pe (`dist/src/main.js`)
+### Bug 4 ? TypeScript Output Galat Path Pe (`dist/src/main.js`)
 
 **Error (Guard se mila):**
 ```
-ERROR: dist/main.js missing after tsc ‚?? check tsconfig.build.json
+ERROR: dist/main.js missing after tsc ? check tsconfig.build.json
 ```
 
-**Kya Hua ‚?? TypeScript ka `rootDir` Auto-Calculation:**
+**Kya Hua ? TypeScript ka `rootDir` Auto-Calculation:**
 
 Jab `rootDir` explicitly set nahi hota, TypeScript **automatically compute karta hai**
 rootDir as the **common ancestor of ALL included `.ts` files**.
 
-`tsconfig.build.json` mein exclude tha: `test/`, `**/*spec.ts` ‚?? lekin `prisma/` nahi!
+`tsconfig.build.json` mein exclude tha: `test/`, `**/*spec.ts` ? lekin `prisma/` nahi!
 
 ```
 # Include hue files:
-apps/api/src/main.ts           ‚?ê NestJS source
-apps/api/src/modules/**/*.ts   ‚?ê NestJS source
-apps/api/prisma/seed.ts        ‚?ê Seed file (EXCLUDE NAHI THA!)
-apps/api/prisma/seed-admin.ts  ‚?ê Seed file (EXCLUDE NAHI THA!)
+apps/api/src/main.ts           ? NestJS source
+apps/api/src/modules/**/*.ts   ? NestJS source
+apps/api/prisma/seed.ts        ? Seed file (EXCLUDE NAHI THA!)
+apps/api/prisma/seed-admin.ts  ? Seed file (EXCLUDE NAHI THA!)
 ```
 
 TypeScript ne dekha files `src/` aur `prisma/` dono mein hain.
@@ -605,8 +605,8 @@ Common ancestor = `apps/api/` (parent of both).
 
 Output structure bana:
 ```
-src/main.ts      ‚??  dist/src/main.js    ‚?ê GALAT! Entrypoint expect karta tha dist/main.js
-prisma/seed.ts   ‚??  dist/prisma/seed.js
+src/main.ts      ?  dist/src/main.js    ? GALAT! Entrypoint expect karta tha dist/main.js
+prisma/seed.ts   ?  dist/prisma/seed.js
 ```
 
 **Fix (`apps/api/tsconfig.build.json`):**
@@ -622,7 +622,7 @@ prisma/seed.ts   ‚??  dist/prisma/seed.js
 
 Ab output:
 ```
-src/main.ts  ‚??  dist/main.js  ‚??
+src/main.ts  ?  dist/main.js  ?
 ```
 
 **Rule:**
@@ -632,7 +632,7 @@ src/main.ts  ‚??  dist/main.js  ‚??
 
 ---
 
-### Bug 5 ‚?? Nginx Default Page Dikh Raha Tha
+### Bug 5 ? Nginx Default Page Dikh Raha Tha
 
 **Error:** "Welcome to nginx!" dikh raha tha instead of site.
 
@@ -660,7 +660,7 @@ nginx -t && systemctl reload nginx
 
 ---
 
-### Bug 6 ‚?? `Cannot POST /api/contact` (404)
+### Bug 6 ? `Cannot POST /api/contact` (404)
 
 **Error:** NestJS 404 return kar raha tha API calls pe.
 
@@ -668,31 +668,31 @@ nginx -t && systemctl reload nginx
 Nginx config mein tha:
 ```nginx
 location /api/ {
-    proxy_pass http://127.0.0.1:3001;   ‚?ê trailing slash NAHI
+    proxy_pass http://127.0.0.1:3001;   ? trailing slash NAHI
 }
 ```
 
 **Bina trailing slash ke**: Nginx poora path forward karta hai.
 ```
-Browser  ‚??  POST /api/contact
-Nginx    ‚??  POST /api/contact  (to port 3001)
-NestJS   ‚??  Route /api/contact? NOT FOUND ‚?? 404
+Browser  ?  POST /api/contact
+Nginx    ?  POST /api/contact  (to port 3001)
+NestJS   ?  Route /api/contact? NOT FOUND ? 404
 ```
 
-NestJS routes hain: `/contact`, `/leads`, `/auth/login` ‚?? koi `/api/` prefix nahi.
+NestJS routes hain: `/contact`, `/leads`, `/auth/login` ? koi `/api/` prefix nahi.
 
-**Fix ‚?? Trailing Slash add karo:**
+**Fix ? Trailing Slash add karo:**
 ```nginx
 location /api/ {
-    proxy_pass http://127.0.0.1:3001/;  ‚?ê trailing slash HAI
+    proxy_pass http://127.0.0.1:3001/;  ? trailing slash HAI
 }
 ```
 
 **Trailing slash ke saath**: Nginx location prefix strip karta hai.
 ```
-Browser  ‚??  POST /api/contact
-Nginx    ‚??  POST /contact  (to port 3001) ‚?? /api/ strip ho gaya
-NestJS   ‚??  Route /contact? FOUND ‚?? 200 ‚??
+Browser  ?  POST /api/contact
+Nginx    ?  POST /contact  (to port 3001) ? /api/ strip ho gaya
+NestJS   ?  Route /contact? FOUND ? 200 ?
 ```
 
 **Rule:**
@@ -721,18 +721,18 @@ Result: Production image choti, fast to pull, less attack surface
 
 ```
 Har Dockerfile instruction ek "layer" hai.
-Agar instruction nahi badla ‚?? cache se serve hota hai (instant)
-Agar instruction badla ‚?? ye aur iske baad sab layers re-run hoti hain
+Agar instruction nahi badla ? cache se serve hota hai (instant)
+Agar instruction badla ? ye aur iske baad sab layers re-run hoti hain
 
 Isliye ye order SAHI hai:
-  COPY package.json ./        ‚?ê rarely changes ‚?? cached zyada
-  RUN npm ci                  ‚?ê slow, cached jab package.json nahi bada
-  COPY apps/api/ ./apps/api/  ‚?ê frequently changes ‚?? ye layer miss hogi
-  RUN npx tsc ...             ‚?ê re-runs sirf jab source code bada
+  COPY package.json ./        ? rarely changes ? cached zyada
+  RUN npm ci                  ? slow, cached jab package.json nahi bada
+  COPY apps/api/ ./apps/api/  ? frequently changes ? ye layer miss hogi
+  RUN npx tsc ...             ? re-runs sirf jab source code bada
 
 Aur ye order GALAT hai:
-  COPY . .                    ‚?ê koi bhi file badli to npm ci dobara chalega
-  RUN npm ci                  ‚?ê SLOW! Har baar
+  COPY . .                    ? koi bhi file badli to npm ci dobara chalega
+  RUN npm ci                  ? SLOW! Har baar
 ```
 
 ### npm Workspaces
@@ -745,27 +745,27 @@ Monorepo structure:
 
 npm sab dependencies ko ROOT node_modules mein install karta hai (hoisting).
 Matlab:
-  /app/node_modules/typescript    ‚?ê API ka TypeScript yahan hai
-  /app/node_modules/.bin/tsc      ‚?ê binary yahan hai
-  /app/node_modules/.bin/nest     ‚?ê NestJS CLI yahan hai
+  /app/node_modules/typescript    ? API ka TypeScript yahan hai
+  /app/node_modules/.bin/tsc      ? binary yahan hai
+  /app/node_modules/.bin/nest     ? NestJS CLI yahan hai
 
-Isliye Docker mein `npx tsc` ya `npx prisma` use karo ‚?? ye hoisted packages dhundhta hai.
+Isliye Docker mein `npx tsc` ya `npx prisma` use karo ? ye hoisted packages dhundhta hai.
 ```
 
 ### Next.js Standalone Output
 
 ```
-Normal Next.js build ‚?? node_modules 1GB+ chahiye runtime pe
-Standalone build     ‚?? sirf zaruri files trace karta hai ‚?? ~50MB
+Normal Next.js build ? node_modules 1GB+ chahiye runtime pe
+Standalone build     ? sirf zaruri files trace karta hai ? ~50MB
 
 next.config.js mein:
   output: 'standalone'
 
 Ye banata hai:
   .next/standalone/
-    server.js         ‚?ê ye run karo
-    node_modules/     ‚?ê minimal, traced dependencies
-    apps/web/.next/   ‚?ê server chunks (monorepo mein nested hota hai)
+    server.js         ? ye run karo
+    node_modules/     ? minimal, traced dependencies
+    apps/web/.next/   ? server chunks (monorepo mein nested hota hai)
 
 Run karne ka tarika:
   node apps/web/server.js
@@ -776,31 +776,31 @@ Run karne ka tarika:
 ```
 Rule:
   Bina trailing slash: proxy_pass http://localhost:3001
-    /api/users  ‚??  /api/users  (full path as-is)
+    /api/users  ?  /api/users  (full path as-is)
 
   Trailing slash ke saath: proxy_pass http://localhost:3001/
-    /api/users  ‚??  /users  (/api/ strip ho gaya)
+    /api/users  ?  /users  (/api/ strip ho gaya)
 
 Example:
   location /api/ {
-    proxy_pass http://localhost:3001/;  ‚?ê / means strip /api/
+    proxy_pass http://localhost:3001/;  ? / means strip /api/
   }
   Browser: GET /api/contacts
-  NestJS receives: GET /contacts  ‚??
+  NestJS receives: GET /contacts  ?
 ```
 
 ---
 
 ## 12. Project File Reference
 
-### Critical Files ‚?? Change Karte Waqt Dhyan Rakhna
+### Critical Files ? Change Karte Waqt Dhyan Rakhna
 
 | File | Kya Karta Hai | Common Mistake |
 |------|---------------|----------------|
 | `apps/api/tsconfig.json` | TypeScript config for NestJS | `module: nodenext` use mat karo |
 | `apps/api/tsconfig.build.json` | Build-specific TS config | `rootDir: "./src"` aur `prisma` exclude zaruri hai |
 | `apps/api/Dockerfile` | API Docker image build | `npm run build` ki jagah `npx tsc` use karo |
-| `apps/web/Dockerfile` | Web Docker image build | CMD mein `apps/web/server.js` ‚?? root ka nahi |
+| `apps/web/Dockerfile` | Web Docker image build | CMD mein `apps/web/server.js` ? root ka nahi |
 | `apps/web/next.config.js` | Next.js configuration | `outputFileTracingRoot` monorepo root pe point karna |
 | `.github/workflows/deploy.yml` | CI/CD pipeline | NEXT_PUBLIC vars yahan inject hote hain |
 | `docker-compose.prod.yml` | Production containers | `API_IMAGE`/`WEB_IMAGE` env vars se aata hai |
@@ -831,35 +831,35 @@ NEXT_PUBLIC_SITE_URL=http://apncodix.com
 
 ```
 Naya deploy karna?
-  ‚?? git push origin main  (bas itna)
+  ? git push origin main  (bas itna)
 
 Site nahi dikh rahi?
-  ‚?? docker ps  (containers running hain?)
-  ‚?? nginx -t && systemctl reload nginx  (nginx theek hai?)
-  ‚?? curl http://localhost:3000  (locally kaam karta hai?)
+  ? docker ps  (containers running hain?)
+  ? nginx -t && systemctl reload nginx  (nginx theek hai?)
+  ? curl http://localhost:3000  (locally kaam karta hai?)
 
 API 404 dikh rahi?
-  ‚?? grep proxy_pass /etc/nginx/sites-available/software-house
-  ‚?? Trailing slash check karo: proxy_pass http://127.0.0.1:3001/;
+  ? grep proxy_pass /etc/nginx/sites-available/software-house
+  ? Trailing slash check karo: proxy_pass http://127.0.0.1:3001/;
 
 Container restart loop mein?
-  ‚?? docker logs --tail 50 <container-name>
+  ? docker logs --tail 50 <container-name>
 
 Docker image nahi ban rahi (GHA fail)?
-  ‚?? GHA logs dekho: github.com/REPO/actions
-  ‚?? `dist/main.js missing` error = tsconfig.build.json check karo
+  ? GHA logs dekho: github.com/REPO/actions
+  ? `dist/main.js missing` error = tsconfig.build.json check karo
 
 NEXT_PUBLIC vars change karne hain?
-  ‚?? GitHub Secrets update karo
-  ‚?? git push (kuch bhi) karo taaki image rebuild ho
+  ? GitHub Secrets update karo
+  ? git push (kuch bhi) karo taaki image rebuild ho
 
 Poora system restart?
-  ‚?? cd ~/Software-House-Website
-  ‚?? export API_IMAGE=ghcr.io/parthbhardwaj7/software-house-api:latest
-  ‚?? export WEB_IMAGE=ghcr.io/parthbhardwaj7/software-house-web:latest
-  ‚?? docker compose -f docker-compose.prod.yml up -d
+  ? cd ~/Software-House-Website
+  ? export API_IMAGE=ghcr.io/parthbhardwaj7/software-house-api:latest
+  ? export WEB_IMAGE=ghcr.io/parthbhardwaj7/software-house-web:latest
+  ? docker compose -f docker-compose.prod.yml up -d
 ```
 
 ---
 
-*Last updated: April 2026 ‚?? All bugs documented from actual production debugging session.*
+*Last updated: April 2026 ? All bugs documented from actual production debugging session.*
