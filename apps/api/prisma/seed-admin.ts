@@ -3,55 +3,41 @@ import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
+// ─── Admin Credentials ────────────────────────────────────────────────────────
+// Change these before first deploy, then update via admin panel (/anish)
+const ADMIN_EMAIL    = 'admin@apncodix.com';
+const ADMIN_PASSWORD = 'Apncodix@2024!';
+// ─────────────────────────────────────────────────────────────────────────────
+
 async function main() {
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@apncodix.com';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'ChangeMe123!';
+  const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
 
-  const hashedPassword = await bcrypt.hash(adminPassword, 10);
   const admin = await prisma.user.upsert({
-    where: { email: adminEmail },
+    where:  { email: ADMIN_EMAIL },
     update: { password: hashedPassword },
-    create: {
-      email: adminEmail,
-      password: hashedPassword,
-    },
+    create: { email: ADMIN_EMAIL, password: hashedPassword },
   });
-  console.log('Admin user created/updated:', admin.email);
+  console.log('[seed] Admin ready:', admin.email);
 
-  const settings = [
-    { key: 'websiteName', value: process.env.SITE_NAME || 'APN Codix' },
-    { key: 'logoUrl', value: '/apn-codix-logo.svg' },
-    { key: 'contactEmail', value: process.env.CONTACT_EMAIL || 'info@apncodix.com' },
-    { key: 'phoneNumber', value: process.env.CONTACT_PHONE || '' },
+  const defaults = [
+    { key: 'websiteName',    value: 'APN Codix' },
+    { key: 'logoUrl',        value: '/apn-codix-logo.svg' },
+    { key: 'contactEmail',   value: 'info@apncodix.com' },
+    { key: 'phoneNumber',    value: '' },
     { key: 'enableBoatCursor', value: 'false' },
-    {
-      key: 'socialLinks',
-      value: JSON.stringify({
-        twitter: '',
-        instagram: '',
-        youtube: '',
-        linkedin: '',
-        facebook: '',
-        github: '',
-        telegram: '',
-      }),
-    },
+    { key: 'socialLinks',    value: JSON.stringify({ twitter:'', instagram:'', youtube:'', linkedin:'', facebook:'', github:'', telegram:'' }) },
   ];
-  for (const s of settings) {
+
+  for (const s of defaults) {
     await prisma.settings.upsert({
-      where: { key: s.key },
-      update: {},
+      where:  { key: s.key },
+      update: {},          // never overwrite — admin panel changes are preserved
       create: s,
     });
   }
-  console.log('Website settings seeded (existing values preserved).');
+  console.log('[seed] Settings ready (existing values preserved).');
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .catch((e) => { console.error(e); process.exit(1); })
+  .finally(async () => { await prisma.$disconnect(); });
