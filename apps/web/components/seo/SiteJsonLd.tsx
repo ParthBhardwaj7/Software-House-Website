@@ -1,3 +1,4 @@
+import { deriveBrandAlternateNames } from "@/lib/public-website-settings";
 import { getPublicWebsiteSettings } from "@/lib/server-website-settings";
 import { getSiteUrlString } from "@/lib/site-url";
 
@@ -14,6 +15,8 @@ export async function SiteJsonLd() {
     s.socialLinks.telegram,
   ].filter(Boolean);
 
+  const altNames = deriveBrandAlternateNames(s.websiteName);
+
   const organization: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -22,6 +25,7 @@ export async function SiteJsonLd() {
     url,
     description: s.siteDescription,
   };
+  if (altNames.length) organization.alternateName = altNames;
   if (s.logoUrl) organization.logo = s.logoUrl;
   if (sameAs.length) organization.sameAs = sameAs;
   if (s.contactEmail) {
@@ -39,6 +43,7 @@ export async function SiteJsonLd() {
       "@type": "WebSite",
       "@id": `${url}/#website`,
       name: s.websiteName,
+      ...(altNames.length ? { alternateName: altNames } : {}),
       url,
       description: s.siteDescription,
       inLanguage: "en",

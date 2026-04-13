@@ -1,14 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { LazyMotion, domAnimation, m } from "framer-motion";
 import { useLayoutEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RollingContactCta } from "@/components/layout/RollingContactCta";
 import { useHeroParallax } from "@/hooks/use-hero-parallax";
 import { cn } from "@/lib/utils";
-import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
 import type { MarketingHomeContent } from "@/lib/marketing-defaults";
 import { DEFAULT_MARKETING_HOME } from "@/lib/marketing-defaults";
 import { parseSocialLinksFromRaw, type SocialLinks } from "@/lib/public-website-settings";
@@ -16,17 +14,12 @@ import { HeroSocialRail } from "./HeroSocialRail";
 
 type HomeHeroProps = {
   content?: MarketingHomeContent;
-  /** Merged site logo (falls back to bundled wordmark). */
-  logoUrl?: string;
-  websiteName?: string;
   /** Profile URLs from admin; empty links are hidden in the rail. */
   socialLinks?: SocialLinks;
 };
 
 export function HomeHero({
   content = DEFAULT_MARKETING_HOME,
-  logoUrl = DEFAULT_SITE_LOGO_PATH,
-  websiteName = "APNCODIX",
   socialLinks = parseSocialLinksFromRaw(""),
 }: HomeHeroProps) {
   const mk = content;
@@ -44,18 +37,18 @@ export function HomeHero({
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: animReduce ? 0 : 0.08,
-        delayChildren: animReduce ? 0 : 0.08,
+        staggerChildren: animReduce ? 0 : 0.04,
+        delayChildren: animReduce ? 0 : 0.03,
       },
     },
   };
 
   const item = {
-    hidden: { opacity: 1, y: animReduce ? 0 : 24 },
+    hidden: { opacity: 1, y: animReduce ? 0 : 14 },
     show: {
       opacity: 1,
       y: 0,
-      transition: { duration: animReduce ? 0 : 0.65, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: animReduce ? 0 : 0.42, ease: [0.25, 0.46, 0.45, 0.94] },
     },
   };
 
@@ -116,27 +109,13 @@ export function HomeHero({
         />
 
         {/* Main hero: flex-1 + justify-center fills viewport; grid centers on large screens */}
-        <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col justify-center gap-12 px-5 pt-16 sm:gap-14 sm:px-6 sm:pt-20 lg:grid lg:h-full lg:min-h-0 lg:grid-cols-2 lg:items-center lg:gap-x-20 lg:gap-y-10 lg:px-8 lg:py-10 lg:pt-24">
+        <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col justify-center gap-8 px-5 pt-16 sm:gap-10 sm:px-6 sm:pt-20 lg:grid lg:h-full lg:min-h-0 lg:grid-cols-2 lg:items-center lg:gap-x-16 lg:gap-y-8 lg:px-8 lg:py-10 lg:pt-24">
           <m.div
             className="flex min-w-0 flex-col justify-center text-center lg:text-left"
             initial="hidden"
             animate="show"
             variants={container}
           >
-            <m.div
-              className="mb-6 flex w-full justify-center lg:justify-start"
-              variants={item}
-            >
-              <Image
-                src={logoUrl.trim() || DEFAULT_SITE_LOGO_PATH}
-                alt={websiteName}
-                width={280}
-                height={72}
-                priority
-                unoptimized
-                className="h-14 w-auto max-w-[min(100%,280px)] object-contain object-center lg:object-left sm:h-16 md:h-[4.25rem]"
-              />
-            </m.div>
             <m.h1
               className="text-balance font-display text-[2.125rem] font-normal leading-[1.08] tracking-tight text-[#0F172A] sm:text-5xl md:text-6xl lg:text-6xl xl:text-[4.25rem] xl:leading-[1.05]"
               variants={item}
@@ -150,13 +129,13 @@ export function HomeHero({
               {mk.headingSuffix}
             </m.h1>
             <m.p
-              className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[#64748B] md:text-lg lg:mx-0 lg:mt-8"
+              className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[#64748B] md:text-lg lg:mx-0 lg:mt-6"
               variants={item}
             >
               {mk.subtext}
             </m.p>
             <m.div
-              className="mt-10 flex flex-wrap items-center justify-center gap-4 lg:justify-start"
+              className="mt-8 flex flex-wrap items-center justify-center gap-4 lg:justify-start"
               variants={item}
             >
               <m.div
@@ -193,9 +172,9 @@ export function HomeHero({
           {/* Right — glass / lagoon focal (scaled up for balance) */}
           <m.div
             className="relative mx-auto flex w-full max-w-[min(100%,22rem)] shrink-0 items-center justify-center sm:max-w-md lg:mx-0 lg:max-w-none"
-            initial={{ opacity: animReduce ? 1 : 0, scale: animReduce ? 1 : 0.94 }}
+            initial={{ opacity: animReduce ? 1 : 0, scale: animReduce ? 1 : 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: animReduce ? 0 : 0.75, ease: [0.22, 1, 0.36, 1], delay: animReduce ? 0 : 0.1 }}
+            transition={{ duration: animReduce ? 0 : 0.48, ease: [0.25, 0.46, 0.45, 0.94], delay: animReduce ? 0 : 0.06 }}
             aria-hidden
           >
             <m.div

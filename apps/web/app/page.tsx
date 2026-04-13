@@ -24,12 +24,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <HomeHero
-        content={site.marketingHome}
-        logoUrl={site.logoUrl}
-        websiteName={site.websiteName}
-        socialLinks={site.socialLinks}
-      />
+      <HomeHero content={site.marketingHome} socialLinks={site.socialLinks} />
       <WhatWeDeliverSection titleTag="h2" delivery={site.marketingDelivery} />
       <ServicesSection showHeading={true} compact={true} variant="default" tone="light" />
       <Portfolio showHeading={true} variant="default" />

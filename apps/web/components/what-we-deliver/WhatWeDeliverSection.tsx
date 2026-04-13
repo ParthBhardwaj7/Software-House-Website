@@ -23,7 +23,7 @@ export function WhatWeDeliverSection({
 
   return (
     <div id={id} className={cn("w-full scroll-mt-24", className)}>
-      <section className="border-b border-[#E5E7EB]/80 bg-white py-10 text-center sm:py-12 md:py-14">
+      <section className="border-b border-[#E5E7EB]/80 bg-white py-8 text-center sm:py-9 md:py-10">
         <div className="page-container">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#64748B]">{d.sectionEyebrow}</p>
           <Title className="mt-3 font-display text-3xl font-normal tracking-tight text-[#0F172A] sm:text-4xl md:text-5xl">

@@ -186,26 +186,47 @@ export function SiteHeader() {
           headerSurface(scrolled)
         )}
       >
-        <div className="mx-auto grid h-full w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 pl-4 pr-2.5 sm:gap-4 sm:pl-6 sm:pr-3 md:flex md:justify-between lg:pl-8 lg:pr-5">
-          <div className="min-w-0 md:hidden" aria-hidden />
+        <div className="mx-auto grid h-full w-full max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 px-3 sm:gap-3 sm:px-6 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-4 lg:px-8">
+          <button
+            type="button"
+            className="flex min-h-11 w-11 shrink-0 items-center justify-center rounded-xl text-[#0F172A] transition hover:bg-black/[0.04] md:hidden"
+            onClick={() => setOpen(true)}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label="Open menu"
+            suppressHydrationWarning
+          >
+            <span className="flex flex-col gap-1.5" aria-hidden>
+              <span className="h-0.5 w-6 bg-current" />
+              <span className="h-0.5 w-6 bg-current" />
+              <span className="h-0.5 w-6 bg-current" />
+            </span>
+          </button>
+
           <Link
             href="/"
-            className="col-start-2 flex min-w-0 shrink-0 justify-self-center text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl md:col-auto md:justify-self-auto"
+            className="flex min-w-0 max-w-full items-center justify-center gap-2 px-0.5 min-[380px]:gap-2.5 md:max-w-[min(48vw,24rem)] md:justify-start md:px-0 lg:max-w-[min(44vw,28rem)] lg:gap-3"
             aria-label={`${websiteName} home`}
           >
-            <span className="relative block h-8 w-[min(100%,112px)] shrink-0 min-[401px]:h-9 min-[401px]:w-[min(100%,200px)] sm:h-10 sm:w-[min(100%,220px)]">
+            <span className="relative h-8 w-[4.75rem] shrink-0 sm:h-9 sm:w-[5.75rem] md:h-9 md:w-[7rem] lg:h-10 lg:w-[8.25rem]">
               <Image
                 src={headerLogoSrc}
-                alt={websiteName}
+                alt=""
                 fill
-                className="object-contain object-center md:object-left"
-                sizes="220px"
+                className="object-contain object-left"
+                sizes="(max-width: 640px) 92px, (max-width: 1024px) 112px, 132px"
                 unoptimized
               />
             </span>
+            <span className="min-w-0 truncate text-left font-display text-[13px] font-semibold leading-tight tracking-tight text-[#0F172A] min-[380px]:text-sm sm:text-base md:text-base lg:text-lg">
+              {websiteName}
+            </span>
           </Link>
 
-          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 md:flex lg:gap-1" aria-label="Main">
+          <nav
+            className="hidden min-w-0 items-center justify-center gap-0.5 md:flex md:min-w-0 md:flex-1 lg:gap-1"
+            aria-label="Main"
+          >
             {overlayLinks.map((link) => {
               const active =
                 pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
@@ -217,7 +238,7 @@ export function SiteHeader() {
             })}
           </nav>
 
-          <div className="col-start-3 flex min-w-0 shrink-0 items-center justify-end justify-self-end gap-2 sm:gap-2.5 md:col-auto md:justify-self-auto md:gap-3">
+          <div className="flex shrink-0 justify-self-end">
             <RollingContactCta
               variant="consultation"
               href="/contact"
@@ -225,25 +246,9 @@ export function SiteHeader() {
               duplicateLabel="It's free"
               compactLabel="Book"
               compactDuplicate="Free"
-              className="inline-flex max-w-[min(100%,8.5rem)] shrink-0 whitespace-nowrap px-2.5 py-1.5 text-[11px] font-medium leading-tight min-[401px]:max-w-[min(100%,11.5rem)] min-[401px]:px-3 min-[401px]:text-xs sm:max-w-none sm:px-4 sm:py-2 sm:text-sm sm:leading-none"
+              className="inline-flex max-w-[min(100%,9.25rem)] shrink-0 whitespace-nowrap px-2 py-1.5 text-[10px] font-medium leading-tight min-[380px]:max-w-[min(100%,10.5rem)] min-[380px]:px-2.5 min-[380px]:text-[11px] min-[401px]:max-w-[min(100%,12rem)] min-[401px]:px-3 min-[401px]:text-xs sm:max-w-none sm:px-4 sm:py-2 sm:text-sm sm:leading-none"
               lineClassName="h-7 sm:h-9"
             />
-            <button
-              type="button"
-              className="flex min-h-11 shrink-0 items-center gap-2 rounded-xl px-2 py-2 text-[#0F172A] transition hover:bg-black/[0.04] md:hidden"
-              onClick={() => setOpen(true)}
-              aria-expanded={open}
-              aria-controls="mobile-menu"
-              aria-label="Open menu"
-              suppressHydrationWarning
-            >
-              <span className="flex flex-col gap-1.5" aria-hidden>
-                <span className="h-0.5 w-6 bg-current" />
-                <span className="h-0.5 w-6 bg-current" />
-                <span className="h-0.5 w-6 bg-current" />
-              </span>
-              <span className="text-sm font-medium max-[400px]:sr-only">Menu</span>
-            </button>
           </div>
         </div>
       </header>

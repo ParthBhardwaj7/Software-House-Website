@@ -14,7 +14,9 @@
     "db:push": "npm run db:push -w api",
     "db:studio": "npm run db:studio -w api",
     "db:seed": "npm run db:seed -w api",
-    "seed:admin": "npm run seed:admin -w api"
+    "seed:admin": "npm run seed:admin -w api",
+    "screenshots:web": "npm run test:visual --workspace=web",
+    "playwright:install:web": "npm run playwright:install --workspace=web"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

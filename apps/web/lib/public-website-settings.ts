@@ -151,6 +151,27 @@ export function mergePublicWebsiteSettings(data: Record<string, unknown>): Publi
   };
 }
 
+/**
+ * Extra brand spellings for JSON-LD `alternateName` (e.g. "APN Codix" → "apncodix", "APNCODIX").
+ * Helps search engines associate queries without spaces with the same organization.
+ */
+export function deriveBrandAlternateNames(websiteName: string): string[] {
+  const t = websiteName.trim();
+  if (!t) return [];
+  const noSpace = t.replace(/\s+/g, "");
+  const variants = [
+    noSpace,
+    noSpace.toLowerCase(),
+    noSpace.toUpperCase(),
+    t.toLowerCase(),
+  ];
+  const out = new Set<string>();
+  for (const v of variants) {
+    if (v && v !== t) out.add(v);
+  }
+  return [...out];
+}
+
 /** Absolute URL for Next.js `metadata.icons`, or null to keep file-based `app/icon.tsx`. */
 export function resolveFaviconUrlForMetadata(faviconUrl: string): string | null {
   const t = faviconUrl.trim().slice(0, MAX_FAVICON_URL_LEN);

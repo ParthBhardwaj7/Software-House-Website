@@ -11,3 +11,9 @@ out
 .turbo
 coverage
 *.tsbuildinfo
+
+# Playwright UI snapshots (regenerate locally / for agent review)
+apps/web/ui-snapshots/
+apps/web/test-results/
+apps/web/playwright-report/
+apps/web/playwright/.cache/

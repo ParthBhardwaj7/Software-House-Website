@@ -48,7 +48,7 @@ function AnimatedStepNumber({
             initial={{ opacity: 0, scale: 0.96, filter: "blur(4px)" }}
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, scale: 1.04, filter: "blur(4px)" }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
+            transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="absolute inset-0 flex items-center justify-center"
           >
             {label}
@@ -74,8 +74,8 @@ function TimelineStepContent({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, {
-    amount: 0.42,
-    margin: "-12% 0px -12% 0px",
+    amount: 0.55,
+    margin: "-22% 0px -22% 0px",
   });
   const inViewForMotion = layoutReady && isInView;
 
@@ -88,15 +88,15 @@ function TimelineStepContent({
       ref={ref}
       initial={false}
       animate={{
-        opacity: inViewForMotion ? 1 : 0.4,
-        y: inViewForMotion ? 0 : 40,
+        opacity: inViewForMotion ? 1 : 0.66,
+        y: inViewForMotion ? 0 : 8,
       }}
       transition={{
-        duration: 0.5,
-        ease: [0.22, 1, 0.36, 1],
+        duration: 0.36,
+        ease: [0.25, 0.46, 0.45, 0.94],
       }}
       className={cn(
-        "flex min-h-[min(88vh,52rem)] flex-col justify-center px-4 py-8 text-center sm:px-5 lg:min-h-[min(85vh,52rem)] lg:px-0 lg:py-12 lg:text-left",
+        "flex flex-col justify-start px-4 py-7 text-center sm:px-5 sm:py-8 lg:px-0 lg:py-9 lg:text-left",
         !isFirst && "border-t border-[#E5E7EB]/80"
       )}
     >
@@ -104,7 +104,7 @@ function TimelineStepContent({
         <h2 className="font-display text-2xl font-normal tracking-tight text-[#0F172A] sm:text-3xl lg:text-4xl">
           {step.title}
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-[#64748B] sm:text-lg lg:mx-0">
+        <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-[#64748B] sm:mt-4 sm:text-lg lg:mx-0">
           {step.body}
         </p>
       </div>
@@ -173,8 +173,8 @@ export function DeliveryTimeline({ embedded = false, steps }: DeliveryTimelinePr
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 140,
+    damping: 32,
     restDelta: 0.0005,
   });
 
@@ -183,15 +183,15 @@ export function DeliveryTimeline({ embedded = false, steps }: DeliveryTimelinePr
     <section
       ref={containerRef}
       className={cn(
-        "relative bg-[#F8FAFC] pb-8 sm:pb-12 md:pb-16",
-        embedded ? "pt-4 sm:pt-6 md:pt-8" : "pt-8 sm:pt-12 md:pt-16"
+        "relative bg-[#F8FAFC] pb-6 sm:pb-8 md:pb-10",
+        embedded ? "pt-3 sm:pt-5 md:pt-6" : "pt-5 sm:pt-7 md:pt-8"
       )}
     >
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <ScrollTrack smoothProgress={smoothProgress} reduceMotion={reduceMotionUI} />
 
         {/* Mobile: sticky single number that increments (same behavior as desktop) */}
-        <div className="pointer-events-none sticky top-16 z-[3] -mx-5 mb-6 flex justify-center border-b border-[#E5E7EB]/60 bg-[#F8FAFC]/95 py-3 backdrop-blur-sm sm:-mx-6 md:top-[4.5rem] lg:hidden">
+        <div className="pointer-events-none sticky top-16 z-[3] -mx-5 mb-3 flex justify-center border-b border-[#E5E7EB]/60 bg-[#F8FAFC]/95 py-1.5 backdrop-blur-sm sm:-mx-6 sm:mb-4 md:top-[4.5rem] lg:hidden">
           <div className="pointer-events-auto">
             <AnimatedStepNumber index={activeStep} reduceMotion={reduceMotionUI} />
           </div>
@@ -202,10 +202,10 @@ export function DeliveryTimeline({ embedded = false, steps }: DeliveryTimelinePr
           so sticky keeps the number “frozen” in view while right column scrolls.
           (items-start made col1 only as tall as the digit — sticky released immediately.)
         */}
-        <div className="relative z-[2] lg:grid lg:grid-cols-3 lg:items-stretch lg:gap-8 lg:gap-y-0">
+        <div className="relative z-[2] lg:grid lg:grid-cols-3 lg:items-stretch lg:gap-6 lg:gap-y-0">
           {/* Desktop: number stays pinned (sticky) for whole section; value still 01→02 via activeStep */}
           <div className="pointer-events-none relative hidden lg:pointer-events-auto lg:col-span-1 lg:flex lg:min-h-0 lg:h-full lg:flex-col">
-            <div className="sticky top-[max(6rem,calc(50vh-4.5rem))] z-[2] py-6">
+            <div className="sticky top-[max(6rem,calc(50vh-4.5rem))] z-[2] py-4">
               <span className="sr-only" aria-live="polite" aria-atomic="true">
                 Step {activeStep + 1} of {steps.length}
               </span>
