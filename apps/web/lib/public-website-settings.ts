@@ -169,7 +169,7 @@ export function deriveBrandAlternateNames(websiteName: string): string[] {
   for (const v of variants) {
     if (v && v !== t) out.add(v);
   }
-  return [...out];
+  return Array.from(out);
 }
 
 /** Absolute URL for Next.js `metadata.icons`, or null to keep file-based `app/icon.tsx`. */
