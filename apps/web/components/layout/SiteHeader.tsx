@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { X } from "lucide-react";
@@ -25,6 +24,17 @@ const STATIC_NAV_END = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
+function brandMonogram(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) {
+    const a = parts[0]?.[0] ?? "";
+    const b = parts[1]?.[0] ?? "";
+    return (a + b).toUpperCase();
+  }
+  const w = parts[0] ?? name.trim();
+  return w.slice(0, 2).toUpperCase();
+}
+
 const emptySocial = (): SocialLinks => ({
   twitter: "",
   instagram: "",
@@ -41,6 +51,50 @@ const headerSurface = (scrolled: boolean) =>
     "w-full border-b-2 border-gray-300/50 bg-transparent shadow-none backdrop-blur-md transition-all duration-300",
     scrolled && "border-gray-300/75 bg-white/80 shadow-sm backdrop-blur-lg"
   );
+
+function BrandMarkBox({
+  showFaviconMark,
+  faviconUrl,
+  monogram,
+  onFaviconError,
+  boxClassName,
+  monogramClassName,
+}: {
+  showFaviconMark: boolean;
+  faviconUrl: string;
+  monogram: string;
+  onFaviconError: () => void;
+  boxClassName: string;
+  monogramClassName: string;
+}) {
+  return (
+    <span
+      className={cn(
+        "flex shrink-0 items-center justify-center overflow-hidden border border-[#E5E7EB] bg-white shadow-sm",
+        boxClassName
+      )}
+    >
+      {showFaviconMark ? (
+        // eslint-disable-next-line @next/next/no-img-element -- favicon URLs may be external or arbitrary format
+        <img
+          src={faviconUrl}
+          alt=""
+          width={48}
+          height={48}
+          className="h-full w-full object-cover"
+          onError={onFaviconError}
+        />
+      ) : (
+        <span
+          className={cn("font-bold tracking-tight text-[#16A34A]", monogramClassName)}
+          aria-hidden
+        >
+          {monogram}
+        </span>
+      )}
+    </span>
+  );
+}
 
 function SocialIconRow({
   links,
@@ -84,7 +138,11 @@ export function SiteHeader() {
   const [contactPhone, setContactPhone] = useState<string>(DUMMY_SITE_SETTINGS.phoneNumber);
   const [websiteName, setWebsiteName] = useState<string>(DUMMY_SITE_SETTINGS.websiteName);
   const [addressLine, setAddressLine] = useState<string>(DUMMY_SITE_SETTINGS.addressLine);
-  const [logoUrl, setLogoUrl] = useState<string>("");
+  const [faviconUrl, setFaviconUrl] = useState<string>("");
+  const [faviconFailed, setFaviconFailed] = useState(false);
+  /** Merged API value: custom admin URL or default path — see `showAdminWordmark` */
+  const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string>(DEFAULT_SITE_LOGO_PATH);
+  const [customLogoFailed, setCustomLogoFailed] = useState(false);
   const [customNav, setCustomNav] = useState<{ href: string; label: string }[]>([]);
   const [socialLinks, setSocialLinks] = useState<SocialLinks>(emptySocial);
 
@@ -123,18 +181,25 @@ export function SiteHeader() {
           websiteName?: string;
           addressLine?: string;
           logoUrl?: string;
+          faviconUrl?: string;
           socialLinks?: SocialLinks;
         }) => {
           const e = typeof data.contactEmail === "string" ? data.contactEmail.trim() : "";
           const p = typeof data.phoneNumber === "string" ? data.phoneNumber.trim() : "";
           const w = typeof data.websiteName === "string" ? data.websiteName.trim() : "";
           const a = typeof data.addressLine === "string" ? data.addressLine.trim() : "";
-          const l = typeof data.logoUrl === "string" ? data.logoUrl.trim() : "";
+          const fav = typeof data.faviconUrl === "string" ? data.faviconUrl.trim() : "";
+          const logo =
+            typeof data.logoUrl === "string" && data.logoUrl.trim()
+              ? data.logoUrl.trim()
+              : DEFAULT_SITE_LOGO_PATH;
           if (e) setContactEmail(e);
           if (p) setContactPhone(p);
           if (w) setWebsiteName(w);
           if (a) setAddressLine(a);
-          if (l) setLogoUrl(l);
+          setResolvedLogoUrl(logo);
+          setCustomLogoFailed(false);
+          if (fav) setFaviconUrl(fav);
           if (data.socialLinks && typeof data.socialLinks === "object") {
             setSocialLinks({
               twitter: String(data.socialLinks.twitter ?? "").trim(),
@@ -164,6 +229,19 @@ export function SiteHeader() {
     closeMenu();
   }, [pathname, closeMenu]);
 
+  useEffect(() => {
+    setFaviconFailed(false);
+  }, [faviconUrl]);
+
+  useEffect(() => {
+    setCustomLogoFailed(false);
+  }, [resolvedLogoUrl]);
+
+  const monogram = useMemo(() => brandMonogram(websiteName), [websiteName]);
+  const showFaviconMark = Boolean(faviconUrl.trim()) && !faviconFailed;
+  /** Admin uploaded a real logo (not the built-in default asset). */
+  const showAdminWordmark = resolvedLogoUrl !== DEFAULT_SITE_LOGO_PATH && !customLogoFailed;
+
   const navLinkClass = (active: boolean) =>
     cn(
       "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
@@ -176,8 +254,6 @@ export function SiteHeader() {
       active ? "text-[#0F172A]" : "text-[#64748B]"
     );
 
-  const headerLogoSrc = logoUrl.trim() || DEFAULT_SITE_LOGO_PATH;
-
   return (
     <>
       <header
@@ -186,10 +262,10 @@ export function SiteHeader() {
           headerSurface(scrolled)
         )}
       >
-        <div className="mx-auto grid h-full w-full max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 px-3 sm:gap-3 sm:px-6 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-4 lg:px-8">
+        <div className="mx-auto grid h-full w-full max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 sm:gap-3 sm:px-6 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-4 lg:px-8">
           <button
             type="button"
-            className="flex min-h-11 w-11 shrink-0 items-center justify-center rounded-xl text-[#0F172A] transition hover:bg-black/[0.04] md:hidden"
+            className="flex min-h-11 w-11 shrink-0 items-center justify-center justify-self-start rounded-xl text-[#0F172A] transition hover:bg-black/[0.04] md:hidden"
             onClick={() => setOpen(true)}
             aria-expanded={open}
             aria-controls="mobile-menu"
@@ -205,22 +281,44 @@ export function SiteHeader() {
 
           <Link
             href="/"
-            className="flex min-w-0 max-w-full items-center justify-center gap-2 px-0.5 min-[380px]:gap-2.5 md:max-w-[min(48vw,24rem)] md:justify-start md:px-0 lg:max-w-[min(44vw,28rem)] lg:gap-3"
+            className={cn(
+              "flex min-w-0 max-w-full items-center justify-center gap-2 justify-self-center px-0.5 sm:gap-2.5",
+              showAdminWordmark
+                ? "max-w-[min(calc(100vw-5rem),15rem)] sm:max-w-[min(calc(100vw-5rem),17rem)] md:max-w-[min(52vw,20rem)] lg:max-w-[min(48vw,22rem)]"
+                : "max-w-[min(calc(100vw-5rem),17rem)] md:max-w-[min(60vw,20rem)] lg:max-w-[min(52vw,22rem)]",
+              /* Desktop: first column, left-aligned */
+              "md:justify-self-start md:justify-start md:gap-3 md:px-0"
+            )}
             aria-label={`${websiteName} home`}
           >
-            <span className="relative h-8 w-[4.75rem] shrink-0 sm:h-9 sm:w-[5.75rem] md:h-9 md:w-[7rem] lg:h-10 lg:w-[8.25rem]">
-              <Image
-                src={headerLogoSrc}
+            {showAdminWordmark ? (
+              // eslint-disable-next-line @next/next/no-img-element -- SVG + Cloudinary URLs: native img avoids next/image layout bugs
+              <img
+                src={resolvedLogoUrl}
                 alt=""
-                fill
-                className="object-contain object-left"
-                sizes="(max-width: 640px) 92px, (max-width: 1024px) 112px, 132px"
-                unoptimized
+                width={268}
+                height={96}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                className="h-8 w-auto max-h-8 max-w-full object-contain object-center md:h-10 md:max-h-10 md:object-left"
+                onError={() => setCustomLogoFailed(true)}
               />
-            </span>
-            <span className="min-w-0 truncate text-left font-display text-[13px] font-semibold leading-tight tracking-tight text-[#0F172A] min-[380px]:text-sm sm:text-base md:text-base lg:text-lg">
-              {websiteName}
-            </span>
+            ) : (
+              <>
+                <BrandMarkBox
+                  showFaviconMark={showFaviconMark}
+                  faviconUrl={faviconUrl}
+                  monogram={monogram}
+                  onFaviconError={() => setFaviconFailed(true)}
+                  boxClassName="h-9 w-9 rounded-xl md:h-10 md:w-10"
+                  monogramClassName="text-xs md:text-sm"
+                />
+                <span className="min-w-0 truncate text-center font-display text-base font-semibold leading-tight tracking-tight text-[#0F172A] md:text-left md:text-xl md:leading-none">
+                  {websiteName}
+                </span>
+              </>
+            )}
           </Link>
 
           <nav
@@ -261,25 +359,43 @@ export function SiteHeader() {
           aria-label="Navigation menu"
           className="fixed inset-0 z-[60] flex flex-col bg-[#F8FAFC] md:hidden"
         >
-          <div className="flex items-start justify-between border-b border-[#E5E7EB] bg-white p-6">
-            <div className="flex gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#22C55E] text-lg font-bold text-white">
-                <Image
-                  src={headerLogoSrc}
-                  alt=""
-                  width={56}
-                  height={56}
-                  className="h-full w-full object-contain p-1"
-                  unoptimized
-                />
-              </div>
-              <div>
-                <p className="text-xs text-[#64748B]">{addressLine}</p>
-                <p className="text-xs text-[#64748B]">
-                  {new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false })}{" "}
-                  IST
-                </p>
-              </div>
+          <div className="flex items-start justify-between gap-3 border-b border-[#E5E7EB] bg-white p-5 sm:p-6">
+            <div className="flex min-w-0 flex-1 items-center gap-3">
+              {showAdminWordmark ? (
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- same as header wordmark */}
+                  <img
+                    src={resolvedLogoUrl}
+                    alt=""
+                    width={268}
+                    height={96}
+                    className="h-9 w-auto max-h-9 max-w-[min(100%,14rem)] object-contain object-left sm:h-10 sm:max-h-10 sm:max-w-[min(100%,16rem)]"
+                    onError={() => setCustomLogoFailed(true)}
+                  />
+                  {addressLine.trim() ? (
+                    <p className="line-clamp-2 text-xs leading-snug text-[#64748B] sm:text-sm">{addressLine}</p>
+                  ) : null}
+                </div>
+              ) : (
+                <>
+                  <BrandMarkBox
+                    showFaviconMark={showFaviconMark}
+                    faviconUrl={faviconUrl}
+                    monogram={monogram}
+                    onFaviconError={() => setFaviconFailed(true)}
+                    boxClassName="h-11 w-11 rounded-xl sm:h-12 sm:w-12"
+                    monogramClassName="text-sm sm:text-base"
+                  />
+                  <div className="min-w-0">
+                    <p className="truncate font-display text-lg font-semibold tracking-tight text-[#0F172A] sm:text-xl">
+                      {websiteName}
+                    </p>
+                    {addressLine.trim() ? (
+                      <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-[#64748B] sm:text-sm">{addressLine}</p>
+                    ) : null}
+                  </div>
+                </>
+              )}
             </div>
             <button
               type="button"
