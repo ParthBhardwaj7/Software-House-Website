@@ -284,7 +284,7 @@ export function SiteHeader() {
             className={cn(
               "flex min-w-0 max-w-full items-center justify-center gap-2 justify-self-center px-0.5 sm:gap-2.5",
               showAdminWordmark
-                ? "max-w-[min(calc(100vw-5rem),15rem)] sm:max-w-[min(calc(100vw-5rem),17rem)] md:max-w-[min(52vw,20rem)] lg:max-w-[min(48vw,22rem)]"
+                ? "max-w-[min(calc(100vw-5rem),20rem)] sm:max-w-[min(calc(100vw-5rem),22rem)] md:max-w-[min(58vw,26rem)] lg:max-w-[min(52vw,28rem)]"
                 : "max-w-[min(calc(100vw-5rem),17rem)] md:max-w-[min(60vw,20rem)] lg:max-w-[min(52vw,22rem)]",
               /* Desktop: first column, left-aligned */
               "md:justify-self-start md:justify-start md:gap-3 md:px-0"
@@ -292,18 +292,23 @@ export function SiteHeader() {
             aria-label={`${websiteName} home`}
           >
             {showAdminWordmark ? (
-              // eslint-disable-next-line @next/next/no-img-element -- SVG + Cloudinary URLs: native img avoids next/image layout bugs
-              <img
-                src={resolvedLogoUrl}
-                alt=""
-                width={268}
-                height={96}
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
-                className="h-8 w-auto max-h-8 max-w-full object-contain object-center md:h-10 md:max-h-10 md:object-left"
-                onError={() => setCustomLogoFailed(true)}
-              />
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element -- SVG + Cloudinary URLs: native img avoids next/image layout bugs */}
+                <img
+                  src={resolvedLogoUrl}
+                  alt=""
+                  width={268}
+                  height={96}
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  className="h-8 w-auto max-h-8 max-w-[6.75rem] shrink-0 object-contain object-center sm:max-w-[7.5rem] md:h-10 md:max-h-10 md:max-w-[8.75rem] md:object-left"
+                  onError={() => setCustomLogoFailed(true)}
+                />
+                <span className="min-w-0 truncate text-center font-display text-base font-semibold leading-tight tracking-tight text-[#0F172A] md:text-left md:text-xl md:leading-none">
+                  {websiteName}
+                </span>
+              </>
             ) : (
               <>
                 <BrandMarkBox
@@ -362,19 +367,24 @@ export function SiteHeader() {
           <div className="flex items-start justify-between gap-3 border-b border-[#E5E7EB] bg-white p-5 sm:p-6">
             <div className="flex min-w-0 flex-1 items-center gap-3">
               {showAdminWordmark ? (
-                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <div className="flex min-w-0 flex-1 items-start gap-3 sm:items-center">
                   {/* eslint-disable-next-line @next/next/no-img-element -- same as header wordmark */}
                   <img
                     src={resolvedLogoUrl}
                     alt=""
                     width={268}
                     height={96}
-                    className="h-9 w-auto max-h-9 max-w-[min(100%,14rem)] object-contain object-left sm:h-10 sm:max-h-10 sm:max-w-[min(100%,16rem)]"
+                    className="h-9 w-auto max-h-9 max-w-[5.5rem] shrink-0 object-contain object-left sm:h-10 sm:max-h-10 sm:max-w-[6.5rem]"
                     onError={() => setCustomLogoFailed(true)}
                   />
-                  {addressLine.trim() ? (
-                    <p className="line-clamp-2 text-xs leading-snug text-[#64748B] sm:text-sm">{addressLine}</p>
-                  ) : null}
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-display text-lg font-semibold tracking-tight text-[#0F172A] sm:text-xl">
+                      {websiteName}
+                    </p>
+                    {addressLine.trim() ? (
+                      <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-[#64748B] sm:text-sm">{addressLine}</p>
+                    ) : null}
+                  </div>
                 </div>
               ) : (
                 <>
