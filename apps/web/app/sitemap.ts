@@ -23,6 +23,7 @@ const STATIC_PATHS = [
   "/terms",
   "/refund-policy",
   "/pay",
+  "/cancellation-policy",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

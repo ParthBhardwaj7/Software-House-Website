@@ -26,18 +26,18 @@ export type MarketingDeliveryContent = {
 
 export const DEFAULT_MARKETING_HOME: MarketingHomeContent = {
   eyebrow: "APNCODIX",
-  headingPrefix: "Powering the ",
-  headingEmphasis: "next",
-  headingMiddle: " generation of ",
-  headingGradient: "AI & software",
-  headingSuffix: " brands.",
+  headingPrefix: "Engineering ",
+  headingEmphasis: "reliable",
+  headingMiddle: " digital products for ",
+  headingGradient: "growth-focused businesses",
+  headingSuffix: ".",
   subtext:
-    "We build high-performance software solutions. Clean, scalable, and built for growth — strategy, engineering, and launch with one team.",
-  bottomEyebrow: "/ Scroll",
+    "APN Codix designs, builds, and scales web platforms, mobile apps, and AI-enabled systems with clear milestones, transparent communication, and production-grade quality.",
+  bottomEyebrow: "Trusted Delivery",
   bottomText:
-    "Community-first delivery, creative product thinking, and cutting-edge engineering for teams that want to ship fast — without cutting corners.",
+    "From discovery to post-launch support, we work as an accountable engineering partner focused on outcomes, performance, and long-term maintainability.",
   primaryCtaHref: "/contact",
-  secondaryButtonLabel: "Learn more",
+  secondaryButtonLabel: "View our work",
   secondaryButtonHref: "/portfolio",
 };
 

@@ -13,9 +13,9 @@ import type { TeamMemberPublic } from "@/lib/team-types";
 const HAS_TURNSTILE = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim());
 
 const SERVICES = [
-  { id: "web_design", label: "Web Design" },
-  { id: "app_software", label: "App / Custom Software" },
-  { id: "seo_copy", label: "SEO / Copywriting" },
+  { id: "web_design", label: "Website / Web App" },
+  { id: "app_software", label: "Mobile App / Custom Software" },
+  { id: "seo_copy", label: "SEO / Content / Growth" },
 ] as const;
 
 type ContactFormProps = {
@@ -141,11 +141,11 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
           {/* Left: copy + avatars + CTA — vertically centered vs form on lg */}
           <div className="order-2 lg:order-1">
             <h2 className="font-display text-3xl font-normal tracking-tight text-foreground md:text-4xl lg:text-5xl">
-              Your project, our challenge!
+              Let us build your next growth milestone.
             </h2>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Ready to work together and move to the next level? Write to us if you want to meet us,
-              start a collaboration, or say hello. We&apos;ll get back to you quickly.
+              Share your goals, expected timeline, and current challenges. Our team will review your requirement and
+              respond with the right next steps.
             </p>
 
             {strip.length > 0 && (
@@ -189,7 +189,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
             >
               <h3 className="text-xl font-bold text-foreground md:text-2xl">Tell us what you need</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                We are here for you, regardless of the size of the challenge.
+                We typically respond within one business day.
               </p>
 
               <form
@@ -332,7 +332,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
                     className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
                     suppressHydrationWarning
                   />
-                  <span>I agree to the terms and conditions.</span>
+                  <span>I agree to the Terms & Conditions and Privacy Policy.</span>
                 </label>
                 {touched.consent && fieldErrors.consent && (
                   <p className="text-xs text-destructive">{fieldErrors.consent}</p>
@@ -361,7 +361,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
                       Sending…
                     </>
                   ) : (
-                    "Send"
+                    "Submit Inquiry"
                   )}
                 </Button>
               </form>

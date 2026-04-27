@@ -25,14 +25,14 @@ export default async function AboutPage() {
           <FooterManagedPageBody text={body} />
         ) : (
           <p className="mt-4 leading-relaxed text-muted-foreground">
-            Add your company story in{" "}
+            Add your company profile in{" "}
             <strong className="font-medium text-foreground">Admin → Website Settings → About page</strong>. Include
-            mission, team culture, locations, and how clients work with you — visitors and search engines both use
-            this page.
+            your company background, core services, operating model, and delivery process so clients and compliance
+            reviewers can clearly understand your business.
           </p>
         )}
         <Link href="/contact" className="mt-8 inline-block font-medium text-primary hover:underline">
-          Contact us →
+          Start a conversation →
         </Link>
       </div>
     </div>

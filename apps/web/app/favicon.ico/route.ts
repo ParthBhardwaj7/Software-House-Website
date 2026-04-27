@@ -18,14 +18,28 @@ export async function GET(req: NextRequest) {
     if (!favicon) return NextResponse.redirect(fallbackUrl, 307);
 
     const sourceUrl = new URL(favicon, req.nextUrl.origin);
-    const upstream = await fetch(sourceUrl.toString(), { cache: "no-store" });
+    // Prevent accidental self-loop when someone saves `/favicon.ico` as favicon URL.
+    if (sourceUrl.pathname === "/favicon.ico") {
+      return NextResponse.redirect(fallbackUrl, 307);
+    }
+
+    const upstream = await fetch(sourceUrl.toString(), {
+      // Revalidate in the background in production to reduce origin load.
+      next: { revalidate: 300 },
+    });
     if (!upstream.ok) return NextResponse.redirect(fallbackUrl, 307);
+
+    const contentType = upstream.headers.get("content-type") || "";
+    if (!contentType.toLowerCase().startsWith("image/")) {
+      return NextResponse.redirect(fallbackUrl, 307);
+    }
 
     const bytes = await upstream.arrayBuffer();
     return new NextResponse(bytes, {
       headers: {
-        "content-type": upstream.headers.get("content-type") || "image/x-icon",
-        "cache-control": "public, max-age=300, stale-while-revalidate=86400",
+        "content-type": contentType || "image/x-icon",
+        "cache-control": "public, max-age=300, s-maxage=300, stale-while-revalidate=86400",
+        "x-content-type-options": "nosniff",
       },
     });
   } catch {

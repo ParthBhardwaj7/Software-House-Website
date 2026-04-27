@@ -30,7 +30,6 @@ const STATIC_NAV_START = [
 ] as const;
 
 const STATIC_NAV_END = [
-  { href: "/pay", label: "Pay" },
   { href: "/contact", label: "Contact" },
 ] as const;
 

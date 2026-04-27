@@ -19,13 +19,13 @@ export type FooterConfig = {
 };
 
 export const DEFAULT_FOOTER_CONFIG: FooterConfig = {
-  brandTagline: "Get ready to work together for the better solution for your business.",
+  brandTagline:
+    "APN Codix builds reliable software systems with a clear process, transparent communication, and measurable outcomes.",
   quickLinksHeading: "Quick Links",
   quickLinks: [
     { href: "/about", label: "About Us" },
     { href: "/teams", label: "Our Teams" },
     { href: "/blog", label: "Blogs" },
-    { href: "/pay", label: "Pay online" },
     { href: "/contact", label: "Contact Us" },
   ],
   servicesHeading: "Services",
@@ -45,7 +45,7 @@ export const DEFAULT_FOOTER_CONFIG: FooterConfig = {
   ],
   newsletterHeading: "Subscribe Our Newsletter",
   newsletterDescription:
-    "Get ready to work together for the better solution for your business",
+    "Get practical product, engineering, and growth insights delivered occasionally.",
   officeHours: "Mon–Fri: 10:00 AM – 06:30 PM",
   copyrightEntity: "APNCODIX",
 };

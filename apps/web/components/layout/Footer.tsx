@@ -17,6 +17,11 @@ type WebsitePayload = {
   footerConfig: FooterConfig;
 };
 
+function isPayLink(href: string): boolean {
+  const t = href.trim().toLowerCase();
+  return t === "/pay" || t.startsWith("/pay?");
+}
+
 const initialPayload: WebsitePayload = {
   websiteName: DUMMY_SITE_SETTINGS.websiteName,
   contactEmail: DUMMY_SITE_SETTINGS.contactEmail,
@@ -85,7 +90,7 @@ export function Footer() {
           logoUrl: logoRaw,
           footerConfig: {
             ...footerConfig,
-            quickLinks: [...footerConfig.quickLinks],
+            quickLinks: footerConfig.quickLinks.filter((l) => !isPayLink(l.href)),
             serviceLinks: [...footerConfig.serviceLinks],
             infoLinks: [...footerConfig.infoLinks],
           },
@@ -144,7 +149,7 @@ export function Footer() {
               {fc.quickLinksHeading}
             </h3>
             <ul className="space-y-3">
-              {fc.quickLinks.map((l) => (
+              {fc.quickLinks.filter((l) => !isPayLink(l.href)).map((l) => (
                 <li key={`${l.href}-${l.label}`}>
                   <FooterNavLink href={l.href} label={l.label} className={linkClass} />
                 </li>

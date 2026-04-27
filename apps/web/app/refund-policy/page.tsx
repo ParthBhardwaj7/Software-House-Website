@@ -6,7 +6,7 @@ import { getPublicFooterConfig } from "@/lib/server-website-settings";
 import { getSiteUrlString } from "@/lib/site-url";
 
 const PATH = "/refund-policy";
-const FALLBACK_TITLE = "Refund & cancellation policy";
+const FALLBACK_TITLE = "Refund and Cancellation Policy";
 const FALLBACK_DESC =
   "How we handle cancellations, milestones, retainers, and refunds for services and online payments.";
 

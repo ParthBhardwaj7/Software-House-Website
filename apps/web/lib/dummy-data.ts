@@ -4,7 +4,7 @@ export const DUMMY_SITE_SETTINGS = {
   websiteName: "APNCODIX",
   contactEmail: "hello@apncodix.com",
   phoneNumber: "+91 98765 43210",
-  tagline: "Modern software for ambitious teams.",
+  tagline: "Engineering digital products for growth-focused businesses.",
   addressLine: "Bengaluru, India",
 } as const;
 

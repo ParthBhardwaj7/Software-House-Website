@@ -3,9 +3,9 @@ import { ContactForm } from "@/components/home/ContactForm";
 import { getTeamMembers } from "@/lib/team";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact Us",
   description:
-    "Start a project or book a consultation with APNCODIX — tell us about your goals and we’ll respond quickly.",
+    "Talk to APN Codix about your project requirements, timelines, and delivery goals. Our team responds within one business day.",
 };
 
 export default async function ContactPage() {
