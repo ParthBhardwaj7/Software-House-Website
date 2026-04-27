@@ -1,6 +1,5 @@
 import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
 import { DUMMY_SITE_SETTINGS } from "@/lib/dummy-data";
-import { getSiteUrlString } from "@/lib/site-url";
 import { mergeFooterConfig, type FooterConfig } from "@/lib/footer-defaults";
 import {
   parseMarketingDeliveryJson,
@@ -172,14 +171,32 @@ export function deriveBrandAlternateNames(websiteName: string): string[] {
   return Array.from(out);
 }
 
+/**
+ * Query-friendly brand tokens (with and without spaces) for metadata keywords.
+ * Example: "APN Codix" => ["APN Codix", "apn codix", "APNCodix", "apncodix", "APNCODIX"].
+ */
+export function deriveBrandKeywordVariants(websiteName: string): string[] {
+  const t = websiteName.trim();
+  if (!t) return [];
+  const collapsedSpace = t.replace(/\s+/g, " ");
+  const noSpace = collapsedSpace.replace(/\s+/g, "");
+  const variants = [
+    collapsedSpace,
+    collapsedSpace.toLowerCase(),
+    noSpace,
+    noSpace.toLowerCase(),
+    noSpace.toUpperCase(),
+  ];
+  return Array.from(new Set(variants.filter(Boolean)));
+}
+
 /** Absolute URL for Next.js `metadata.icons`, or null to keep file-based `app/icon.tsx`. */
 export function resolveFaviconUrlForMetadata(faviconUrl: string): string | null {
   const t = faviconUrl.trim().slice(0, MAX_FAVICON_URL_LEN);
   if (!t) return null;
   if (/^https?:\/\//i.test(t)) return t;
-  if (t.startsWith("/")) {
-    const base = getSiteUrlString().replace(/\/$/, "");
-    return `${base}${t}`;
-  }
-  return null;
+  // Keep site-relative paths relative so favicon does not depend on NEXT_PUBLIC_SITE_URL.
+  if (t.startsWith("/")) return t;
+  // Admin uploads may sometimes persist as "uploads/..." without a leading slash.
+  return `/${t.replace(/^\/+/, "")}`;
 }

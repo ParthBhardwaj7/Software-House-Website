@@ -192,8 +192,12 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
                 We are here for you, regardless of the size of the challenge.
               </p>
 
-              {/* Extensions (password managers, etc.) may add attrs like fdprocessedid before hydrate */}
-              <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
+              <form
+                onSubmit={handleSubmit}
+                className="mt-8 space-y-5"
+                noValidate
+                suppressHydrationWarning
+              >
                 {status === "success" && (
                   <p
                     className="rounded-lg border border-primary/40 bg-primary/10 px-4 py-3 text-sm font-medium text-primary"
@@ -279,6 +283,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
                             setForm((f) => ({ ...f, serviceInterest: s.id }));
                             setTouched((t) => ({ ...t, serviceInterest: true }));
                           }}
+                          suppressHydrationWarning
                           className={cn(
                             "rounded-full border px-4 py-2 text-sm font-medium transition-colors",
                             selected
@@ -348,6 +353,7 @@ export function ContactForm({ variant = "default", teamMembers }: ContactFormPro
                   disabled={status === "loading"}
                   aria-busy={status === "loading"}
                   className="w-full rounded-xl py-6 text-base font-semibold"
+                  suppressHydrationWarning
                 >
                   {status === "loading" ? (
                     <>

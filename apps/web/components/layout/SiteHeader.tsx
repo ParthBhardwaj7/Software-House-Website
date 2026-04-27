@@ -8,8 +8,18 @@ import { cn } from "@/lib/utils";
 import { getSocialLinkDisplayItems } from "@/lib/social-links-display";
 import { RollingContactCta } from "./RollingContactCta";
 import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
-import { DUMMY_SITE_SETTINGS } from "@/lib/dummy-data";
 import type { SocialLinks } from "@/lib/public-website-settings";
+
+/** Passed from `app/layout.tsx` (server) so the first paint matches production — no dummy → API flash on refresh. */
+export type SiteHeaderInitialSettings = {
+  websiteName: string;
+  contactEmail: string;
+  phoneNumber: string;
+  addressLine: string;
+  logoUrl: string;
+  faviconUrl: string;
+  socialLinks: SocialLinks;
+};
 
 const STATIC_NAV_START = [
   { href: "/", label: "Home" },
@@ -130,21 +140,39 @@ function SocialIconRow({
   );
 }
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+  initialSettings: SiteHeaderInitialSettings;
+  initialCustomNav: { href: string; label: string }[];
+};
+
+function initialLogoUrl(logoUrl: string): string {
+  const t = logoUrl.trim();
+  return t || DEFAULT_SITE_LOGO_PATH;
+}
+
+export function SiteHeader({ initialSettings, initialCustomNav }: SiteHeaderProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const [contactEmail, setContactEmail] = useState<string>(DUMMY_SITE_SETTINGS.contactEmail);
-  const [contactPhone, setContactPhone] = useState<string>(DUMMY_SITE_SETTINGS.phoneNumber);
-  const [websiteName, setWebsiteName] = useState<string>(DUMMY_SITE_SETTINGS.websiteName);
-  const [addressLine, setAddressLine] = useState<string>(DUMMY_SITE_SETTINGS.addressLine);
-  const [faviconUrl, setFaviconUrl] = useState<string>("");
+  const [contactEmail] = useState<string>(initialSettings.contactEmail);
+  const [contactPhone] = useState<string>(initialSettings.phoneNumber);
+  const [websiteName] = useState<string>(initialSettings.websiteName);
+  const [addressLine] = useState<string>(initialSettings.addressLine);
+  const [faviconUrl] = useState<string>(initialSettings.faviconUrl.trim());
   const [faviconFailed, setFaviconFailed] = useState(false);
-  /** Merged API value: custom admin URL or default path — see `showAdminWordmark` */
-  const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string>(DEFAULT_SITE_LOGO_PATH);
+  /** Merged value: custom admin URL or default path — see `showAdminWordmark` */
+  const [resolvedLogoUrl] = useState<string>(() => initialLogoUrl(initialSettings.logoUrl));
   const [customLogoFailed, setCustomLogoFailed] = useState(false);
-  const [customNav, setCustomNav] = useState<{ href: string; label: string }[]>([]);
-  const [socialLinks, setSocialLinks] = useState<SocialLinks>(emptySocial);
+  const [customNav] = useState<{ href: string; label: string }[]>(() => initialCustomNav);
+  const [socialLinks] = useState<SocialLinks>(() => ({
+    twitter: String(initialSettings.socialLinks.twitter ?? "").trim(),
+    instagram: String(initialSettings.socialLinks.instagram ?? "").trim(),
+    youtube: String(initialSettings.socialLinks.youtube ?? "").trim(),
+    linkedin: String(initialSettings.socialLinks.linkedin ?? "").trim(),
+    facebook: String(initialSettings.socialLinks.facebook ?? "").trim(),
+    github: String(initialSettings.socialLinks.github ?? "").trim(),
+    telegram: String(initialSettings.socialLinks.telegram ?? "").trim(),
+  }));
 
   const overlayLinks = useMemo(
     () => [...STATIC_NAV_START, ...customNav, ...STATIC_NAV_END],
@@ -161,62 +189,6 @@ export function SiteHeader() {
   }, []);
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-    fetch(`${apiUrl}/custom-pages/nav`)
-      .then((r) => (r.ok ? r.json() : Promise.resolve([])))
-      .then((items: { slug: string; navLabel: string }[]) => {
-        if (!Array.isArray(items)) return;
-        setCustomNav(items.map((it) => ({ href: `/site/${it.slug}`, label: it.navLabel })));
-      })
-      .catch(() => setCustomNav([]));
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/settings/website")
-      .then((r) => (r.ok ? r.json() : Promise.resolve({})))
-      .then(
-        (data: {
-          contactEmail?: string;
-          phoneNumber?: string;
-          websiteName?: string;
-          addressLine?: string;
-          logoUrl?: string;
-          faviconUrl?: string;
-          socialLinks?: SocialLinks;
-        }) => {
-          const e = typeof data.contactEmail === "string" ? data.contactEmail.trim() : "";
-          const p = typeof data.phoneNumber === "string" ? data.phoneNumber.trim() : "";
-          const w = typeof data.websiteName === "string" ? data.websiteName.trim() : "";
-          const a = typeof data.addressLine === "string" ? data.addressLine.trim() : "";
-          const fav = typeof data.faviconUrl === "string" ? data.faviconUrl.trim() : "";
-          const logo =
-            typeof data.logoUrl === "string" && data.logoUrl.trim()
-              ? data.logoUrl.trim()
-              : DEFAULT_SITE_LOGO_PATH;
-          if (e) setContactEmail(e);
-          if (p) setContactPhone(p);
-          if (w) setWebsiteName(w);
-          if (a) setAddressLine(a);
-          setResolvedLogoUrl(logo);
-          setCustomLogoFailed(false);
-          if (fav) setFaviconUrl(fav);
-          if (data.socialLinks && typeof data.socialLinks === "object") {
-            setSocialLinks({
-              twitter: String(data.socialLinks.twitter ?? "").trim(),
-              instagram: String(data.socialLinks.instagram ?? "").trim(),
-              youtube: String(data.socialLinks.youtube ?? "").trim(),
-              linkedin: String(data.socialLinks.linkedin ?? "").trim(),
-              facebook: String(data.socialLinks.facebook ?? "").trim(),
-              github: String(data.socialLinks.github ?? "").trim(),
-              telegram: String(data.socialLinks.telegram ?? "").trim(),
-            });
-          }
-        }
-      )
-      .catch(() => {});
-  }, []);
-
-  useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -228,14 +200,6 @@ export function SiteHeader() {
   useEffect(() => {
     closeMenu();
   }, [pathname, closeMenu]);
-
-  useEffect(() => {
-    setFaviconFailed(false);
-  }, [faviconUrl]);
-
-  useEffect(() => {
-    setCustomLogoFailed(false);
-  }, [resolvedLogoUrl]);
 
   const monogram = useMemo(() => brandMonogram(websiteName), [websiteName]);
   const showFaviconMark = Boolean(faviconUrl.trim()) && !faviconFailed;

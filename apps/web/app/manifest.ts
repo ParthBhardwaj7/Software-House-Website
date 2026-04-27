@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { resolveFaviconUrlForMetadata } from "@/lib/public-website-settings";
 import { getPublicWebsiteSettings } from "@/lib/server-website-settings";
 import { getSiteUrlString } from "@/lib/site-url";
 
@@ -8,6 +9,8 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const s = await getPublicWebsiteSettings();
   const base = getSiteUrlString();
   const short = s.websiteName.trim().slice(0, 12) || "Site";
+  const faviconSrc = resolveFaviconUrlForMetadata(s.faviconUrl) || "/icon";
+  const iconUrl = new URL(faviconSrc, base).toString();
 
   return {
     name: s.websiteName,
@@ -20,7 +23,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     orientation: "portrait-primary",
     icons: [
       {
-        src: `${base}/icon`,
+        src: iconUrl,
         sizes: "32x32",
         type: "image/png",
         purpose: "any",

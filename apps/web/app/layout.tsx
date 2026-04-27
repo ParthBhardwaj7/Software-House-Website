@@ -11,8 +11,11 @@ import { BoatCursor } from "@/components/effects/BoatCursor";
 import { SiteJsonLd } from "@/components/seo/SiteJsonLd";
 import { defaultOgImages } from "@/lib/default-og";
 import { getSiteUrl } from "@/lib/site-url";
-import { resolveFaviconUrlForMetadata } from "@/lib/public-website-settings";
-import { getPublicWebsiteSettings } from "@/lib/server-website-settings";
+import {
+  deriveBrandKeywordVariants,
+  resolveFaviconUrlForMetadata,
+} from "@/lib/public-website-settings";
+import { getCustomPagesNav, getPublicWebsiteSettings } from "@/lib/server-website-settings";
 
 const sans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 const display = Playfair_Display({ subsets: ["latin"], variable: "--font-display", display: "swap" });
@@ -22,13 +25,25 @@ export async function generateMetadata(): Promise<Metadata> {
   const titleDefault = `${s.websiteName} | ${s.seoTitleSuffix}`;
   const ogImages = defaultOgImages(s.websiteName);
   const faviconAbs = resolveFaviconUrlForMetadata(s.faviconUrl);
+  const brandKeywords = deriveBrandKeywordVariants(s.websiteName);
   return {
     metadataBase: getSiteUrl(),
     title: {
       default: titleDefault,
       template: `%s | ${s.websiteName}`,
     },
+    applicationName: s.websiteName,
     description: s.siteDescription,
+    keywords: [
+      ...brandKeywords,
+      "software development company",
+      "web development agency",
+      "app development",
+      "digital solutions",
+    ],
+    alternates: {
+      canonical: "/",
+    },
     robots: { index: true, follow: true },
     verification: {
       google: "FX-W6EPCJZszrR1KI73wOURHYZIu8MEWAk5zswqL43o",
@@ -69,7 +84,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const s = await getPublicWebsiteSettings();
+  const [s, initialCustomNav] = await Promise.all([getPublicWebsiteSettings(), getCustomPagesNav()]);
 
   return (
     <html
@@ -85,14 +100,25 @@ export default async function RootLayout({
         <ThemeProvider>
           {s.enableBoatCursor ? <BoatCursor /> : null}
           <div className="flex min-h-screen flex-col">
-            <SiteHeader />
+            <SiteHeader
+              initialSettings={{
+                websiteName: s.websiteName,
+                contactEmail: s.contactEmail,
+                phoneNumber: s.phoneNumber,
+                addressLine: s.addressLine,
+                logoUrl: s.logoUrl,
+                faviconUrl: s.faviconUrl,
+                socialLinks: s.socialLinks,
+              }}
+              initialCustomNav={initialCustomNav}
+            />
             <main className="flex-1 min-w-0 w-full pb-8 pt-20 has-[.home-hero-root]:pt-0 sm:pb-10">
               {children}
             </main>
             <Marquee />
             <Footer />
             <BackToTop />
-            <WhatsAppButton />
+            <WhatsAppButton whatsappNumber={s.whatsappNumber} />
           </div>
         </ThemeProvider>
       </body>
