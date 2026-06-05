@@ -1,6 +1,9 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { MarketingEmptyState } from "@/components/shared/MarketingEmptyState";
 import { TeamMemberCard } from "@/components/team/TeamMemberCard";
+import { allowDummyMarketingContent } from "@/lib/allow-dummy-content";
+import { isDummyId } from "@/lib/resolve-marketing-list";
 import { getTeamMembers } from "@/lib/team";
 export const metadata: Metadata = {
   title: "Team",
@@ -10,8 +13,7 @@ export const metadata: Metadata = {
 export default async function TeamPage() {
   const members = await getTeamMembers();
   const isFallbackOnly =
-    members.length > 0 &&
-    members.every((m) => m.id.startsWith("dummy-"));
+    allowDummyMarketingContent() && members.length > 0 && members.every((m) => isDummyId(m.id));
 
   return (
     <div className="page-marketing min-h-[min(100dvh,56rem)] w-full">
@@ -36,11 +38,18 @@ export default async function TeamPage() {
           )}
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
-          {members.map((m) => (
-            <TeamMemberCard key={m.id} member={m} />
-          ))}
-        </div>
+        {members.length === 0 ? (
+          <MarketingEmptyState
+            title="Our team"
+            description="Team profiles will be published here soon. Contact us to meet the people who would work on your project."
+          />
+        ) : (
+          <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
+            {members.map((m) => (
+              <TeamMemberCard key={m.id} member={m} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

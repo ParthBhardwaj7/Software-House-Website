@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { api } from "@/lib/api";
 import { DUMMY_SERVICES } from "@/lib/dummy-data";
-import { fillToMin } from "@/lib/fill-dummy";
+import { resolveMarketingList } from "@/lib/resolve-marketing-list";
 
 type Service = {
   id: string;
@@ -27,7 +27,7 @@ export function Services({ showHeading = true }: ServicesProps) {
   }, []);
 
   const display = useMemo(
-    () => fillToMin(services, DUMMY_SERVICES as Service[], 6),
+    () => resolveMarketingList(services, DUMMY_SERVICES as Service[], 6),
     [services]
   );
 

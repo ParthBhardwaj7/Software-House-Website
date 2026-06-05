@@ -15,6 +15,7 @@ import {
   deriveBrandKeywordVariants,
   resolveFaviconUrlForMetadata,
 } from "@/lib/public-website-settings";
+import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
 import { getCustomPagesNav, getPublicWebsiteSettings } from "@/lib/server-website-settings";
 
 const sans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
@@ -120,8 +121,14 @@ export default async function RootLayout({
             <main className="flex-1 min-w-0 w-full pb-8 pt-20 has-[.home-hero-root]:pt-0 sm:pb-10">
               {children}
             </main>
-            <Marquee />
-            <Footer />
+            <Marquee websiteName={s.websiteName} />
+            <Footer
+              websiteName={s.websiteName}
+              contactEmail={s.contactEmail}
+              phoneNumber={s.phoneNumber}
+              logoUrl={s.logoUrl.trim() || DEFAULT_SITE_LOGO_PATH}
+              footerConfig={s.footerConfig}
+            />
             <BackToTop />
             <WhatsAppButton whatsappNumber={s.whatsappNumber} />
           </div>

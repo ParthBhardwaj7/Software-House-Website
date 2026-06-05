@@ -5,7 +5,8 @@ import { LazyMotion, domAnimation, m } from "framer-motion";
 import { Star } from "lucide-react";
 import { api } from "@/lib/api";
 import { DUMMY_TESTIMONIALS } from "@/lib/dummy-data";
-import { fillToMin } from "@/lib/fill-dummy";
+import { MarketingEmptyState } from "@/components/shared/MarketingEmptyState";
+import { resolveMarketingList } from "@/lib/resolve-marketing-list";
 
 type Testimonial = {
   id: string;
@@ -73,7 +74,7 @@ export function TestimonialsPageView() {
   }, []);
 
   const display = useMemo(() => {
-    const merged = fillToMin(items, DUMMY_TESTIMONIALS as Testimonial[], 6);
+    const merged = resolveMarketingList(items, DUMMY_TESTIMONIALS as Testimonial[], 6);
     return merged.map((t) => ({
       ...t,
       date:
@@ -134,7 +135,15 @@ export function TestimonialsPageView() {
             </div>
           )}
 
-          {!loading && (
+          {!loading && display.length === 0 && (
+            <MarketingEmptyState
+              title="Testimonials"
+              description="Client feedback will appear here once published."
+              className="bg-white"
+            />
+          )}
+
+          {!loading && display.length > 0 && (
             <m.div
               className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
               variants={container}

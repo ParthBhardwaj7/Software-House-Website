@@ -1,15 +1,11 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
-import { DUMMY_SITE_SETTINGS } from "@/lib/dummy-data";
-import { DEFAULT_FOOTER_CONFIG, type FooterConfig, type FooterLink } from "@/lib/footer-defaults";
+import type { FooterConfig, FooterLink } from "@/lib/footer-defaults";
 import { FooterNewsletter } from "./FooterNewsletter";
 import { FooterContact } from "./FooterContact";
 
-type WebsitePayload = {
+export type FooterProps = {
   websiteName: string;
   contactEmail: string;
   phoneNumber: string;
@@ -22,29 +18,11 @@ function isPayLink(href: string): boolean {
   return t === "/pay" || t.startsWith("/pay?");
 }
 
-const initialPayload: WebsitePayload = {
-  websiteName: DUMMY_SITE_SETTINGS.websiteName,
-  contactEmail: DUMMY_SITE_SETTINGS.contactEmail,
-  phoneNumber: DUMMY_SITE_SETTINGS.phoneNumber,
-  logoUrl: "",
-  footerConfig: {
-    ...DEFAULT_FOOTER_CONFIG,
-    quickLinks: [...DEFAULT_FOOTER_CONFIG.quickLinks],
-    serviceLinks: [...DEFAULT_FOOTER_CONFIG.serviceLinks],
-    infoLinks: [...DEFAULT_FOOTER_CONFIG.infoLinks],
-  },
-};
-
 function FooterNavLink({ href, label, className }: FooterLink & { className: string }) {
   const external = /^https?:\/\//i.test(href);
   if (external) {
     return (
-      <a
-        href={href}
-        className={className}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a href={href} className={className} target="_blank" rel="noopener noreferrer">
         {label}
       </a>
     );
@@ -56,53 +34,13 @@ function FooterNavLink({ href, label, className }: FooterLink & { className: str
   );
 }
 
-export function Footer() {
-  const [data, setData] = useState<WebsitePayload>(initialPayload);
-
-  useEffect(() => {
-    fetch("/api/settings/website")
-      .then((r) => (r.ok ? r.json() : Promise.resolve(null)))
-      .then((json: unknown) => {
-        if (!json || typeof json !== "object") return;
-        const o = json as Record<string, unknown>;
-        const fc = o.footerConfig;
-        const footerConfig: FooterConfig =
-          fc && typeof fc === "object" && "quickLinks" in (fc as object)
-            ? (fc as FooterConfig)
-            : initialPayload.footerConfig;
-        const logoRaw =
-          typeof o.logoUrl === "string" && o.logoUrl.trim()
-            ? o.logoUrl.trim()
-            : DEFAULT_SITE_LOGO_PATH;
-        setData({
-          websiteName:
-            typeof o.websiteName === "string" && o.websiteName.trim()
-              ? o.websiteName.trim()
-              : initialPayload.websiteName,
-          contactEmail:
-            typeof o.contactEmail === "string" && o.contactEmail.trim()
-              ? o.contactEmail.trim()
-              : initialPayload.contactEmail,
-          phoneNumber:
-            typeof o.phoneNumber === "string" && o.phoneNumber.trim()
-              ? o.phoneNumber.trim()
-              : initialPayload.phoneNumber,
-          logoUrl: logoRaw,
-          footerConfig: {
-            ...footerConfig,
-            quickLinks: footerConfig.quickLinks.filter((l) => !isPayLink(l.href)),
-            serviceLinks: [...footerConfig.serviceLinks],
-            infoLinks: [...footerConfig.infoLinks],
-          },
-        });
-      })
-      .catch(() => {});
-  }, []);
-
-  const fc = data.footerConfig;
+export function Footer({ websiteName, contactEmail, phoneNumber, logoUrl, footerConfig }: FooterProps) {
+  const fc = footerConfig;
   const linkClass =
     "text-sm text-[#94A3B8] transition-colors duration-200 hover:text-[#22C55E]";
-  const copyrightName = fc.copyrightEntity.trim() || data.websiteName.trim() || "Company";
+  const copyrightName = fc.copyrightEntity.trim() || websiteName.trim() || "Company";
+  const logoSrc = logoUrl.trim() || DEFAULT_SITE_LOGO_PATH;
+  const quickLinks = fc.quickLinks.filter((l) => !isPayLink(l.href));
 
   return (
     <footer className="relative bg-[#0F172A] text-[#F8FAFC]">
@@ -110,12 +48,12 @@ export function Footer() {
         className="pointer-events-none h-16 bg-gradient-to-b from-[#F8FAFC] via-[#e2e8f0]/90 to-[#0F172A] sm:h-20"
         aria-hidden
       />
-      <div className="relative py-8 transition-opacity duration-500">
+      <div className="relative py-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-6 px-5 sm:flex-row sm:gap-12">
           <FooterContact
             variant="strip"
-            contactEmail={data.contactEmail}
-            phoneNumber={data.phoneNumber}
+            contactEmail={contactEmail}
+            phoneNumber={phoneNumber}
             officeHours={fc.officeHours}
           />
         </div>
@@ -127,8 +65,8 @@ export function Footer() {
             <div className="mb-4">
               <div className="relative flex h-9 min-w-[7rem] max-w-[10rem] shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-[#22C55E] to-[#16A34A] px-2 shadow-lg shadow-[#22C55E]/20 sm:h-10 sm:min-w-[8rem] sm:max-w-[11rem]">
                 <Image
-                  src={data.logoUrl || DEFAULT_SITE_LOGO_PATH}
-                  alt={data.websiteName}
+                  src={logoSrc}
+                  alt={websiteName}
                   width={176}
                   height={40}
                   className="h-7 w-auto max-h-full object-contain object-left sm:h-8"
@@ -138,8 +76,8 @@ export function Footer() {
             </div>
             <p className="mb-6 text-sm leading-relaxed text-[#94A3B8]">{fc.brandTagline}</p>
             <FooterContact
-              contactEmail={data.contactEmail}
-              phoneNumber={data.phoneNumber}
+              contactEmail={contactEmail}
+              phoneNumber={phoneNumber}
               officeHours={fc.officeHours}
             />
           </div>
@@ -149,7 +87,7 @@ export function Footer() {
               {fc.quickLinksHeading}
             </h3>
             <ul className="space-y-3">
-              {fc.quickLinks.filter((l) => !isPayLink(l.href)).map((l) => (
+              {quickLinks.map((l) => (
                 <li key={`${l.href}-${l.label}`}>
                   <FooterNavLink href={l.href} label={l.label} className={linkClass} />
                 </li>
@@ -192,7 +130,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-[#64748B] transition-colors duration-300 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-[#64748B] sm:flex-row">
           <span>
             © {new Date().getFullYear()} {copyrightName}
           </span>

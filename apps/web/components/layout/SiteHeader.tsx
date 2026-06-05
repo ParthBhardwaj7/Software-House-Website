@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { getSocialLinkDisplayItems } from "@/lib/social-links-display";
 import { RollingContactCta } from "./RollingContactCta";
 import { DEFAULT_SITE_LOGO_PATH } from "@/lib/brand";
+import { HEADER_NAV_LINKS } from "@/lib/site-nav";
 import type { SocialLinks } from "@/lib/public-website-settings";
 
 /** Passed from `app/layout.tsx` (server) so the first paint matches production — no dummy → API flash on refresh. */
@@ -21,17 +22,7 @@ export type SiteHeaderInitialSettings = {
   socialLinks: SocialLinks;
 };
 
-const STATIC_NAV_START = [
-  { href: "/", label: "Home" },
-  { href: "/portfolio", label: "Portfolio" },
-  { href: "/services", label: "Services" },
-  { href: "/what-we-deliver", label: "What we deliver" },
-  { href: "/testimonials", label: "Testimonials" },
-] as const;
-
-const STATIC_NAV_END = [
-  { href: "/contact", label: "Contact" },
-] as const;
+const STATIC_NAV_END = [{ href: "/contact", label: "Contact" }] as const;
 
 function brandMonogram(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -174,7 +165,7 @@ export function SiteHeader({ initialSettings, initialCustomNav }: SiteHeaderProp
   }));
 
   const overlayLinks = useMemo(
-    () => [...STATIC_NAV_START, ...customNav, ...STATIC_NAV_END],
+    () => [...HEADER_NAV_LINKS, ...customNav, ...STATIC_NAV_END],
     [customNav]
   );
 
@@ -207,7 +198,7 @@ export function SiteHeader({ initialSettings, initialCustomNav }: SiteHeaderProp
 
   const navLinkClass = (active: boolean) =>
     cn(
-      "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+      "shrink-0 whitespace-nowrap rounded-lg px-2.5 py-2 text-xs font-medium transition-colors lg:px-3 lg:text-sm",
       active ? "bg-[#0F172A]/5 text-[#0F172A]" : "text-[#475569] hover:bg-black/[0.04] hover:text-[#0F172A]"
     );
 
@@ -290,7 +281,7 @@ export function SiteHeader({ initialSettings, initialCustomNav }: SiteHeaderProp
           </Link>
 
           <nav
-            className="hidden min-w-0 items-center justify-center gap-0.5 md:flex md:min-w-0 md:flex-1 lg:gap-1"
+            className="hidden min-w-0 max-w-full items-center justify-center gap-0.5 overflow-x-auto md:flex md:flex-1 md:scrollbar-none lg:gap-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             aria-label="Main"
           >
             {overlayLinks.map((link) => {

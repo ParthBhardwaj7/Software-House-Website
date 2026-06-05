@@ -5,8 +5,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Card3DTilt } from "./Card3DTilt";
 import { api } from "@/lib/api";
+import { MarketingEmptyState } from "@/components/shared/MarketingEmptyState";
 import { DUMMY_SERVICES } from "@/lib/dummy-data";
-import { fillToMin } from "@/lib/fill-dummy";
+import { resolveMarketingList } from "@/lib/resolve-marketing-list";
 import { cn } from "@/lib/utils";
 
 type Service = {
@@ -45,7 +46,7 @@ export function ServicesSection({
   }, []);
 
   const display: Service[] = useMemo(
-    () => fillToMin(services, DUMMY_SERVICES as Service[], 6),
+    () => resolveMarketingList(services, DUMMY_SERVICES as Service[], 6),
     [services]
   );
 
@@ -112,6 +113,11 @@ export function ServicesSection({
               </div>
             ))}
           </div>
+        ) : display.length === 0 ? (
+          <MarketingEmptyState
+            title="Services"
+            description="Our service offerings are being updated. Reach out and we will share capabilities tailored to your project."
+          />
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {display.map((s) => (

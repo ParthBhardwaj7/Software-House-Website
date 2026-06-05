@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { MarketingEmptyState } from "@/components/shared/MarketingEmptyState";
 import { DUMMY_TESTIMONIALS } from "@/lib/dummy-data";
-import { fillToMin } from "@/lib/fill-dummy";
+import { resolveMarketingList } from "@/lib/resolve-marketing-list";
 import { TestimonialMarquee, type TestimonialMarqueeItem } from "./TestimonialMarquee";
 
 type Testimonial = TestimonialMarqueeItem & {
@@ -32,7 +33,7 @@ export function Testimonials({ variant = "default", tone = "light" }: Testimonia
   }, []);
 
   const display = useMemo(
-    () => fillToMin(testimonials, DUMMY_TESTIMONIALS as Testimonial[], 6),
+    () => resolveMarketingList(testimonials, DUMMY_TESTIMONIALS as Testimonial[], 6),
     [testimonials]
   );
 
@@ -103,6 +104,15 @@ export function Testimonials({ variant = "default", tone = "light" }: Testimonia
                 </div>
               ))}
           </div>
+        </div>
+      ) : display.length === 0 ? (
+        <div className="page-container px-5 sm:px-6 lg:px-8">
+          <MarketingEmptyState
+            title="Client stories"
+            description="Testimonials from our partners will appear here once published."
+            actionHref="/contact"
+            actionLabel="Become a client"
+          />
         </div>
       ) : (
         <TestimonialMarquee items={display} />

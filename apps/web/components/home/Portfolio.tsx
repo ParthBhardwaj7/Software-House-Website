@@ -6,8 +6,9 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Card3DTilt } from "./Card3DTilt";
 import { api } from "@/lib/api";
+import { MarketingEmptyState } from "@/components/shared/MarketingEmptyState";
 import { DUMMY_PROJECTS } from "@/lib/dummy-data";
-import { fillToMin } from "@/lib/fill-dummy";
+import { resolveMarketingList } from "@/lib/resolve-marketing-list";
 import { cn } from "@/lib/utils";
 
 type Project = {
@@ -39,7 +40,7 @@ export function Portfolio({ showHeading = true, variant = "default" }: Portfolio
   }, []);
 
   const displayProjects = useMemo(
-    () => fillToMin(projects, DUMMY_PROJECTS as Project[], 6),
+    () => resolveMarketingList(projects, DUMMY_PROJECTS as Project[], 6),
     [projects]
   );
 
@@ -86,6 +87,13 @@ export function Portfolio({ showHeading = true, variant = "default" }: Portfolio
               </div>
             ))}
           </div>
+        ) : displayProjects.length === 0 ? (
+          <MarketingEmptyState
+            title="Portfolio coming soon"
+            description="We are preparing case studies for our latest work. Contact us to discuss similar projects in the meantime."
+            actionHref="/contact"
+            actionLabel="Discuss your project"
+          />
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {displayProjects.map((project) => (
@@ -128,12 +136,12 @@ export function Portfolio({ showHeading = true, variant = "default" }: Portfolio
                         </div>
                       ) : null}
                       <Link
-                        href={project.liveUrl || `/portfolio#${project.slug}`}
+                        href={project.liveUrl || `/portfolio/${project.slug}`}
                         target={project.liveUrl ? "_blank" : undefined}
                         rel={project.liveUrl ? "noopener noreferrer" : undefined}
                         className="text-sm font-medium text-primary hover:text-primary-dark"
                       >
-                        View project →
+                        {project.liveUrl ? "Live site →" : "View details →"}
                       </Link>
                     </CardContent>
                   </Card>

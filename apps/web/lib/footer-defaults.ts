@@ -24,8 +24,8 @@ export const DEFAULT_FOOTER_CONFIG: FooterConfig = {
   quickLinksHeading: "Quick Links",
   quickLinks: [
     { href: "/about", label: "About Us" },
-    { href: "/teams", label: "Our Teams" },
-    { href: "/blog", label: "Blogs" },
+    { href: "/team", label: "Our Team" },
+    { href: "/blog", label: "Blog" },
     { href: "/contact", label: "Contact Us" },
   ],
   servicesHeading: "Services",
@@ -49,6 +49,13 @@ export const DEFAULT_FOOTER_CONFIG: FooterConfig = {
   officeHours: "Mon–Fri: 10:00 AM – 06:30 PM",
   copyrightEntity: "APNCODIX",
 };
+
+/** Legacy paths saved in admin JSON — normalize on read. */
+function normalizeFooterHref(href: string): string {
+  const t = href.trim();
+  if (t === "/teams" || t === "/teams/") return "/team";
+  return t;
+}
 
 function isFooterLink(x: unknown): x is FooterLink {
   if (!x || typeof x !== "object") return false;
@@ -75,7 +82,7 @@ export function mergeFooterConfig(raw: string | undefined | null): FooterConfig 
       const arr = o[key];
       if (!Array.isArray(arr)) return [...fallback];
       const out = arr.filter(isFooterLink).map((l) => {
-        const base = { label: l.label.trim(), href: l.href.trim() };
+        const base = { label: l.label.trim(), href: normalizeFooterHref(l.href) };
         const pc = trimPageContent(l.pageContent);
         return pc !== undefined ? { ...base, pageContent: pc } : base;
       });

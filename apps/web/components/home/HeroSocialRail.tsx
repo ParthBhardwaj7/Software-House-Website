@@ -14,7 +14,7 @@ export function HeroSocialRail({ links, className }: HeroSocialRailProps) {
   return (
     <nav
       className={cn(
-        "pointer-events-auto absolute right-3 top-[56%] z-20 flex -translate-y-1/2 flex-col gap-2 sm:right-4 sm:gap-2.5 lg:top-1/2 lg:right-6 lg:gap-3 xl:right-8",
+        "pointer-events-auto absolute right-6 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-3 lg:flex xl:right-8",
         className
       )}
       aria-label="Social links"

@@ -3,7 +3,8 @@ import Link from "next/link";
 import { api } from "@/lib/api";
 import { allowDummyMarketingContent } from "@/lib/allow-dummy-content";
 import { DUMMY_BLOG_POSTS } from "@/lib/dummy-data";
-import { fillToMin } from "@/lib/fill-dummy";
+import { resolveMarketingList } from "@/lib/resolve-marketing-list";
+import { MarketingEmptyState } from "@/components/shared/MarketingEmptyState";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
@@ -28,8 +29,7 @@ export default async function BlogPage() {
   } catch {
     posts = [];
   }
-  const minCards = allowDummyMarketingContent() ? 6 : 0;
-  posts = fillToMin(posts, DUMMY_BLOG_POSTS as BlogPost[], minCards);
+  posts = resolveMarketingList(posts, DUMMY_BLOG_POSTS as BlogPost[], 6);
 
   return (
     <div className="page-marketing page-section-y w-full">
@@ -41,16 +41,16 @@ export default async function BlogPage() {
           </p>
         </div>
         {posts.length === 0 ? (
-          <p className="mx-auto max-w-lg text-center text-muted-foreground">
-            {allowDummyMarketingContent() ? (
-              <>
-                No posts yet. Add articles from the admin, or enable sample content with{" "}
-                <code className="rounded bg-muted px-1 text-sm">NEXT_PUBLIC_USE_DUMMY_SITEMAP=true</code>.
-              </>
-            ) : (
-              "No articles published yet. Please check back soon."
-            )}
-          </p>
+          <MarketingEmptyState
+            title="Blog"
+            description={
+              allowDummyMarketingContent()
+                ? "No articles yet. Publish posts from the admin panel."
+                : "New articles will be published here soon."
+            }
+            actionHref="/contact"
+            actionLabel="Talk to our team"
+          />
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (

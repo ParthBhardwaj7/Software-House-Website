@@ -24,12 +24,23 @@ export default async function AboutPage() {
         {body ? (
           <FooterManagedPageBody text={body} />
         ) : (
-          <p className="mt-4 leading-relaxed text-muted-foreground">
-            Add your company profile in{" "}
-            <strong className="font-medium text-foreground">Admin → Website Settings → About page</strong>. Include
-            your company background, core services, operating model, and delivery process so clients and compliance
-            reviewers can clearly understand your business.
-          </p>
+          <div className="mt-6 rounded-2xl border border-dashed border-border bg-muted/30 px-6 py-8 sm:px-8">
+            <p className="leading-relaxed text-muted-foreground">
+              We are updating our company story. In the meantime, explore our{" "}
+              <Link href="/services" className="font-medium text-primary hover:underline">
+                services
+              </Link>
+              ,{" "}
+              <Link href="/portfolio" className="font-medium text-primary hover:underline">
+                portfolio
+              </Link>
+              , and{" "}
+              <Link href="/what-we-deliver" className="font-medium text-primary hover:underline">
+                delivery process
+              </Link>{" "}
+              — or reach out directly.
+            </p>
+          </div>
         )}
         <Link href="/contact" className="mt-8 inline-block font-medium text-primary hover:underline">
           Start a conversation →

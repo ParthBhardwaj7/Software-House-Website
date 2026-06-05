@@ -1,0 +1,88 @@
+<svg width="960" height="960" viewBox="0 0 960 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="960" rx="96" fill="url(#bg)"/>
+  <g filter="url(#shadow)">
+    <rect x="154" y="122" width="652" height="498" rx="34" fill="#F8FAFC"/>
+    <rect x="154" y="122" width="652" height="498" rx="34" stroke="#D8E4F0" stroke-width="2"/>
+  </g>
+  <rect x="186" y="156" width="588" height="52" rx="18" fill="#EAF1F7"/>
+  <circle cx="220" cy="182" r="8" fill="#16A34A"/>
+  <circle cx="248" cy="182" r="8" fill="#38BDF8"/>
+  <circle cx="276" cy="182" r="8" fill="#94A3B8"/>
+  <rect x="576" y="170" width="166" height="24" rx="12" fill="#D8E4F0"/>
+
+  <rect x="196" y="238" width="174" height="128" rx="24" fill="#0F172A"/>
+  <text x="224" y="280" fill="#E2E8F0" font-family="Arial, sans-serif" font-size="20" font-weight="700">Project health</text>
+  <text x="224" y="330" fill="white" font-family="Arial, sans-serif" font-size="46" font-weight="700">98%</text>
+  <text x="224" y="356" fill="#94A3B8" font-family="Arial, sans-serif" font-size="18">On-time sprint delivery</text>
+
+  <rect x="396" y="238" width="348" height="128" rx="24" fill="white" stroke="#D8E4F0" stroke-width="2"/>
+  <text x="426" y="280" fill="#0F172A" font-family="Arial, sans-serif" font-size="20" font-weight="700">Weekly growth snapshot</text>
+  <path d="M428 327C457 312 477 316 510 284C542 253 582 245 610 256C637 268 671 294 712 266" stroke="#16A34A" stroke-width="12" stroke-linecap="round"/>
+  <path d="M428 312C463 291 486 297 515 268C547 236 580 226 617 240C651 253 684 279 712 248" stroke="#38BDF8" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+  <circle cx="712" cy="266" r="9" fill="#16A34A"/>
+
+  <rect x="196" y="392" width="250" height="150" rx="24" fill="white" stroke="#D8E4F0" stroke-width="2"/>
+  <text x="226" y="432" fill="#0F172A" font-family="Arial, sans-serif" font-size="20" font-weight="700">Team velocity</text>
+  <rect x="226" y="462" width="30" height="50" rx="10" fill="#C7D2FE"/>
+  <rect x="272" y="436" width="30" height="76" rx="10" fill="#93C5FD"/>
+  <rect x="318" y="414" width="30" height="98" rx="10" fill="#38BDF8"/>
+  <rect x="364" y="382" width="30" height="130" rx="10" fill="#16A34A"/>
+  <text x="226" y="530" fill="#64748B" font-family="Arial, sans-serif" font-size="18">Delivery improving every sprint</text>
+
+  <rect x="472" y="392" width="272" height="150" rx="24" fill="#F0FDF4"/>
+  <text x="502" y="432" fill="#166534" font-family="Arial, sans-serif" font-size="20" font-weight="700">Launch readiness</text>
+  <rect x="502" y="462" width="212" height="16" rx="8" fill="#D1FAE5"/>
+  <rect x="502" y="462" width="170" height="16" rx="8" fill="#22C55E"/>
+  <rect x="502" y="496" width="152" height="12" rx="6" fill="#86EFAC"/>
+  <rect x="502" y="520" width="104" height="12" rx="6" fill="#BBF7D0"/>
+  <text x="502" y="537" fill="#15803D" font-family="Arial, sans-serif" font-size="18">QA, infra, analytics and rollout aligned</text>
+
+  <g filter="url(#shadowSoft)">
+    <rect x="646" y="562" width="190" height="212" rx="34" fill="#0F172A"/>
+    <rect x="664" y="590" width="154" height="18" rx="9" fill="#1E293B"/>
+    <rect x="664" y="626" width="120" height="94" rx="22" fill="#F8FAFC"/>
+    <path d="M690 685C710 660 729 670 745 650C760 632 782 628 798 638" stroke="#16A34A" stroke-width="10" stroke-linecap="round"/>
+    <rect x="664" y="736" width="94" height="12" rx="6" fill="#334155"/>
+    <rect x="664" y="758" width="132" height="12" rx="6" fill="#1D4ED8"/>
+  </g>
+
+  <g filter="url(#shadowSoft)">
+    <rect x="104" y="612" width="218" height="92" rx="26" fill="white"/>
+    <circle cx="152" cy="658" r="18" fill="#DCFCE7"/>
+    <path d="M144 658L150 664L162 650" stroke="#16A34A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="182" y="646" fill="#0F172A" font-family="Arial, sans-serif" font-size="20" font-weight="700">Client approvals</text>
+    <text x="182" y="674" fill="#64748B" font-family="Arial, sans-serif" font-size="18">Fast feedback. Clear sign-off.</text>
+  </g>
+
+  <g filter="url(#shadowSoft)">
+    <rect x="580" y="82" width="230" height="84" rx="24" fill="white"/>
+    <text x="610" y="118" fill="#0F172A" font-family="Arial, sans-serif" font-size="18" font-weight="700">Live delivery board</text>
+    <text x="610" y="144" fill="#64748B" font-family="Arial, sans-serif" font-size="16">Design, dev and launch in one view</text>
+  </g>
+
+  <defs>
+    <linearGradient id="bg" x1="115" y1="65" x2="838" y2="896" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E0F2FE"/>
+      <stop offset="0.54" stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#DCFCE7"/>
+    </linearGradient>
+    <filter id="shadow" x="122" y="136" width="716" height="524" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="18"/>
+      <feGaussianBlur stdDeviation="16"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0588235 0 0 0 0 0.0941176 0 0 0 0 0.164706 0 0 0 0.12 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_2"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_2" result="shape"/>
+    </filter>
+    <filter id="shadowSoft" x="72" y="80" width="796" height="726" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="14"/>
+      <feGaussianBlur stdDeviation="16"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0588235 0 0 0 0 0.0941176 0 0 0 0 0.164706 0 0 0 0.1 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_2"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_2" result="shape"/>
+    </filter>
+  </defs>
+</svg>
