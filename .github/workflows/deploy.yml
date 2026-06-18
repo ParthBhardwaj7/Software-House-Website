@@ -140,7 +140,7 @@ jobs:
           command_timeout: 10m
           script: |
             set -e
-            cd ~/Software-House-Website
+            cd ~/apncodix
 
             # Always sync server to match remote exactly — discard any local drift
             git fetch origin main
